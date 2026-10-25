@@ -57,7 +57,8 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .menu { display: flex; align-items: center; gap: 22px; font-size: 14px; }
 .menu a { color: var(--muted); transition: color .15s; }
 .menu a:hover, .menu a[aria-current] { color: var(--ink); text-decoration: none; }
-.menu .gh { color: var(--btn-ink); background: var(--btn); padding: 0 16px; line-height: 30px; border-radius: 980px; font-weight: 500; transition: background-color .15s; }
+.menu .gh { color: var(--btn-ink); background: var(--btn); display: inline-flex; align-items: center; gap: 6px; padding: 0 16px 0 13px; height: 30px; border-radius: 980px; font-weight: 500; transition: background-color .15s; }
+.menu .gh svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .menu .gh:hover { background: var(--btn-hover); color: var(--btn-ink); }
 
 /* ---- buttons ---- */
