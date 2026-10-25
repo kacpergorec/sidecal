@@ -2,6 +2,12 @@
 name = "sidecal"
 version = "0.1.0"
 edition = "2021"
+authors = ["Kacper Górec"]
+description = "Free, open-source sidebar calendar for macOS: time blocking by dragging, auto-hide, menu bar countdown. Built with Rust and Tauri."
+license = "Apache-2.0"
+readme = "README.md"
+keywords = ["calendar", "macos", "productivity", "time-blocking", "menu-bar"]
+categories = ["gui"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }

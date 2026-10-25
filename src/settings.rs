@@ -1,4 +1,5 @@
 //! User settings, stored as JSON in the app config dir.
+// Copyright 2026 Kacper Górec. Licensed under the Apache License, Version 2.0 (see LICENSE and NOTICE).
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

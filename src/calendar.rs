@@ -1,4 +1,5 @@
 //! Minimal EventKit bridge: access, calendars, and reading/writing events.
+// Copyright 2026 Kacper Górec. Licensed under the Apache License, Version 2.0 (see LICENSE and NOTICE).
 
 use block2::RcBlock;
 use objc2::rc::{autoreleasepool, Retained};

@@ -1,3 +1,4 @@
+// Copyright 2026 Kacper Górec. Licensed under the Apache License, Version 2.0 (see LICENSE and NOTICE).
 // Shared by the sidebar and the settings window: the 12 entry/calendar colours and colour helpers.
 // Every colour has a light-mode and a dark-mode variant; only the palette id is stored.
 const PALETTE = [
