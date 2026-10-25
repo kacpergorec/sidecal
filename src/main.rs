@@ -262,6 +262,7 @@ fn set_collapsed(app: &AppHandle, collapsed: bool) {
     let _ = app.emit("collapsed", collapsed);
     if !collapsed {
         if let Some(win) = app.get_webview_window("sidebar") {
+            let _ = win.set_ignore_cursor_events(false);
             let _ = win.show();
         }
     }
@@ -309,9 +310,14 @@ fn set_collapsed(app: &AppHandle, collapsed: bool) {
             });
             std::thread::sleep(Duration::from_millis(14));
         }
-        // No edge preview: leave nothing on screen (the screen edge still brings it back).
-        if collapsed && !s.edge_preview && app.state::<Runtime>().anim.load(Ordering::Relaxed) == gen {
-            let _ = win.hide();
+        if collapsed && app.state::<Runtime>().anim.load(Ordering::Relaxed) == gen {
+            // The faded strip must never swallow clicks meant for the app underneath; the cursor poll
+            // (not window events) brings the sidebar back at the screen edge.
+            let _ = win.set_ignore_cursor_events(true);
+            // No edge preview: leave nothing on screen (the screen edge still brings it back).
+            if !s.edge_preview {
+                let _ = win.hide();
+            }
         }
     });
 }
@@ -328,6 +334,7 @@ fn apply(app: &AppHandle) {
         }
         let collapsed = s.auto_hide && rt.auto_hidden.load(Ordering::Relaxed);
         place(app, &win, &s, collapsed);
+        let _ = win.set_ignore_cursor_events(collapsed);
         if collapsed {
             let _ = if s.edge_preview { win.show() } else { win.hide() };
         }
