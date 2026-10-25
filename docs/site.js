@@ -35,7 +35,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   const story = document.querySelector('.story');
   if (!story) return;
   const stage = story.querySelector('.stage'), scene = story.querySelector('.scene'), side = story.querySelector('.side');
-  const evs = [...story.querySelectorAll('.ev[data-s]')], ghost = story.querySelector('.ghost');
+  const evs = [...story.querySelectorAll('.ev[data-s]')], ghost = story.querySelector('.ghost');  // ghost is the entry "added" in step 3
   const now = story.querySelector('.now'), title = story.querySelector('.mbar b'), clk = story.querySelector('.clk');
   const caps = [...story.querySelectorAll('.cap')], dots = [...story.querySelectorAll('.dots i')];
   const N = caps.length, T0 = 8 * 60 + 40, T1 = 20 * 60 + 10;
@@ -45,7 +45,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   let step = -1, lastT = -1;
 
   // Same tiers as the app: two lines when tall enough, one line otherwise.
-  const tiers = () => [...evs, ghost].forEach((e) => e.classList.toggle('l2', e.offsetHeight >= 40));
+  const tiers = () => evs.forEach((e) => e.classList.toggle('l2', e.offsetHeight >= 40));
 
   function draw() {
     const rect = story.getBoundingClientRect();
@@ -53,20 +53,6 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
     const t = Math.round(T0 + (T1 - T0) * p);
     const i = Math.min(N - 1, Math.floor(p * N));
 
-    if (t !== lastT) {
-      lastT = t;
-      now.style.top = (t / 14.4) + '%';
-      let cur = null, next = null;
-      for (const e of evs) {
-        const on = +e.dataset.s <= t && +e.dataset.e > t;
-        e.classList.toggle('active', on);
-        if (on) cur = e;
-        else if (+e.dataset.s > t && (!next || +e.dataset.s < +next.dataset.s)) next = e;
-      }
-      side.style.setProperty('--glow', cur ? cur.style.getPropertyValue('--ev-c') : 'transparent');
-      title.textContent = cur ? `${cur.dataset.t} (${dur(+cur.dataset.e - t)} left)` : next ? `${next.dataset.t} in ${dur(+next.dataset.s - t)}` : 'Calendar';
-      clk.textContent = `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
-    }
     if (i !== step) {
       step = i;
       caps.forEach((c, k) => c.classList.toggle('on', k === i));
@@ -75,7 +61,23 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
       side.classList.toggle('collapsed', i === 3);
       side.classList.toggle('island', i >= 4);
       scene.dataset.mode = (i >= 5) === dark ? 'light' : 'dark';
+      lastT = -1;  // the ghost entry joins (or leaves) the clock logic
       setTimeout(tiers, 0);
+    }
+    if (t !== lastT) {
+      lastT = t;
+      now.style.top = (t / 14.4) + '%';
+      let cur = null, next = null;
+      for (const e of evs) {
+        if (e === ghost && !ghost.classList.contains('on')) { e.classList.remove('active'); continue; }
+        const on = +e.dataset.s <= t && +e.dataset.e > t;
+        e.classList.toggle('active', on);
+        if (on) cur = e;
+        else if (+e.dataset.s > t && (!next || +e.dataset.s < +next.dataset.s)) next = e;
+      }
+      side.style.setProperty('--glow', cur ? cur.style.getPropertyValue('--ev-c') : 'transparent');
+      title.textContent = cur ? `${cur.dataset.t} (${dur(+cur.dataset.e - t)} left)` : next ? `${next.dataset.t} in ${dur(+next.dataset.s - t)}` : 'Calendar';
+      clk.textContent = `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
     }
   }
   let queued = false;
