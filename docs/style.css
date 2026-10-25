@@ -115,7 +115,7 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .side.collapsed .now { left: calc(100% - 8px); }
 .side.collapsed .now::before { width: 3.5px; height: 3.5px; top: -1px; }
 .side.collapsed .ev.active { opacity: 1; }
-.sc-head, .hour, .ev > span, .ev, .now { transition: opacity var(--t) var(--ease), background-color var(--t), color var(--t), left var(--t) var(--ease), right var(--t) var(--ease), border-radius var(--t), padding var(--t); }
+.sc-head, .hour, .ev > span, .ev, .now { transition: opacity var(--t) var(--ease), background-color var(--t), color var(--t), left var(--t) var(--ease), right var(--t) var(--ease), border-radius var(--t), padding var(--t), transform var(--t) var(--ease); }
 
 .sc-head { position: relative; text-align: center; padding: 6px 30px 6px; min-height: 32px; border-bottom: 1px solid var(--line); flex: none; }
 .sc-head b { display: block; font: 500 14px/1.15 var(--serif); letter-spacing: -.02em; color: var(--text); }
@@ -139,7 +139,7 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .side.collapsed .ev.active { box-shadow: none; }
 .ev.active { z-index: 7; box-shadow: 0 0 0 1px var(--bg), 0 0 0 2.5px var(--ev-c), 0 0 8px 1px color-mix(in srgb, var(--ev-c) 45%, transparent); }
 .ev.ghost { opacity: 0; transform: scaleY(.2); transform-origin: top; }
-.ev.ghost.on { opacity: 1; transform: none; transition: opacity .35s, transform .5s var(--ease); }
+.ev.ghost.on { opacity: 1; transform: none; }
 .side.collapsed .ev.ghost.on { opacity: .6; }
 .now { position: absolute; left: -22px; right: 0; height: 1.5px; background: var(--now); z-index: 10; }
 .now::before { content: ""; position: absolute; left: 0; top: -2.5px; width: 6.5px; height: 6.5px; border-radius: 50%; background: var(--now); }
