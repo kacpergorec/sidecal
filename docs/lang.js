@@ -66,12 +66,18 @@
   document.addEventListener('DOMContentLoaded', () => { translate(); wire(); done(); });
 
   function wire() {
-    const sel = document.querySelector('.lang');
-    if (!sel) return;
-    sel.value = lang;
-    sel.addEventListener('change', () => {
-      try { localStorage.setItem('lang', sel.value); } catch {}
-      location.reload();
+    const btn = document.querySelector('.lang-btn'), menu = document.querySelector('.lang-menu');
+    if (!btn || !menu) return;
+    const items = [...menu.querySelectorAll('[data-lang]')];
+    btn.querySelector('use').setAttribute('href', items.find((i) => i.dataset.lang === lang).querySelector('use').getAttribute('href'));
+    items.forEach((i) => { if (i.dataset.lang === lang) i.setAttribute('aria-current', 'true'); else i.removeAttribute('aria-current'); });
+    const set = (open) => { menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); };
+    btn.addEventListener('click', () => set(menu.hidden));
+    document.addEventListener('click', (e) => { if (!menu.hidden && !e.target.closest('.langpick')) set(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { set(false); btn.focus(); } });
+    for (const i of items) i.addEventListener('click', () => {
+      try { localStorage.setItem('lang', i.dataset.lang); } catch {}
+      if (i.dataset.lang === lang) set(false); else location.reload();
     });
   }
 })();

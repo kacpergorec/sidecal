@@ -322,8 +322,14 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 :root[data-theme="dark"] .theme-toggle .sun { display: block; }
 :root[data-theme="dark"] .theme-toggle .moon { display: none; }
 
-/* Language picker in the nav; the page stays hidden until lang.js has swapped the text. */
+/* Language picker: a flag button opening a small menu. The page stays hidden until lang.js has swapped the text. */
 .i18n-wait body { visibility: hidden; }
-.menu .lang { font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 0; border-radius: 980px; padding: 5px 6px; cursor: pointer; }
-.menu .lang:hover { color: var(--ink); background: var(--alt); }
-.menu .lang option { color: #1d1d1f; background: #fff; }
+.langpick { position: relative; display: grid; }
+.lang-btn { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; transition: background-color .15s; }
+.lang-btn:hover, .lang-btn[aria-expanded="true"] { background: var(--alt); }
+.flag { width: 20px; height: 20px; color: var(--ink); }
+.lang-menu { position: absolute; right: -8px; top: calc(100% + 14px); z-index: 40; min-width: 160px; margin: 0; padding: 6px; list-style: none;
+  background: var(--surface); border: 1px solid var(--hair); border-radius: 14px; box-shadow: 0 12px 32px rgba(0, 0, 0, .16); }
+.lang-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 9px; background: transparent; color: var(--text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.lang-menu button:hover, .lang-menu button:focus-visible { background: var(--alt); }
+.lang-menu button[aria-current="true"] { font-weight: 600; color: var(--ink); }
