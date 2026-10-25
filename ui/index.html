@@ -41,12 +41,15 @@
   :root[data-slide][data-side="left"] body.collapsed { left: calc(var(--ww, 190px) - var(--strip, 10px)); }
   body.collapsed header, body.collapsed #allday, body.collapsed .hour { opacity: 0; pointer-events: none; }
   body.collapsed #msg { display: none; }
-  body.collapsed #day { margin-left: 0; }
   body.collapsed .ev .tm, body.collapsed .ev .tt { display: none; }
   body.collapsed .ev { font-size: 0 !important; padding: 0; border-radius: 2px; left: 1px !important; width: calc(100% - 2px) !important; opacity: var(--pv-op, .6); box-shadow: none; }
   body.collapsed .ev.past { opacity: calc(var(--pv-op, .6) * .5); }
   body.collapsed .ev.active { opacity: 1; }   /* the running event stays at full strength in the preview */
-  body.collapsed #now { left: 0; }
+  /* Preview: the "now" marker is a dot in its own column at the strip's outer edge, not on top of the bars. */
+  body.collapsed #day { margin-left: min(6px, calc(var(--strip, 10px) * .4)); }
+  body.collapsed #now { left: calc(min(6px, calc(var(--strip, 10px) * .4)) * -1); right: auto; width: min(5px, calc(var(--strip, 10px) * .4));
+    height: min(5px, calc(var(--strip, 10px) * .4)); margin-top: -2.5px; border-radius: 50%; }
+  body.collapsed #now::before { display: none; }
   /* Hovering the strip: preview bars fade out in 0.1 s while the sidebar is about to open. */
   body.collapsed.hover .ev, body.collapsed.hover .ev.past, body.collapsed.hover .ev.active, body.collapsed.hover #now { opacity: 0; transition: opacity .1s linear; }
   /* Transitions live on the collapsed state only: collapsing animates, expanding is instant. */
