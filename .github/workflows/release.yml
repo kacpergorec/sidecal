@@ -1,11 +1,16 @@
 # Builds SideCal.app for Apple Silicon and Intel and attaches both to a GitHub release.
-# Publish a release: git tag v0.1.0 && git push origin v0.1.0
+# Publish a release: git tag v0.1.0 && git push origin v0.1.0,
+# or run this workflow by hand (Actions tab) and enter the tag.
 name: Release
 
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to create, for example v0.1.0 (leave empty to only build)"
+        required: false
 
 permissions:
   contents: write
@@ -45,7 +50,7 @@ jobs:
 
   release:
     needs: build
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/') || inputs.tag != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -54,6 +59,8 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          target_commitish: ${{ github.sha }}
           generate_release_notes: true
           files: dist/*.zip
           body: |
