@@ -24,10 +24,14 @@ if (links.length && 'IntersectionObserver' in window) {
   links.forEach((a) => { const s = document.querySelector(a.getAttribute('href')); if (s) spy.observe(s); });
 }
 
+// Strings the script builds itself; lang.js fills window.SC_UI for non-English visitors.
+const UI = window.SC_UI || {};
+const fmt = (tpl, vars) => tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k]);
+
 // Copy button on the terminal block.
 document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; } catch { b.textContent = 'Press Ctrl+C'; }
-  setTimeout(() => (b.textContent = 'Copy'), 1600);
+  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = UI.copied || 'Copied'; } catch { b.textContent = UI.manual || 'Press Ctrl+C'; }
+  setTimeout(() => (b.textContent = UI.copy || 'Copy'), 1600);
 }));
 
 // Pinned story: scrolling drives the mockup (clock, menu bar, new event, auto-hide, island, dark).
@@ -76,7 +80,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
         else if (+e.dataset.s > t && (!next || +e.dataset.s < +next.dataset.s)) next = e;
       }
       side.style.setProperty('--glow', cur ? cur.style.getPropertyValue('--ev-c') : 'transparent');
-      title.textContent = cur ? `${cur.dataset.t} (${dur(+cur.dataset.e - t)} left)` : next ? `${next.dataset.t} in ${dur(+next.dataset.s - t)}` : 'Calendar';
+      title.textContent = cur ? fmt(UI.running || '{t} ({d} left)', { t: cur.dataset.t, d: dur(+cur.dataset.e - t) }) : next ? fmt(UI.upcoming || '{t} in {d}', { t: next.dataset.t, d: dur(+next.dataset.s - t) }) : (UI.calendar || 'Calendar');
       clk.textContent = `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
     }
   }

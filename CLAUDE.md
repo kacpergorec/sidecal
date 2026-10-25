@@ -38,3 +38,8 @@ Free sidebar calendar for macOS. Rust + Tauri 2 backend, plain HTML/CSS/JS UI (n
 
 - Site: open `docs/index.html` and `docs/documentation.html` with Playwright, check the console for errors, and take screenshots (light, dark, 390px wide).
 - Rust (on a Mac): `cargo check`, fix every warning, then `./build-app.sh`.
+
+## Homepage languages
+
+- `docs/index.html` stays English (what search engines index). `docs/lang.js` swaps text at load for pl, de, es, fr from `docs/i18n.js`, keyed by the exact English text (whitespace collapsed); the pick is saved in `localStorage` (`lang`), else the browser language decides. Docs page is English only.
+- When you change English copy in `index.html`, change the matching key in `i18n.js` for every language, or that string falls back to English.

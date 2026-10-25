@@ -17,7 +17,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     const btn = document.querySelector('.theme-toggle');
     if (!btn) return;
-    const label = () => btn.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    const UI = window.SC_UI || {};
+    const label = () => btn.setAttribute('aria-label', root.dataset.theme === 'dark' ? (UI.toLight || 'Switch to light mode') : (UI.toDark || 'Switch to dark mode'));
     label();
     document.addEventListener('themechange', label);
     btn.addEventListener('click', () => {

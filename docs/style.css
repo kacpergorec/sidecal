@@ -321,3 +321,9 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 .theme-toggle .sun { display: none; }
 :root[data-theme="dark"] .theme-toggle .sun { display: block; }
 :root[data-theme="dark"] .theme-toggle .moon { display: none; }
+
+/* Language picker in the nav; the page stays hidden until lang.js has swapped the text. */
+.i18n-wait body { visibility: hidden; }
+.menu .lang { font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 0; border-radius: 980px; padding: 5px 6px; cursor: pointer; }
+.menu .lang:hover { color: var(--ink); background: var(--alt); }
+.menu .lang option { color: #1d1d1f; background: #fff; }
