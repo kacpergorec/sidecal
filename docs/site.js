@@ -38,7 +38,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   const evs = [...story.querySelectorAll('.ev[data-s]')], ghost = story.querySelector('.ghost');
   const now = story.querySelector('.now'), title = story.querySelector('.mbar b'), clk = story.querySelector('.clk');
   const caps = [...story.querySelectorAll('.cap')], dots = [...story.querySelectorAll('.dots i')];
-  const N = caps.length, T0 = 8 * 60 + 40, T1 = 11 * 60 + 7;
+  const N = caps.length, T0 = 8 * 60 + 40, T1 = 20 * 60 + 10;
   const dark = matchMedia('(prefers-color-scheme: dark)').matches;
   const dur = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? ' ' + (m % 60) + 'm' : ''}` : `${m}m`);
   const clamp = (v) => Math.min(1, Math.max(0, v));
@@ -50,7 +50,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   function draw() {
     const rect = story.getBoundingClientRect();
     const p = clamp((52 - rect.top) / (story.offsetHeight - stage.offsetHeight));
-    const t = Math.round(T0 + (T1 - T0) * clamp((p * N) / 2));
+    const t = Math.round(T0 + (T1 - T0) * p);
     const i = Math.min(N - 1, Math.floor(p * N));
 
     if (t !== lastT) {
