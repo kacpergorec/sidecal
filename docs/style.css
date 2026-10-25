@@ -42,7 +42,7 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .bar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent);
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
 .bar .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
-.mark { font: 500 21px var(--serif); letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
+.mark { display: inline-flex; align-items: center; gap: 10px; font: 500 21px var(--serif); letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
 .bar nav { display: flex; align-items: center; gap: 26px; font-size: 14px; }
 .bar nav a { text-decoration: none; color: var(--muted); transition: color .15s; }
 .bar nav a:hover, .bar nav a[aria-current] { color: var(--ink); }
@@ -169,3 +169,5 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   .hero { padding: 72px 0 64px; } section.block { padding: 72px 0; }
 }
 @media (max-width: 560px) { .bar nav a:not(.keep) { display: none; } .card { padding: 24px; } }
+
+.mark img { border-radius: 7px; }
