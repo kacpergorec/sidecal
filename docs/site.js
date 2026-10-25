@@ -86,3 +86,17 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   addEventListener('resize', () => { tiers(); tick(); });
   tiers(); draw();
 })();
+
+// Hero chip: roll through the assistant names.
+(() => {
+  const words = [...document.querySelectorAll('.chip .rot b')];
+  if (words.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let i = 0;
+  setInterval(() => {
+    const n = (i + 1) % words.length, prev = i;
+    words[prev].className = 'off';
+    words[n].className = 'on';
+    setTimeout(() => (words[prev].className = ''), 600);
+    i = n;
+  }, 2000);
+})();
