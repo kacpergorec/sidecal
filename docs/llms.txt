@@ -1,0 +1,8 @@
+# SideCal
+
+> Free, open-source sidebar calendar for macOS. Shows today's Apple Calendar as a 24-hour timeline on the screen edge, lets you time-block by dragging, and shows your next event in the menu bar. No telemetry, no network code, built with Rust and Tauri. Apache 2.0.
+
+- [Website](https://kacpergorec.github.io/sidecal/)
+- [Documentation](https://kacpergorec.github.io/sidecal/documentation.html): install, usage, settings, shortcuts
+- [Download](https://github.com/kacpergorec/sidecal/releases/latest): Apple Silicon and Intel builds, macOS 14 or later
+- [Source](https://github.com/kacpergorec/sidecal)
