@@ -1,0 +1,332 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="theme.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--text); font: 13px/1.5 var(--font); -webkit-font-smoothing: antialiased; user-select: none; cursor: default; }
+  body { padding: 38px 44px 34px; min-width: 520px; }
+  h1 { font: 500 28px/1.1 var(--serif); letter-spacing: -.03em; margin-bottom: 8px; }
+  .intro { color: var(--muted); margin-bottom: 22px; max-width: 46ch; }
+  nav { display: flex; gap: 22px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  nav button { padding: 8px 0 9px; border: 0; background: none; color: var(--muted); font: 500 13px var(--font); cursor: pointer;
+    border-bottom: 1.5px solid transparent; margin-bottom: -1px; transition: color .12s; }
+  nav button:hover { color: var(--text); }
+  nav button.on { color: var(--text); border-color: var(--text); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+  section { display: none; } section.on { display: block; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 28px; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } body { padding: 28px 24px; } .row > span { width: 130px; } }
+  label { display: flex; align-items: center; gap: 9px; cursor: pointer; }
+  input[type=checkbox] { -webkit-appearance: none; appearance: none; flex: none; display: inline-grid; place-content: center;
+    width: 15px; height: 15px; margin: 0; border: 1.5px solid var(--muted); border-radius: 4px; background: transparent; cursor: pointer;
+    transition: background-color .12s, border-color .12s; }
+  input[type=checkbox]:hover { border-color: var(--text); }
+  input[type=checkbox]:checked { background: var(--btn); border-color: var(--btn); }
+  input[type=checkbox]:checked::after { content: ""; width: 8px; height: 4px; margin-top: -2px;
+    border-left: 2px solid var(--btn-ink); border-bottom: 2px solid var(--btn-ink); transform: rotate(-45deg); }
+  input[type=checkbox]:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  input[type=range] { accent-color: var(--text); width: 170px; }
+
+  .cal { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-bottom: 1px solid var(--line); }
+  .cal.over { background: var(--hover); }
+  .cal .grip { display: grid; place-items: center; width: 18px; height: 18px; color: var(--muted); cursor: grab; }
+  .cal .grip svg { width: 12px; height: 12px; fill: currentColor; }
+  .cal { position: relative; }
+  .cal .sw { width: 14px; height: 14px; border-radius: 4px; flex: none; border: 0; padding: 0; cursor: pointer;
+    outline: 1px solid color-mix(in srgb, var(--text) 16%, transparent); transition: transform .12s; }
+  .cal .sw:hover { transform: scale(1.15); }
+  .pal { position: absolute; left: 34px; top: calc(100% - 4px); z-index: 10; padding: 12px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; display: grid; grid-template-columns: repeat(6, 22px); gap: 10px; }
+  .pal .dot { width: 22px; height: 22px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+    outline: 1px solid color-mix(in srgb, var(--text) 14%, transparent); transition: transform .12s; }
+  .pal .dot:hover { transform: scale(1.15); }
+  .pal .dot.on { outline: 2px solid var(--text); outline-offset: 2px; }
+  .pal .rs { grid-column: 1 / -1; border: 0; border-top: 1px solid var(--line); padding: 10px 0 0; background: none;
+    color: var(--muted); font: 500 12px var(--font); cursor: pointer; text-align: center; }
+  .pal .rs:hover { color: var(--text); }
+  .q { display: inline-grid; place-items: center; width: 15px; height: 15px; margin-left: 2px; flex: none; position: relative;
+    border: 1px solid var(--line); border-radius: 50%; color: var(--muted); font: 600 9.5px var(--font); cursor: help; }
+  .q:hover { color: var(--text); border-color: var(--muted); }
+  #tt { position: fixed; z-index: 100; max-width: 260px; padding: 9px 11px; border-radius: 8px; background: var(--btn); color: var(--btn-ink);
+    font: 400 11.5px/1.45 var(--font); pointer-events: none; opacity: 0; transition: opacity .12s; }
+  #tt.on { opacity: 1; }
+  .cal .name { flex: 1; font-weight: 500; }
+  .cal label { color: var(--muted); font-size: 12px; }
+
+  .group { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; gap: 14px; }
+  .row { display: flex; align-items: center; gap: 14px; }
+  .row > span { width: 170px; flex: none; color: var(--muted); }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; padding: 2px; gap: 2px; }
+  .seg button { padding: 4px 14px; border: 0; border-radius: 6px; background: transparent; color: var(--muted);
+    font: 500 12px var(--font); cursor: pointer; transition: background-color .12s, color .12s; }
+  .seg button:hover { color: var(--text); }
+  .seg button.on { background: var(--btn); color: var(--btn-ink); }
+  #width-v { font: 500 12px var(--font); color: var(--muted); }
+
+  input[type=text] { font: 500 13px var(--font); width: 220px; text-align: center; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--text); }
+  input[type=text]:focus { outline: 2px solid var(--focus); outline-offset: -1px; border-color: transparent; }
+  #keys.on { display: grid; gap: 18px; }
+  #keys .hint { margin-top: 4px; }
+  .hint { color: var(--muted); font-size: 11.5px; margin-top: 16px; max-width: 58ch; }
+
+  .stat { display: flex; justify-content: space-between; align-items: baseline; padding: 18px 20px; border: 1px solid var(--line);
+    border-radius: 10px; margin-bottom: 10px; background: var(--panel); cursor: pointer; transition: background-color .12s; }
+  .stat:hover { background: var(--hover); }
+  .stat span { color: var(--muted); }
+  .stat b { font: 500 26px var(--serif); letter-spacing: -.02em; }
+</style>
+</head>
+<body>
+<h1>SideCal</h1>
+<p class="intro">Keep an eye on your calendar from the screen edge and the menu bar.</p>
+<nav id="tabs">
+  <button data-t="cal" class="on">Calendars</button><button data-t="set">Settings</button>
+  <button data-t="keys">Shortcuts</button><button data-t="prod">Productivity</button>
+</nav>
+
+<section id="cal" class="on"><div id="cal-list"></div>
+  <p class="hint">Untick the swatch to hide a calendar. Drag the handle to reorder: higher = priority (wins the left column and sits on top when events overlap). "Counts as productive" feeds the Productivity tab.</p></section>
+
+<section id="set">
+  <div class="grid" id="toggles"></div>
+  <div class="group">
+    <div class="row"><span>Appearance</span>
+      <div class="seg" id="theme"><button data-v="light">Light</button><button data-v="dark">Dark</button><button data-v="system" title="Follow the macOS appearance">Auto</button></div></div>
+    <div class="row"><span>Sidebar side</span>
+      <div class="seg" id="side"><button data-v="left">Left</button><button data-v="right">Right</button></div></div>
+    <div class="row"><span>Sidebar width</span><input id="width" type="range" min="150" max="320" step="10"><b id="width-v"></b></div>
+  </div>
+  <div class="group">
+    <div class="row"><span>Edge preview</span>
+      <label><input type="checkbox" id="pv-on"> Leave faded entries on the screen edge while hidden</label></div>
+    <div class="row"><span>Preview width</span><input id="pv-w" type="range" min="7" max="40" step="1"><b id="pv-w-v"></b></div>
+    <div class="row"><span>Preview opacity</span><input id="pv-o" type="range" min="20" max="100" step="5"><b id="pv-o-v"></b></div>
+  </div>
+</section>
+
+<section id="keys">
+  <div class="row"><span>Show / hide sidebar</span><input type="text" data-k="toggle" readonly></div>
+  <div class="row"><span>New event</span><input type="text" data-k="new_event" readonly></div>
+  <div class="row"><span>Open settings</span><input type="text" data-k="settings" readonly></div>
+  <p class="hint">Click a field and press the new combination (include Ctrl, Alt or Cmd). Requires "Use Global Hotkeys".</p>
+</section>
+
+<section id="prod">
+  <div class="stat" id="p-today"><span>Productive today</span><b>–</b></div>
+  <div class="stat" id="p-week"><span>Productive this week</span><b>–</b></div>
+  <p class="hint">Sums timed events from calendars marked "Counts as productive". Click a number to copy it.</p>
+</section>
+
+<div id="tt"></div>
+<script src="palette.js"></script>
+<script>
+const { invoke } = window.__TAURI__.core;
+const $ = (id) => document.getElementById(id);
+let cfg, cals = [];
+
+// [key, label, optional help text shown in the "?" tooltip]
+const TOGGLES = [
+  ['launch_at_login', 'Launch at Login'], ['display_all_day_events', 'Display All Day Events'],
+  ['float_above', 'Keep Above Other Windows', 'Keeps the sidebar on top of other windows. Turn it off to let other windows cover it.'],
+  ['auto_hide', 'Auto-Hide', 'Slides the sidebar to the screen edge when the cursor leaves it, and back out when you touch the edge.'],
+  ['island_mode', 'Island Mode', 'Shows the open sidebar as a floating card: transparent margin around it and rounded corners, like a macOS window.'],
+  ['show_glowing_border', 'Highlight Active Event', 'Marks the event happening right now with a coloured ring. In the edge preview it is also drawn at full opacity while the other entries stay faded.'],
+  ['suggest_events', 'Suggest Events', 'When you add an event with the + button or the shortcut, it starts in the next free half-hour slot and lasts an hour, instead of starting right now.'],
+  ['show_duration_in_menu_bar', 'Show Event Duration in Menu Bar'], ['show_title_in_menu_bar', 'Show Event Title in Menu Bar'],
+  ['use_12_hour', 'Use 12-Hour Time Format', 'Shows 1-12 instead of 0-23 (no AM/PM).'],
+  ['show_time_indicator', 'Show Time Indicator'], ['show_weekday', 'Show Weekday'], ['show_date', 'Show Date'],
+  ['use_global_hotkeys', 'Use Global Hotkeys'],
+];
+
+// Help tooltip: placed above (or below) the "?" and clamped so it never leaves the window.
+function showTip(anchor, text) {
+  const tt = $('tt'), m = 12;
+  tt.textContent = text;
+  tt.style.maxWidth = Math.min(260, innerWidth - 2 * m) + 'px';
+  const r = anchor.getBoundingClientRect(), w = tt.offsetWidth, h = tt.offsetHeight;
+  const left = Math.max(m, Math.min(innerWidth - w - m, r.left + r.width / 2 - w / 2));
+  const above = r.top - h - 8 >= m;
+  tt.style.left = left + 'px';
+  tt.style.top = (above ? r.top - h - 8 : r.bottom + 8) + 'px';
+  tt.classList.add('on');
+}
+const hideTip = () => $('tt').classList.remove('on');
+
+const save = () => invoke('save_settings', { settings: cfg });
+
+function applyTheme() {
+  if (cfg.theme === 'system') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = cfg.theme;
+}
+
+function pref(id) {
+  let p = cfg.calendars.find((c) => c.id === id);
+  if (!p) { p = { id, visible: true, productive: false }; cfg.calendars.push(p); }
+  return p;
+}
+
+// Reorder by dragging the handle (mouse events: HTML5 drag-and-drop is unreliable in this webview).
+let dragging = null;
+window.addEventListener('mousemove', (e) => {
+  if (!dragging) return;
+  const over = document.elementFromPoint(e.clientX, e.clientY)?.closest('.cal');
+  if (!over || over === dragging) return;
+  const r = over.getBoundingClientRect();
+  over.parentNode.insertBefore(dragging, e.clientY < r.top + r.height / 2 ? over : over.nextSibling);
+});
+window.addEventListener('mouseup', () => {
+  if (!dragging) return;
+  dragging.classList.remove('over');
+  dragging = null;
+  cfg.calendars = [...$('cal-list').children].map((r) => pref(r.dataset.id));
+  save();
+});
+
+// Per-calendar colour override: 12 shared colours (light/dark variants) or back to the calendar's own.
+function openPalette(row, p, c) {
+  const open = row.querySelector('.pal');
+  closePalettes();
+  if (open) return;
+  const pal = document.createElement('div');
+  pal.className = 'pal';
+  pal.onclick = (e) => e.stopPropagation();
+  for (const x of PALETTE) {
+    const b = document.createElement('button');
+    b.className = 'dot' + (p.color === x.id ? ' on' : '');
+    b.style.background = scTone(x, cfg.theme); b.title = x.id;
+    b.onclick = () => { p.color = x.id; save(); renderCalendars(); };
+    pal.appendChild(b);
+  }
+  const reset = document.createElement('button');
+  reset.className = 'rs'; reset.textContent = 'Use the calendar’s own colour';
+  reset.onclick = () => { p.color = null; save(); renderCalendars(); };
+  pal.appendChild(reset);
+  row.appendChild(pal);
+}
+const closePalettes = () => document.querySelectorAll('.pal').forEach((n) => n.remove());
+document.addEventListener('click', closePalettes);
+
+function renderCalendars() {
+  const order = cfg.calendars.map((c) => c.id);
+  const sorted = [...cals].sort((a, b) => {
+    const ia = order.indexOf(a.id), ib = order.indexOf(b.id);
+    return (ia < 0 ? 1e9 : ia) - (ib < 0 ? 1e9 : ib);
+  });
+  $('cal-list').innerHTML = '';
+  sorted.forEach((c) => {
+    const p = pref(c.id);
+    const row = document.createElement('div');
+    row.className = 'cal'; row.dataset.id = c.id;
+    row.innerHTML = `<span class="grip"><svg viewBox="0 0 12 12"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg></span><input type="checkbox" ${p.visible ? 'checked' : ''}>
+      <button class="sw" title="Change calendar colour" aria-label="Change calendar colour"></button><span class="name"></span>
+      <label><input type="checkbox" class="prod" ${p.productive ? 'checked' : ''}>Counts as productive</label>`;
+    row.querySelector('.name').textContent = c.title;
+    const swatch = row.querySelector('.sw');
+    const chosen = PALETTE.find((x) => x.id === p.color);
+    swatch.style.background = chosen ? scTone(chosen, cfg.theme) : scSoften(c.color, cfg.theme);
+    swatch.onclick = (e) => { e.stopPropagation(); openPalette(row, p, c); };
+    row.querySelector('input').onchange = (e) => { p.visible = e.target.checked; save(); };
+    row.querySelector('.prod').onchange = (e) => { p.productive = e.target.checked; save(); };
+    row.querySelector('.grip').onmousedown = (e) => { e.preventDefault(); dragging = row; row.classList.add('over'); };
+    $('cal-list').appendChild(row);
+  });
+}
+
+function renderToggles() {
+  $('toggles').innerHTML = '';
+  for (const [key, label, tip] of TOGGLES) {
+    const l = document.createElement('label');
+    l.innerHTML = `<input type="checkbox" ${cfg[key] ? 'checked' : ''}> <span></span>`;
+    l.querySelector('span').textContent = label;
+    if (tip) {
+      const q = document.createElement('span');
+      q.className = 'q'; q.textContent = '?'; q.dataset.tip = tip;
+      q.onclick = (e) => e.preventDefault();      // don't toggle the checkbox when asking for help
+      q.onmouseenter = () => showTip(q, tip);
+      q.onmouseleave = hideTip;
+      l.appendChild(q);
+    }
+    l.querySelector('input').onchange = (e) => { cfg[key] = e.target.checked; save(); };
+    $('toggles').appendChild(l);
+  }
+  renderSeg(); $('width').value = cfg.width; $('width-v').textContent = cfg.width + ' px';
+  $('pv-on').checked = cfg.edge_preview;
+  $('pv-w').value = cfg.strip_width; $('pv-w-v').textContent = cfg.strip_width + ' px';
+  $('pv-o').value = Math.round(cfg.preview_opacity * 100); $('pv-o-v').textContent = Math.round(cfg.preview_opacity * 100) + '%';
+}
+function renderSeg() {
+  for (const [id, key] of [['theme', 'theme'], ['side', 'side']]) {
+    $(id).querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.v === cfg[key]));
+  }
+}
+for (const key of ['theme', 'side']) {
+  $(key).onclick = (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    cfg[key] = b.dataset.v; renderSeg(); if (key === 'theme') applyTheme(); save();
+  };
+}
+$('width').oninput = (e) => { $('width-v').textContent = e.target.value + ' px'; };
+$('width').onchange = (e) => { cfg.width = +e.target.value; save(); };
+$('pv-on').onchange = (e) => { cfg.edge_preview = e.target.checked; save(); };
+$('pv-w').oninput = (e) => { $('pv-w-v').textContent = e.target.value + ' px'; };
+$('pv-w').onchange = (e) => { cfg.strip_width = +e.target.value; save(); };
+$('pv-o').oninput = (e) => { $('pv-o-v').textContent = e.target.value + '%'; };
+$('pv-o').onchange = (e) => { cfg.preview_opacity = +e.target.value / 100; save(); };
+
+// Shortcut recorder: builds a global-hotkey string like "Ctrl+Alt+Cmd+S".
+const KEYS = { ',': 'Comma', '.': 'Period', '/': 'Slash', ';': 'Semicolon', "'": 'Quote', '-': 'Minus', '=': 'Equal',
+  ' ': 'Space', ArrowUp: 'Up', ArrowDown: 'Down', ArrowLeft: 'Left', ArrowRight: 'Right' };
+document.querySelectorAll('[data-k]').forEach((input) => {
+  input.value = cfg_k(input.dataset.k);
+  input.onkeydown = (e) => {
+    e.preventDefault();
+    if (['Control', 'Alt', 'Meta', 'Shift'].includes(e.key)) return;
+    if (!(e.ctrlKey || e.altKey || e.metaKey)) return;
+    const key = KEYS[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : e.key);
+    const combo = [e.ctrlKey && 'Ctrl', e.altKey && 'Alt', e.shiftKey && 'Shift', e.metaKey && 'Cmd', key].filter(Boolean).join('+');
+    cfg.shortcuts[input.dataset.k] = combo; input.value = combo; save();
+  };
+});
+function cfg_k(k) { return cfg ? cfg.shortcuts[k] : ''; }
+
+// Productivity: hours in "productive" calendars.
+async function hoursBetween(a, b) {
+  const ids = cfg.calendars.filter((c) => c.productive).map((c) => c.id);
+  const evs = await invoke('get_events', { start: a, end: b });
+  const ms = evs.filter((e) => !e.all_day && ids.includes(e.calendar_id))
+    .reduce((sum, e) => sum + Math.max(0, Math.min(e.end, b) - Math.max(e.start, a)), 0);
+  return `${(ms / 3600000).toFixed(1)} h`;
+}
+async function renderProductivity() {
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  $('p-today').lastElementChild.textContent = await hoursBetween(d.getTime(), d.getTime() + 864e5);
+  $('p-week').lastElementChild.textContent = await hoursBetween(mon.getTime(), mon.getTime() + 7 * 864e5);
+}
+document.querySelectorAll('.stat').forEach((s) => (s.onclick = () => navigator.clipboard.writeText(s.lastElementChild.textContent)));
+
+document.querySelectorAll('#tabs button').forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll('#tabs button, section').forEach((e) => e.classList.remove('on'));
+    b.classList.add('on'); $(b.dataset.t).classList.add('on');
+    if (b.dataset.t === 'prod') renderProductivity();
+  };
+});
+
+window.__TAURI__.event.listen('settings-changed', async () => {
+  const fresh = await invoke('get_settings');
+  if (cfg) { cfg.theme = fresh.theme; applyTheme(); renderSeg(); }
+});
+
+(async () => {
+  cfg = await invoke('get_settings');
+  cals = await invoke('get_calendars');
+  applyTheme(); renderCalendars(); renderToggles();
+  document.querySelectorAll('[data-k]').forEach((i) => (i.value = cfg.shortcuts[i.dataset.k]));
+})();
+</script>
+</body>
+</html>
