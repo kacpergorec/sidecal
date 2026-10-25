@@ -111,7 +111,7 @@ Settings has six tabs.
 - **Shortcuts**: global hotkeys.
 - **Productivity**: hours spent in calendars you marked as productive, today and this week.
 
-Settings are stored in `~/Library/Application Support/pl.deploys.sidebarcalendar/settings.json`. Custom event
+Settings are stored in `~/Library/Application Support/com.kacpergorec.sidecal/settings.json`. Custom event
 colours and hidden events are stored there too, never in your calendar.
 
 ## How it works

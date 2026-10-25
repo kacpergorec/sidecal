@@ -1,7 +1,7 @@
 {
   "productName": "SideCal",
   "version": "0.1.0",
-  "identifier": "pl.deploys.sidebarcalendar",
+  "identifier": "com.kacpergorec.sidecal",
   "build": { "frontendDist": "ui" },
   "app": {
     "withGlobalTauri": true,
