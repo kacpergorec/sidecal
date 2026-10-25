@@ -31,6 +31,7 @@ Free sidebar calendar for macOS. Rust + Tauri 2 backend, plain HTML/CSS/JS UI (n
 - The landing mockup mirrors the real UI (same tokens, entry tiers, colours). Keep it faithful when the app UI changes.
 - The hero mockup is a pinned, scroll-driven story driven by `site.js`; timings live in CSS variable `--t`.
 - The site has a strict CSP meta tag: no inline scripts, no external resources.
+- Theme: `docs/theme.js` (loaded in `<head>`) sets `data-theme` from the saved choice or the system setting; CSS keys off `:root[data-theme]`, with a `prefers-color-scheme` fallback only when the attribute is absent. Use tokens/variables, not new media queries.
 - When app behaviour or settings change, update `README.md`, `docs/documentation.html`, `docs/index.html` (including the FAQ JSON-LD) and `docs/llms.txt` together.
 
 ## Checks before pushing

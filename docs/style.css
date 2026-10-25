@@ -6,14 +6,26 @@
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --mono: ui-monospace, 'SF Mono', Menlo, monospace;
   --ease: cubic-bezier(.16, 1, .3, 1);
+  --shimmer: rgba(255, 255, 255, .9); --tile-ring: 0 0 0 0 transparent;
+  --b2: #1d1d1f; --b3: #1d1d1f; --b4: #084CCF; --b5: #6f55a0; --b6: #1d1d1f; --b7: #1d1d1f;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
+:root[data-theme="dark"] {
     --bg: #000000; --alt: #111113; --surface: #1c1c1e; --line: #3a3a3c; --hair: #2c2c2e;
     --ink: #f5f5f7; --text: #e5e5ea; --muted: #a1a1a6;
     --link: #2997ff; --btn: #f5f5f7; --btn-ink: #1d1d1f; --btn-hover: #d2d2d7;
     color-scheme: dark;
+    --shimmer: rgba(255, 255, 255, .22); --tile-ring: inset 0 0 0 1px rgba(255, 255, 255, .2);
+    --b2: #f5f5f7; --b3: #f5f5f7; --b4: #7fa2ec; --b5: #a58bcb; --b6: #f5f5f7; --b7: #f5f5f7;
+  }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #000000; --alt: #111113; --surface: #1c1c1e; --line: #3a3a3c; --hair: #2c2c2e;
+    --ink: #f5f5f7; --text: #e5e5ea; --muted: #a1a1a6;
+    --link: #2997ff; --btn: #f5f5f7; --btn-ink: #1d1d1f; --btn-hover: #d2d2d7;
+    color-scheme: dark;
+    --shimmer: rgba(255, 255, 255, .22); --tile-ring: inset 0 0 0 1px rgba(255, 255, 255, .2);
+    --b2: #f5f5f7; --b3: #f5f5f7; --b4: #7fa2ec; --b5: #a58bcb; --b6: #f5f5f7; --b7: #f5f5f7;
   }
 }
 
@@ -80,15 +92,17 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .scene { flex: 1; min-height: 0; width: min(900px, 100% - 32px); display: flex; user-select: none; -webkit-user-select: none; cursor: default; }
 .desk { position: relative; flex: 1; max-height: 640px; border-radius: 24px; overflow: hidden; text-align: left; transition: background-color .55s;
   background:
-    radial-gradient(60% 80% at 15% 20%, #cfe0ff 0%, transparent 60%),
-    radial-gradient(55% 70% at 85% 30%, #f5d4ff 0%, transparent 60%),
-    radial-gradient(70% 80% at 55% 100%, #ffe1c9 0%, transparent 60%), #eef0f8; }
+    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .55) 42%, transparent 54%),
+    radial-gradient(90% 70% at 30% 110%, #3aa0e8 0, transparent 65%),
+    radial-gradient(80% 60% at 90% 0, #8fe0f0 0, transparent 60%),
+    linear-gradient(#cfeaff, #9fd0f5); }
 /* Gradients cannot transition, so the dark wallpaper fades in as a layer above the light one. */
 .desk::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .55s;
   background:
-    radial-gradient(60% 80% at 15% 20%, #1c2f5c 0%, transparent 60%),
-    radial-gradient(55% 70% at 85% 30%, #43245c 0%, transparent 60%),
-    radial-gradient(70% 80% at 55% 100%, #5c3320 0%, transparent 60%), #141420; }
+    linear-gradient(115deg, transparent 30%, rgba(120, 200, 255, .16) 42%, transparent 54%),
+    radial-gradient(90% 70% at 30% 110%, #0e5a96 0, transparent 65%),
+    radial-gradient(80% 60% at 90% 0, #0d6b7a 0, transparent 60%),
+    linear-gradient(#08203a, #06101f); }
 .scene[data-mode="dark"] .desk::before { opacity: 1; }
 .mbar { position: relative; z-index: 2; display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px; height: 28px; align-items: center; font-size: 13px; white-space: nowrap;
   color: #1d1d1f; background: rgba(255, 255, 255, .55); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); transition: background-color .55s, color .55s; }
@@ -266,8 +280,7 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
   color: var(--ink); font-size: 14px; font-weight: 500; letter-spacing: -.01em; }
 .chip:hover { text-decoration: none; border-color: var(--muted); }
 .chip::after { content: ""; position: absolute; inset: 0; width: 40%; pointer-events: none;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .22), transparent); animation: sweep 3.6s ease-in-out infinite; }
-@media (prefers-color-scheme: light) { .chip::after { background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .9), transparent); } }
+  background: linear-gradient(100deg, transparent, var(--shimmer), transparent); animation: sweep 3.6s ease-in-out infinite; }
 @keyframes sweep { 0% { transform: translateX(-120%); } 60%, 100% { transform: translateX(260%); } }
 .chip .st { width: 16px; height: 16px; flex: none; }
 .chip .st path { transform-origin: center; transform-box: fill-box; animation: twinkle 2.4s ease-in-out infinite; }
@@ -276,34 +289,32 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 .chip .who { display: inline-flex; align-items: center; gap: 8px; }
 .chip .swap { position: relative; width: 20px; height: 20px; flex: none; }
 .chip .tile { position: absolute; inset: 0; border-radius: 6px; display: grid; place-items: center; opacity: 0; transform: scale(.6) rotate(-20deg);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); transition: transform .5s var(--ease), opacity .35s; }
-@media (prefers-color-scheme: light) { .chip .tile { box-shadow: none; } }
+  box-shadow: var(--tile-ring); transition: transform .5s var(--ease), opacity .35s; }
 .chip .tile.on { opacity: 1; transform: none; }
 .chip .tile svg { width: 68%; height: 68%; fill: #fff; display: block; }
 /* The name box animates to the width of the current name, so the whole pill grows and shrinks with it. */
 .chip .names { display: inline-grid; overflow: hidden; height: 1.4em; transition: width .5s var(--ease); }
 .chip .names b { grid-area: 1 / 1; justify-self: start; font-weight: 600; white-space: nowrap; transform: translateY(110%); opacity: 0;
   transition: transform .5s var(--ease), opacity .4s; }
-/* each assistant name in its brand colour (near-black brands use the page ink) */
+/* each assistant name in its brand colour (near-black brands use the page ink; --b2.. switch with the theme) */
 .chip .names b:nth-child(1) { color: #D97757; }
-.chip .names b:nth-child(2) { color: #1d1d1f; }
-.chip .names b:nth-child(3) { color: #1d1d1f; }
-.chip .names b:nth-child(4) { color: #084CCF; }
-.chip .names b:nth-child(5) { color: #6f55a0; }
-.chip .names b:nth-child(6) { color: #1d1d1f; }
-.chip .names b:nth-child(7) { color: #1d1d1f; }
-@media (prefers-color-scheme: dark) {
-  .chip .names b:nth-child(1) { color: #D97757; }
-  .chip .names b:nth-child(2) { color: #f5f5f7; }
-  .chip .names b:nth-child(3) { color: #f5f5f7; }
-  .chip .names b:nth-child(4) { color: #7fa2ec; }
-  .chip .names b:nth-child(5) { color: #a58bcb; }
-  .chip .names b:nth-child(6) { color: #f5f5f7; }
-  .chip .names b:nth-child(7) { color: #f5f5f7; }
-}
+.chip .names b:nth-child(2) { color: var(--b2); }
+.chip .names b:nth-child(3) { color: var(--b3); }
+.chip .names b:nth-child(4) { color: var(--b4); }
+.chip .names b:nth-child(5) { color: var(--b5); }
+.chip .names b:nth-child(6) { color: var(--b6); }
+.chip .names b:nth-child(7) { color: var(--b7); }
 .chip .names b.on { transform: none; opacity: 1; }
 .chip .names b.off { transform: translateY(-110%); opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .chip::after, .chip .st path { animation: none; } .chip .names, .chip .names b, .chip .tile { transition: none; } }
 
 /* text for search engines and screen readers */
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+/* light / dark switch in the nav */
+.theme-toggle { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; transition: color .15s, background-color .15s; }
+.theme-toggle:hover { color: var(--ink); background: var(--alt); }
+.theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .moon { display: none; }

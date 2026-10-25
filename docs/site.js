@@ -39,7 +39,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   const now = story.querySelector('.now'), title = story.querySelector('.mbar b'), clk = story.querySelector('.clk');
   const caps = [...story.querySelectorAll('.cap')], dots = [...story.querySelectorAll('.dots i')];
   const N = caps.length, T0 = 8 * 60 + 40, T1 = 20 * 60 + 10;
-  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = () => document.documentElement.dataset.theme === 'dark';
   const dur = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? ' ' + (m % 60) + 'm' : ''}` : `${m}m`);
   const clamp = (v) => Math.min(1, Math.max(0, v));
   let step = -1, lastT = -1;
@@ -60,7 +60,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
       ghost.classList.toggle('on', i >= 2);
       side.classList.toggle('collapsed', i === 3);
       side.classList.toggle('island', i >= 4);
-      scene.dataset.mode = (i >= 5) === dark ? 'light' : 'dark';
+      scene.dataset.mode = (i >= 5) === isDark() ? 'light' : 'dark';
       lastT = -1;  // the ghost entry joins (or leaves) the clock logic
       setTimeout(tiers, 0);
     }
@@ -83,6 +83,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   let queued = false;
   const tick = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; draw(); }); };
   addEventListener('scroll', tick, { passive: true });
+  document.addEventListener('themechange', () => { step = -1; tick(); });
   addEventListener('resize', () => { tiers(); tick(); });
   tiers(); draw();
 })();
