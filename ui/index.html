@@ -80,6 +80,8 @@
   .hour { position: absolute; left: calc(var(--gutter) * -1); right: 0; border-top: 1px solid var(--line); pointer-events: none; }
   .hour span { position: absolute; left: 0; width: calc(var(--gutter) - 5px); text-align: right; top: -6px;
     background: var(--bg); color: var(--muted); font: 500 9px/12px var(--font); letter-spacing: 0; }
+  /* Labels sit centred on their line; the first one would stick out above the grid and get clipped. */
+  .hour[data-h="0"] span { top: 1px; }
   .ev { position: absolute; border-radius: 6px; padding: 0 6px; overflow: hidden; font-weight: 500; line-height: 1.2;
     font-size: var(--ev-fs, 11px); display: flex; align-items: center; gap: 6px; }
   .ev .tt { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
