@@ -1,0 +1,65 @@
+# Builds SideCal.app for Apple Silicon and Intel and attaches both to a GitHub release.
+# Publish a release: git tag v0.1.0 && git push origin v0.1.0
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: macos-15, target: aarch64-apple-darwin, name: apple-silicon }
+          - { runner: macos-15-intel, target: x86_64-apple-darwin, name: intel }
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+      - name: Build SideCal.app
+        run: |
+          cargo build --release --target ${{ matrix.target }}
+          APP=SideCal.app
+          mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+          cp target/${{ matrix.target }}/release/sidecal "$APP/Contents/MacOS/"
+          cp Info.plist "$APP/Contents/"
+          cp icons/icon.icns "$APP/Contents/Resources/"
+          codesign --force --sign - "$APP"
+      - name: Zip
+        run: ditto -c -k --sequesterRsrc --keepParent SideCal.app SideCal-${{ matrix.name }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SideCal-${{ matrix.name }}
+          path: SideCal-${{ matrix.name }}.zip
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/*.zip
+          body: |
+            ## Install
+            1. Download **SideCal-apple-silicon.zip** (M1 and newer) or **SideCal-intel.zip** (Intel Macs).
+            2. Unzip and drag **SideCal.app** to **Applications**.
+            3. First launch: right-click the app, choose **Open**, then **Open** again. The app is not notarized with an Apple Developer ID, so macOS asks once.
+
+            If macOS says the app is damaged, run `xattr -dr com.apple.quarantine /Applications/SideCal.app`.

@@ -387,9 +387,9 @@ fn spawn_auto_hide(app: AppHandle) {
                 continue;
             }
             if rt.auto_hidden.load(Ordering::Relaxed) {
-                // Collapsed to a strip: resting on it for 100 ms (the preview bars fade out
-                // meanwhile) expands the sidebar.
-                if inside && cur.y > MENU_BAR * scale {
+                // Collapsed to a strip: only touching the screen edge itself (not the whole strip)
+                // for 100 ms expands the sidebar.
+                if at_edge && cur.y > MENU_BAR * scale {
                     if entered_at.get_or_insert_with(Instant::now).elapsed() >= Duration::from_millis(100) {
                         set_collapsed(&app, false);
                         entered_at = None;

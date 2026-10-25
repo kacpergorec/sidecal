@@ -23,3 +23,9 @@ if (links.length && 'IntersectionObserver' in window) {
   }, { rootMargin: '-90px 0px -70% 0px' });
   links.forEach((a) => { const s = document.querySelector(a.getAttribute('href')); if (s) spy.observe(s); });
 }
+
+// Copy button on the terminal block.
+document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; } catch { b.textContent = 'Press Ctrl+C'; }
+  setTimeout(() => (b.textContent = 'Copy'), 1600);
+}));
