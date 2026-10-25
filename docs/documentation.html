@@ -6,7 +6,7 @@
 <title>SideCal documentation: install, use and configure the macOS sidebar calendar</title>
 <meta name="description" content="How to install, use and configure SideCal, the free open-source sidebar calendar for macOS: auto-hide, edge preview, time blocking by dragging, menu bar countdown, shortcuts and settings.">
 <meta name="author" content="Kacper Górec">
-<meta name="theme-color" content="#fbfbfa">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon-32x32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon-16x16.png" type="image/png" sizes="16x16">
@@ -16,14 +16,14 @@
 </head>
 <body>
 
-<header class="bar">
+<header class="nav">
   <div class="wrap">
-    <a class="mark" href="./"><img src="icon.png" alt="" width="28" height="28">SideCal</a>
-    <nav aria-label="Main">
-      <a href="./#features">Features</a>
+    <a class="brand" href="./"><img src="icon.png" alt="" width="26" height="26">SideCal</a>
+    <nav class="menu" aria-label="Main">
+      <a href="./#edge-preview">Features</a>
       <a href="./#faq">FAQ</a>
       <a class="keep" href="documentation.html" aria-current="page">Docs</a>
-      <a class="keep" data-repo="" href="#">GitHub</a>
+      <a class="gh keep" href="https://github.com/kacpergorec/sidecal">GitHub</a>
     </nav>
   </div>
 </header>
@@ -59,7 +59,7 @@
     <pre><code>./install.sh
 open /Applications/SideCal.app</code></pre>
     <p>The first build compiles about 400 Rust crates and takes a few minutes. Later builds take about a minute. To build without installing, run <code>./build-app.sh</code>; it creates <code>SideCal.app</code> in the project folder.</p>
-    <p class="note"><b>Tested on:</b> an Intel Mac with macOS 15. Apple Silicon should work but is untested.</p>
+    <p class="callout"><b>Tested on:</b> an Intel Mac with macOS 15. Apple Silicon should work but is untested.</p>
 
     <h2 id="first-launch">First launch</h2>
     <ol>
@@ -68,7 +68,7 @@ open /Applications/SideCal.app</code></pre>
       <li>Click the menu bar text to show or hide the sidebar. Right-click it for <b>Settings</b> and <b>Quit</b>.</li>
       <li>To start at login, copy the app to <code>/Applications</code> first, then turn on <b>Launch at Login</b> in Settings → General.</li>
     </ol>
-    <p class="note"><b>After updating:</b> the app is signed ad hoc, so macOS sees every rebuilt copy as a new app and asks for calendar access once more.</p>
+    <p class="callout"><b>After updating:</b> the app is signed ad hoc, so macOS sees every rebuilt copy as a new app and asks for calendar access once more.</p>
 
     <h2 id="using">Using the sidebar</h2>
     <table>
@@ -155,7 +155,7 @@ open /Applications/SideCal.app</code></pre>
 <footer>
   <div class="wrap">
     <span>SideCal by Kacper Górec. Open source under the Apache License 2.0.</span>
-    <span><a href="./">Home</a> · <a data-repo="" href="#">GitHub</a> · <a data-repo="/issues" href="#">Report an issue</a></span>
+    <span><a href="./">Home</a> · <a href="https://github.com/kacpergorec/sidecal">GitHub</a> · <a href="https://github.com/kacpergorec/sidecal/issues">Report an issue</a></span>
   </div>
 </footer>
 
