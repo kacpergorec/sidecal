@@ -5,6 +5,7 @@ Free sidebar calendar for macOS. Rust + Tauri 2 backend, plain HTML/CSS/JS UI (n
 ## Workflow
 
 - Commit and push straight to `main`. No feature branches or PRs unless asked.
+- Commit messages: plain and descriptive. No `Co-Authored-By` or `Claude-Session` trailers (the owner does not want session links in public history).
 - Release: Actions tab, Release workflow, Run workflow, enter a tag like `v0.2.0` (tag pushes from the cloud sandbox get a 403). The workflow stamps the version from the tag, builds Apple Silicon and Intel zips, publishes the release and writes `docs/latest.json`.
 - The cloud sandbox is Linux: the app cannot be compiled or run there (EventKit/objc code is macOS-only). Say so when shipping Rust changes. Pure logic can be checked in a scratch crate.
 
