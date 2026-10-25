@@ -1,5 +1,5 @@
-//! `sidecal --mcp`: a Model Context Protocol server over stdio, so Claude and other MCP clients can read
-//! and plan your calendar. It runs locally and has no network code; it reuses the EventKit bridge.
+//! `sidecal --mcp`: a Model Context Protocol server over stdio, so AI assistants (Claude, Cursor and other
+//! MCP clients) can read and plan your calendar. It runs locally and has no network code; it reuses the EventKit bridge.
 // Copyright 2026 Kacper Górec. Licensed under the Apache License, Version 2.0 (see LICENSE and NOTICE).
 
 use crate::{calendar, settings};

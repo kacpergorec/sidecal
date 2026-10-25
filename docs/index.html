@@ -107,10 +107,10 @@
       },
       {
         "@type": "Question",
-        "name": "Can Claude use SideCal?",
+        "name": "Can AI assistants use SideCal?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Run sidecal --mcp and SideCal acts as a local MCP server over stdio, with no network. Claude can list calendars, read events, add events and move or rename them. It cannot delete events, and events you hide in SideCal stay hidden from Claude."
+          "text": "Yes. Run sidecal --mcp and SideCal acts as a local MCP server over stdio, with no network. Any MCP client, such as Claude or Cursor, can list calendars, read events, add events and move or rename them. It cannot delete events, and events you hide in SideCal stay hidden from the assistant."
         }
       },
       {
@@ -220,28 +220,27 @@
   </div>
 </section>
 
-<section class="band" id="claude">
+<section class="band" id="ai">
   <div class="wrap">
-    <p class="eyebrow reveal">MCP</p>
-    <h2 class="reveal" style="--i:1">Let Claude plan your day.</h2>
-    <p class="sub reveal" style="--i:2">SideCal doubles as a local MCP server. Claude reads your calendar and time-blocks it for you. It runs over stdio, so nothing leaves your Mac.</p>
+    <p class="eyebrow reveal">AI assistants</p>
+    <h2 class="reveal" style="--i:1">Let your AI plan your day.</h2>
+    <p class="sub reveal" style="--i:2">SideCal doubles as a local MCP server, the open standard assistants use to talk to tools. Claude, Cursor and any other MCP client can read your calendar and time-block it. It runs over stdio, so nothing leaves your Mac.</p>
     <div class="ways mcp">
       <div class="way reveal" style="--i:1">
         <h3>Connect it</h3>
-        <p>One command for Claude Code. Claude Desktop setup is in the docs.</p>
+        <p>Point any MCP client at this command. Setup for Claude Code, Claude Desktop and Cursor is in the docs.</p>
         <div class="term">
-          <div class="bar"><span></span><span></span><span></span><em>Terminal</em><button type="button" class="copy" data-copy="claude mcp add sidecal -- /Applications/SideCal.app/Contents/MacOS/sidecal --mcp">Copy</button></div>
-<pre><code><span class="p">$</span> claude mcp add sidecal -- \
-    /Applications/SideCal.app/Contents/MacOS/sidecal --mcp</code></pre>
+          <div class="bar"><span></span><span></span><span></span><em>MCP server command</em><button type="button" class="copy" data-copy="/Applications/SideCal.app/Contents/MacOS/sidecal --mcp">Copy</button></div>
+<pre><code><span class="p">$</span> /Applications/SideCal.app/Contents/MacOS/sidecal --mcp</code></pre>
         </div>
-        <p class="small"><a href="documentation.html#claude">Setup guide</a></p>
+        <p class="small"><a href="documentation.html#ai">Setup guide</a></p>
       </div>
       <div class="way reveal" style="--i:2">
-        <h3>What Claude can do</h3>
+        <h3>What your AI can do</h3>
         <ul class="chips">
           <li>List your calendars</li><li>Read events in a date range</li><li>Add events (time blocking)</li><li>Move, resize and rename events</li>
         </ul>
-        <p class="small">It cannot delete events. Events and calendars you hide in SideCal stay hidden from Claude.</p>
+        <p class="small">It cannot delete events. Events and calendars you hide in SideCal stay hidden from the assistant.</p>
       </div>
     </div>
   </div>
@@ -304,7 +303,7 @@
       <details><summary>Which calendars does SideCal work with?</summary><p>Every calendar in the macOS Calendar app: iCloud, Google, Exchange, CalDAV and local calendars. Add the account in System Settings and it appears in SideCal.</p></details>
       <details><summary>Does SideCal show my next meeting in the menu bar?</summary><p>Yes. The menu bar shows the running event with the time left, for example “Design review (23m left)”, or the next event, for example “Standup in 12m”. You can hide the title or the duration in Settings.</p></details>
       <details><summary>Is my calendar data private?</summary><p>Yes. SideCal has no telemetry and no analytics. It reads your events locally through Apple&#x27;s EventKit and keeps its own settings in one JSON file on your Mac. The only network call it can make is an optional update check, which is off by default and downloads one small file.</p></details>
-      <details><summary>Can Claude use SideCal?</summary><p>Yes. Run sidecal --mcp and SideCal acts as a local MCP server over stdio, with no network. Claude can list calendars, read events, add events and move or rename them. It cannot delete events, and events you hide in SideCal stay hidden from Claude.</p></details>
+      <details><summary>Can AI assistants use SideCal?</summary><p>Yes. Run sidecal --mcp and SideCal acts as a local MCP server over stdio, with no network. Any MCP client, such as Claude or Cursor, can list calendars, read events, add events and move or rename them. It cannot delete events, and events you hide in SideCal stay hidden from the assistant.</p></details>
       <details><summary>Does SideCal update itself?</summary><p>Optionally. Turn on Check for Updates Automatically in Settings, or use Check for Updates in the menu bar menu. SideCal reads one small file (latest.json) from GitHub Pages, and installing an update always needs your click. With the setting off it makes no network calls.</p></details>
       <details><summary>Which Macs and macOS versions are supported?</summary><p>macOS 14 (Sonoma) or newer. SideCal is tested on an Intel Mac running macOS 15. Apple Silicon should work but is untested.</p></details>
       <details><summary>How do I install SideCal?</summary><p>Download SideCal-apple-silicon.zip or SideCal-intel.zip from the latest GitHub release, unzip it and drag SideCal.app to Applications. Or build it yourself: clone the repository and run ./install.sh (needs the Xcode Command Line Tools and Rust).</p></details>

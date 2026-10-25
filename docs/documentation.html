@@ -37,7 +37,7 @@
     <a href="#using">Using the sidebar</a>
     <a href="#edge-preview">Auto-hide and edge preview</a>
     <a href="#shortcuts">Shortcuts</a>
-    <a href="#claude">Use with Claude</a>
+    <a href="#ai">Use with AI assistants</a>
     <a href="#updates">Updates</a>
     <a href="#settings">Settings</a>
     <a href="#data">Your data</a>
@@ -114,12 +114,15 @@ open /Applications/SideCal.app</code></pre>
     </table>
     <p><kbd>Esc</kbd> closes the event form and menus.</p>
 
-    <h2 id="claude">Use with Claude (MCP)</h2>
-    <p>SideCal can run as a local <a href="https://modelcontextprotocol.io">MCP</a> server, so Claude can read your calendar and plan your day. It talks over stdio only; there is no network and no window.</p>
+    <h2 id="ai">Use with AI assistants (MCP)</h2>
+    <p>SideCal can run as a local <a href="https://modelcontextprotocol.io">MCP</a> server, so any MCP-capable assistant (Claude, Cursor and others) can read your calendar and plan your day. It talks over stdio only; there is no network and no window.</p>
+    <h3>Any MCP client</h3>
+    <p>Configure a stdio server with this command and the argument <code>--mcp</code>:</p>
+    <pre><code>/Applications/SideCal.app/Contents/MacOS/sidecal --mcp</code></pre>
     <h3>Claude Code</h3>
     <pre><code>claude mcp add sidecal -- /Applications/SideCal.app/Contents/MacOS/sidecal --mcp</code></pre>
-    <h3>Claude Desktop</h3>
-    <p>Add this to <code>claude_desktop_config.json</code> (Settings → Developer → Edit Config), then restart Claude:</p>
+    <h3>Claude Desktop, Cursor and other JSON configs</h3>
+    <p>Clients that read an <code>mcpServers</code> block use the same entry. In Claude Desktop it goes in <code>claude_desktop_config.json</code> (Settings → Developer → Edit Config); in Cursor, in its MCP settings. Restart the client afterwards:</p>
     <pre><code>{
   "mcpServers": {
     "sidecal": {
@@ -136,8 +139,8 @@ open /Applications/SideCal.app</code></pre>
       <tr><td><code>create_event</code></td><td>Adds an event: title, start, end and an optional calendar.</td></tr>
       <tr><td><code>update_event</code></td><td>Moves, resizes or renames an event. Only this occurrence of a repeating event changes.</td></tr>
     </table>
-    <p class="callout"><b>Safety:</b> there is no delete tool. Events and calendars you hide in SideCal stay hidden from Claude. Event titles are treated as data, never as instructions.</p>
-    <p class="callout"><b>Permission:</b> open SideCal once and choose Allow Full Access first. If Claude reports that access is missing, restart the MCP client; macOS may ask for the app that launched the server.</p>
+    <p class="callout"><b>Safety:</b> there is no delete tool. Events and calendars you hide in SideCal stay hidden from the assistant. Event titles are treated as data, never as instructions.</p>
+    <p class="callout"><b>Permission:</b> open SideCal once and choose Allow Full Access first. If the assistant reports that access is missing, restart the MCP client; macOS may ask for the app that launched the server.</p>
     <p>Times without an offset are read as your Mac's local time. Try: "Block two hours for deep work tomorrow afternoon, after my meetings."</p>
 
     <h2 id="updates">Updates</h2>

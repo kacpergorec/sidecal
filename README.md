@@ -39,7 +39,7 @@
 | **Your arrangement** | Recolour calendars and events, set calendar priority, hide single events. |
 | **Global shortcuts** | Show the sidebar, add an event or open settings from anywhere. |
 | **Fully customizable** | Side, width, island mode, auto-hide, edge preview, theme, 12 colours, timeline and menu bar options, remappable shortcuts. |
-| **Claude and MCP** | `sidecal --mcp` is a local MCP server: Claude can read your day and time-block it. No network. |
+| **AI assistants (MCP)** | `sidecal --mcp` is a local MCP server: Claude, Cursor or any MCP client can read your day and time-block it. No network. |
 | **Optional updates** | Check from the menu bar and install in one click. Off by default. |
 | **Tiny** | One native binary of about 7 MB. No background services. |
 
@@ -66,22 +66,30 @@ cd sidecal
 
 The first build takes a few minutes. `./build-app.sh` builds `SideCal.app` without installing it.
 
-## Use with Claude (MCP)
+## Use with AI assistants (MCP)
 
-SideCal can run as a local [MCP](https://modelcontextprotocol.io) server, so Claude can read your calendar and plan your day. It talks over stdio only, with no network.
+SideCal can run as a local [MCP](https://modelcontextprotocol.io) server, so any MCP-capable assistant (Claude, Cursor and others) can read your calendar and plan your day. It talks over stdio only, with no network.
+
+Point your client at this command:
+
+```
+/Applications/SideCal.app/Contents/MacOS/sidecal --mcp
+```
+
+Examples:
 
 ```bash
 # Claude Code
 claude mcp add sidecal -- /Applications/SideCal.app/Contents/MacOS/sidecal --mcp
 ```
 
-For Claude Desktop add this to `claude_desktop_config.json`:
-
 ```json
 { "mcpServers": { "sidecal": { "command": "/Applications/SideCal.app/Contents/MacOS/sidecal", "args": ["--mcp"] } } }
 ```
 
-Tools: `list_calendars`, `get_events`, `create_event`, `update_event`. There is no delete tool. Events and calendars you hide in SideCal stay hidden from Claude. Open SideCal once and allow calendar access first.
+The JSON block works for clients that use an `mcpServers` config, such as Claude Desktop and Cursor.
+
+Tools: `list_calendars`, `get_events`, `create_event`, `update_event`. There is no delete tool. Events and calendars you hide in SideCal stay hidden from the assistant. Open SideCal once and allow calendar access first.
 
 ## Updates
 
