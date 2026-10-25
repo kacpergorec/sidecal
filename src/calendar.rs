@@ -119,7 +119,7 @@ pub fn events(start_ms: f64, end_ms: f64) -> Vec<Event> {
 /// One event by its identifier (used by the MCP server to change only the fields it was given).
 pub fn event_by_id(id: &str) -> Result<Event, String> {
     autoreleasepool(|_| {
-        let store = EKEventStore::new();
+        let store = unsafe { EKEventStore::new() };
         find(&store, id).map(|ev| to_event(&ev))
     })
 }

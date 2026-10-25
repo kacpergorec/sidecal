@@ -38,7 +38,7 @@ fn civil_from_days(z: i64) -> (i64, i64, i64) {
 /// The Mac's UTC offset (seconds) at a moment, daylight saving included.
 fn local_offset(utc_secs: i64) -> i64 {
     let date = NSDate::dateWithTimeIntervalSince1970(utc_secs as f64);
-    unsafe { NSTimeZone::localTimeZone().secondsFromGMTForDate(&date) as i64 }
+    NSTimeZone::localTimeZone().secondsFromGMTForDate(&date) as i64
 }
 
 /// Parses "2026-10-27", "2026-10-27T14:00", "2026-10-27T14:00:00Z" or "...+01:00" into Unix milliseconds.
