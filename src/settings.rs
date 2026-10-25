@@ -175,7 +175,7 @@ pub fn set_launch_at_login(enabled: bool) -> Result<(), String> {
 </dict>
 </plist>
 "#,
-        exe.display()
+        exe.display().to_string().replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
     );
     if let Some(dir) = plist.parent() {
         std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;

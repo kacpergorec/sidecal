@@ -360,9 +360,12 @@ fn spawn_auto_hide(app: AppHandle) {
         loop {
             std::thread::sleep(Duration::from_millis(50));
             let rt = app.state::<Runtime>();
-            let s = rt.settings.lock().unwrap().clone();
+            let (auto_hide, side) = {
+                let s = rt.settings.lock().unwrap();
+                (s.auto_hide, s.side.clone())
+            };
             let Some(win) = app.get_webview_window("sidebar") else { continue };
-            if !s.auto_hide {
+            if !auto_hide {
                 left_at = None;
                 continue;
             }
@@ -373,7 +376,7 @@ fn spawn_auto_hide(app: AppHandle) {
             };
             let scale = mon.scale_factor();
             let screen_w = mon.size().width as f64;
-            let at_edge = if s.side == "left" { cur.x <= 1.0 } else { cur.x >= screen_w - 2.0 };
+            let at_edge = if side == "left" { cur.x <= 1.0 } else { cur.x >= screen_w - 2.0 };
             let inside = cur.x >= pos.x as f64
                 && cur.x <= (pos.x + size.width as i32) as f64
                 && cur.y >= pos.y as f64

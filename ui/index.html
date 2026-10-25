@@ -538,7 +538,8 @@ function openForm(ev, startMs, endMs) {
   const writable = calendars
     .filter((c) => c.writable && (!hiddenCal(c) || (ev && ev.calendar_id === c.id)))
     .sort((a, b) => idx(a) - idx(b));
-  $('f-cal').innerHTML = writable.map((c) => `<option value="${c.id}">${c.title}</option>`).join('');
+  // Calendar titles come from other apps/accounts: build options with textContent, never innerHTML.
+  $('f-cal').replaceChildren(...writable.map((c) => Object.assign(document.createElement('option'), { value: c.id, textContent: c.title })));
   const start = ev ? ev.start : startMs ?? (cfg.suggest_events ? nextFreeSlot() : Math.ceil(Date.now() / 900000) * 900000);
   $('f-title').value = ev ? ev.title : '';
   $('f-start').value = hm24(start);
