@@ -60,6 +60,7 @@ pub struct Settings {
     pub side: String,
     pub width: f64,
     pub show_date: bool,
+    pub show_header: bool,
     pub show_weekday: bool,
     /// Expanded sidebar floats with a transparent margin and rounded corners.
     pub island_mode: bool,
@@ -96,6 +97,7 @@ impl Default for Settings {
             side: "right".into(),
             width: 190.0,
             show_date: true,
+            show_header: true,
             show_weekday: true,
             island_mode: false,
             edge_preview: true,

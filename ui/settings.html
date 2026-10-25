@@ -9,7 +9,7 @@
   body { padding: 38px 44px 34px; min-width: 520px; }
   h1 { font: 500 28px/1.1 var(--serif); letter-spacing: -.03em; margin-bottom: 8px; }
   .intro { color: var(--muted); margin-bottom: 22px; max-width: 46ch; }
-  nav { display: flex; gap: 22px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  nav { display: flex; flex-wrap: wrap; gap: 0 20px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
   nav button { padding: 8px 0 9px; border: 0; background: none; color: var(--muted); font: 500 13px var(--font); cursor: pointer;
     border-bottom: 1.5px solid transparent; margin-bottom: -1px; transition: color .12s; }
   nav button:hover { color: var(--text); }
@@ -55,6 +55,9 @@
   .cal .name { flex: 1; font-weight: 500; }
   .cal label { color: var(--muted); font-size: 12px; }
 
+  .grp + .grp { margin-top: 30px; }
+  .grp h3 { font: 600 11px var(--font); letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .list { display: grid; gap: 14px; }
   .group { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; gap: 14px; }
   .row { display: flex; align-items: center; gap: 14px; }
   .row > span { width: 170px; flex: none; color: var(--muted); }
@@ -83,31 +86,44 @@
 <h1>SideCal</h1>
 <p class="intro">Keep an eye on your calendar from the screen edge and the menu bar.</p>
 <nav id="tabs">
-  <button data-t="cal" class="on">Calendars</button><button data-t="set">Settings</button>
-  <button data-t="keys">Shortcuts</button><button data-t="prod">Productivity</button>
+  <button data-t="cal" class="on">Calendars</button><button data-t="gen">General</button><button data-t="app">Appearance</button>
+  <button data-t="side">Sidebar</button><button data-t="keys">Shortcuts</button><button data-t="prod">Productivity</button>
 </nav>
 
 <section id="cal" class="on"><div id="cal-list"></div>
   <p class="hint">Untick the swatch to hide a calendar. Drag the handle to reorder: higher = priority (wins the left column and sits on top when events overlap). "Counts as productive" feeds the Productivity tab.</p></section>
 
-<section id="set">
-  <div class="grid" id="toggles"></div>
-  <div class="group">
+<!-- Checkbox settings are filled in from TOGGLES into the groups below (data-keys = which ones). -->
+<section id="gen">
+  <div class="grp" data-keys="launch_at_login"><h3>Startup</h3><div class="list"></div></div>
+  <div class="grp" data-keys="show_title_in_menu_bar,show_duration_in_menu_bar"><h3>Menu bar</h3><div class="list"></div></div>
+  <div class="grp" data-keys="suggest_events"><h3>New events</h3><div class="list"></div></div>
+</section>
+
+<section id="app">
+  <div class="grp"><h3>Theme</h3><div class="list">
     <div class="row"><span>Appearance</span>
       <div class="seg" id="theme"><button data-v="light">Light</button><button data-v="dark">Dark</button><button data-v="system" title="Follow the macOS appearance">Auto</button></div></div>
+  </div></div>
+  <div class="grp" data-keys="island_mode,show_header,show_weekday,show_date"><h3>Header &amp; layout</h3><div class="list"></div></div>
+  <div class="grp" data-keys="use_12_hour,show_time_indicator,display_all_day_events,show_glowing_border"><h3>Timeline</h3><div class="list"></div></div>
+</section>
+
+<section id="side">
+  <div class="grp" data-keys="float_above,auto_hide"><h3>Position &amp; behaviour</h3><div class="list">
     <div class="row"><span>Sidebar side</span>
-      <div class="seg" id="side"><button data-v="left">Left</button><button data-v="right">Right</button></div></div>
+      <div class="seg" id="side-seg"><button data-v="left">Left</button><button data-v="right">Right</button></div></div>
     <div class="row"><span>Sidebar width</span><input id="width" type="range" min="150" max="320" step="10"><b id="width-v"></b></div>
-  </div>
-  <div class="group">
-    <div class="row"><span>Edge preview</span>
-      <label><input type="checkbox" id="pv-on"> Leave faded entries on the screen edge while hidden</label></div>
+  </div></div>
+  <div class="grp"><h3>Edge preview</h3><div class="list">
+    <label><input type="checkbox" id="pv-on"> <span>Leave faded entries on the screen edge while hidden</span></label>
     <div class="row"><span>Preview width</span><input id="pv-w" type="range" min="7" max="40" step="1"><b id="pv-w-v"></b></div>
     <div class="row"><span>Preview opacity</span><input id="pv-o" type="range" min="20" max="100" step="5"><b id="pv-o-v"></b></div>
-  </div>
+  </div></div>
 </section>
 
 <section id="keys">
+  <div class="grp" data-keys="use_global_hotkeys"><div class="list"></div></div>
   <div class="row"><span>Show / hide sidebar</span><input type="text" data-k="toggle" readonly></div>
   <div class="row"><span>New event</span><input type="text" data-k="new_event" readonly></div>
   <div class="row"><span>Open settings</span><input type="text" data-k="settings" readonly></div>
@@ -133,11 +149,13 @@ const TOGGLES = [
   ['float_above', 'Keep Above Other Windows', 'Keeps the sidebar on top of other windows. Turn it off to let other windows cover it.'],
   ['auto_hide', 'Auto-Hide', 'Slides the sidebar to the screen edge when the cursor leaves it, and back out when you touch the edge.'],
   ['island_mode', 'Island Mode', 'Shows the open sidebar as a floating card: transparent margin around it and rounded corners, like a macOS window.'],
-  ['show_glowing_border', 'Highlight Active Event', 'Marks the event happening right now with a coloured ring. In the edge preview it is also drawn at full opacity while the other entries stay faded.'],
+  ['show_glowing_border', 'Highlight Active Event', 'Marks the event happening right now: a ring around its entry and a soft glow along the edge of the open sidebar, in the event colour. In the edge preview it is drawn at full opacity while the other entries stay faded.'],
   ['suggest_events', 'Suggest Events', 'When you add an event with the + button or the shortcut, it starts in the next free half-hour slot and lasts an hour, instead of starting right now.'],
   ['show_duration_in_menu_bar', 'Show Event Duration in Menu Bar'], ['show_title_in_menu_bar', 'Show Event Title in Menu Bar'],
   ['use_12_hour', 'Use 12-Hour Time Format', 'Shows 1-12 instead of 0-23 (no AM/PM).'],
-  ['show_time_indicator', 'Show Time Indicator'], ['show_weekday', 'Show Weekday'], ['show_date', 'Show Date'],
+  ['show_time_indicator', 'Show Time Indicator'],
+  ['show_header', 'Show Header', 'Hides the whole header: weekday, date and the settings and + buttons. Right-click the board for Settings; use the shortcut to add an event.'],
+  ['show_weekday', 'Show Weekday'], ['show_date', 'Show Date'],
   ['use_global_hotkeys', 'Use Global Hotkeys'],
 ];
 
@@ -195,7 +213,7 @@ function openPalette(row, p, c) {
   pal.onclick = (e) => e.stopPropagation();
   for (const x of PALETTE) {
     const b = document.createElement('button');
-    b.className = 'dot' + (p.color === x.id ? ' on' : '');
+    b.className = 'dot' + (scFind(p.color) === x ? ' on' : '');
     b.style.background = scTone(x, cfg.theme); b.title = x.id;
     b.onclick = () => { p.color = x.id; save(); renderCalendars(); };
     pal.appendChild(b);
@@ -225,7 +243,7 @@ function renderCalendars() {
       <label><input type="checkbox" class="prod" ${p.productive ? 'checked' : ''}>Counts as productive</label>`;
     row.querySelector('.name').textContent = c.title;
     const swatch = row.querySelector('.sw');
-    const chosen = PALETTE.find((x) => x.id === p.color);
+    const chosen = scFind(p.color);
     swatch.style.background = chosen ? scTone(chosen, cfg.theme) : scSoften(c.color, cfg.theme);
     swatch.onclick = (e) => { e.stopPropagation(); openPalette(row, p, c); };
     row.querySelector('input').onchange = (e) => { p.visible = e.target.checked; save(); };
@@ -236,34 +254,40 @@ function renderCalendars() {
 }
 
 function renderToggles() {
-  $('toggles').innerHTML = '';
-  for (const [key, label, tip] of TOGGLES) {
-    const l = document.createElement('label');
-    l.innerHTML = `<input type="checkbox" ${cfg[key] ? 'checked' : ''}> <span></span>`;
-    l.querySelector('span').textContent = label;
-    if (tip) {
-      const q = document.createElement('span');
-      q.className = 'q'; q.textContent = '?'; q.dataset.tip = tip;
-      q.onclick = (e) => e.preventDefault();      // don't toggle the checkbox when asking for help
-      q.onmouseenter = () => showTip(q, tip);
-      q.onmouseleave = hideTip;
-      l.appendChild(q);
+  const byKey = Object.fromEntries(TOGGLES.map((x) => [x[0], x]));
+  document.querySelectorAll('.grp[data-keys]').forEach((grp) => {
+    let box = grp.querySelector('.tg');
+    if (!box) { box = document.createElement('div'); box.className = 'tg list'; grp.querySelector('.list').appendChild(box); }
+    box.innerHTML = '';
+    for (const key of grp.dataset.keys.split(',')) {
+      const [, label, tip] = byKey[key];
+      const l = document.createElement('label');
+      l.innerHTML = `<input type="checkbox" ${cfg[key] ? 'checked' : ''}> <span></span>`;
+      l.querySelector('span').textContent = label;
+      if (tip) {
+        const q = document.createElement('span');
+        q.className = 'q'; q.textContent = '?'; q.dataset.tip = tip;
+        q.onclick = (e) => e.preventDefault();      // don't toggle the checkbox when asking for help
+        q.onmouseenter = () => showTip(q, tip);
+        q.onmouseleave = hideTip;
+        l.appendChild(q);
+      }
+      l.querySelector('input').onchange = (e) => { cfg[key] = e.target.checked; save(); };
+      box.appendChild(l);
     }
-    l.querySelector('input').onchange = (e) => { cfg[key] = e.target.checked; save(); };
-    $('toggles').appendChild(l);
-  }
+  });
   renderSeg(); $('width').value = cfg.width; $('width-v').textContent = cfg.width + ' px';
   $('pv-on').checked = cfg.edge_preview;
   $('pv-w').value = cfg.strip_width; $('pv-w-v').textContent = cfg.strip_width + ' px';
   $('pv-o').value = Math.round(cfg.preview_opacity * 100); $('pv-o-v').textContent = Math.round(cfg.preview_opacity * 100) + '%';
 }
 function renderSeg() {
-  for (const [id, key] of [['theme', 'theme'], ['side', 'side']]) {
+  for (const [id, key] of [['theme', 'theme'], ['side-seg', 'side']]) {
     $(id).querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.v === cfg[key]));
   }
 }
-for (const key of ['theme', 'side']) {
-  $(key).onclick = (e) => {
+for (const [id, key] of [['theme', 'theme'], ['side-seg', 'side']]) {
+  $(id).onclick = (e) => {
     const b = e.target.closest('button'); if (!b) return;
     cfg[key] = b.dataset.v; renderSeg(); if (key === 'theme') applyTheme(); save();
   };
