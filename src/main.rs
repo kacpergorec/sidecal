@@ -2,6 +2,7 @@
 // Copyright 2026 Kacper Górec. Licensed under the Apache License, Version 2.0 (see LICENSE and NOTICE).
 
 mod calendar;
+mod mcp;
 mod settings;
 
 use settings::Settings;
@@ -416,6 +417,11 @@ fn spawn_auto_hide(app: AppHandle) {
 }
 
 fn main() {
+    // `sidecal --mcp`: local MCP server over stdio for Claude and other MCP clients (no window, no network).
+    if std::env::args().any(|a| a == "--mcp") {
+        mcp::run();
+        return;
+    }
     tauri::Builder::default()
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .invoke_handler(tauri::generate_handler![

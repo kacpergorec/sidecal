@@ -39,6 +39,7 @@
 | **Your arrangement** | Recolour calendars and events, set calendar priority, hide single events. |
 | **Global shortcuts** | Show the sidebar, add an event or open settings from anywhere. |
 | **Fully customizable** | Side, width, island mode, auto-hide, edge preview, theme, 12 colours, timeline and menu bar options, remappable shortcuts. |
+| **Claude and MCP** | `sidecal --mcp` is a local MCP server: Claude can read your day and time-block it. No network. |
 | **Tiny** | One native binary of about 7 MB. No background services. |
 
 ## Install
@@ -63,6 +64,23 @@ cd sidecal
 ```
 
 The first build takes a few minutes. `./build-app.sh` builds `SideCal.app` without installing it.
+
+## Use with Claude (MCP)
+
+SideCal can run as a local [MCP](https://modelcontextprotocol.io) server, so Claude can read your calendar and plan your day. It talks over stdio only, with no network.
+
+```bash
+# Claude Code
+claude mcp add sidecal -- /Applications/SideCal.app/Contents/MacOS/sidecal --mcp
+```
+
+For Claude Desktop add this to `claude_desktop_config.json`:
+
+```json
+{ "mcpServers": { "sidecal": { "command": "/Applications/SideCal.app/Contents/MacOS/sidecal", "args": ["--mcp"] } } }
+```
+
+Tools: `list_calendars`, `get_events`, `create_event`, `update_event`. There is no delete tool. Events and calendars you hide in SideCal stay hidden from Claude. Open SideCal once and allow calendar access first.
 
 ## Privacy
 

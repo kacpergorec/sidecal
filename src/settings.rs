@@ -146,6 +146,17 @@ pub fn load(app: &AppHandle) -> Settings {
         .unwrap_or_default()
 }
 
+/// Loads the settings file without a running app (MCP mode). Same location as Tauri's app config dir.
+pub fn load_standalone() -> Settings {
+    std::env::var("HOME")
+        .ok()
+        .map(|h| PathBuf::from(h).join("Library/Application Support/com.kacpergorec.sidecal/settings.json"))
+        .and_then(|p| std::fs::read_to_string(p).ok())
+        .and_then(|s| serde_json::from_str::<Settings>(&s).ok())
+        .map(Settings::sanitized)
+        .unwrap_or_default()
+}
+
 pub fn save(app: &AppHandle, settings: &Settings) -> Result<(), String> {
     let p = path(app).ok_or("No config dir")?;
     if let Some(dir) = p.parent() {

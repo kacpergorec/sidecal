@@ -91,29 +91,36 @@ pub fn calendars() -> Vec<Calendar> {
     })
 }
 
+fn to_event(ev: &EKEvent) -> Event {
+    unsafe {
+        let cal = ev.calendar();
+        Event {
+            id: ev.eventIdentifier().map(|s| s.to_string()).unwrap_or_default(),
+            title: ev.title().to_string(),
+            calendar_id: cal.as_ref().map(|c| c.calendarIdentifier().to_string()).unwrap_or_default(),
+            calendar: cal.as_ref().map(|c| c.title().to_string()).unwrap_or_default(),
+            color: cal.as_ref().map(|c| hex(&c.color())).unwrap_or_else(|| "#3b82f6".into()),
+            start: ev.startDate().timeIntervalSince1970() * 1000.0,
+            end: ev.endDate().timeIntervalSince1970() * 1000.0,
+            all_day: ev.isAllDay(),
+            editable: cal.map(|c| c.allowsContentModifications()).unwrap_or(false),
+        }
+    }
+}
+
 pub fn events(start_ms: f64, end_ms: f64) -> Vec<Event> {
     autoreleasepool(|_| unsafe {
         let store = EKEventStore::new();
         let predicate = store.predicateForEventsWithStartDate_endDate_calendars(&date(start_ms), &date(end_ms), None);
+        store.eventsMatchingPredicate(&predicate).iter().map(|ev| to_event(&ev)).collect()
+    })
+}
 
-        store
-            .eventsMatchingPredicate(&predicate)
-            .iter()
-            .map(|ev| {
-                let cal = ev.calendar();
-                Event {
-                    id: ev.eventIdentifier().map(|s| s.to_string()).unwrap_or_default(),
-                    title: ev.title().to_string(),
-                    calendar_id: cal.as_ref().map(|c| c.calendarIdentifier().to_string()).unwrap_or_default(),
-                    calendar: cal.as_ref().map(|c| c.title().to_string()).unwrap_or_default(),
-                    color: cal.as_ref().map(|c| hex(&c.color())).unwrap_or_else(|| "#3b82f6".into()),
-                    start: ev.startDate().timeIntervalSince1970() * 1000.0,
-                    end: ev.endDate().timeIntervalSince1970() * 1000.0,
-                    all_day: ev.isAllDay(),
-                    editable: cal.map(|c| c.allowsContentModifications()).unwrap_or(false),
-                }
-            })
-            .collect()
+/// One event by its identifier (used by the MCP server to change only the fields it was given).
+pub fn event_by_id(id: &str) -> Result<Event, String> {
+    autoreleasepool(|_| {
+        let store = EKEventStore::new();
+        find(&store, id).map(|ev| to_event(&ev))
     })
 }
 
