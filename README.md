@@ -12,7 +12,6 @@
 
 <p align="center">
 <a href="https://github.com/kacpergorec/sidecal/releases/latest"><img src="https://img.shields.io/github/v/release/kacpergorec/sidecal?style=flat-square" alt="Latest release"></a>
-<a href="https://github.com/kacpergorec/sidecal/releases"><img src="https://img.shields.io/github/downloads/kacpergorec/sidecal/total?style=flat-square" alt="Downloads"></a>
 <a href="https://github.com/kacpergorec/sidecal/stargazers"><img src="https://img.shields.io/github/stars/kacpergorec/sidecal?style=flat-square" alt="Stars"></a>
 <a href="LICENSE"><img src="https://img.shields.io/github/license/kacpergorec/sidecal?style=flat-square" alt="License"></a>
 <img src="https://img.shields.io/badge/macOS-14%2B-000000?style=flat-square&logo=apple&logoColor=white" alt="macOS 14+">
