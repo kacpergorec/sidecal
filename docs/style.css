@@ -46,14 +46,17 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .wrap { width: min(1080px, 100% - 48px); margin-inline: auto; }
 
 /* ---- navigation ---- */
-.nav { position: sticky; top: 0; z-index: 30; height: 52px; border-bottom: 1px solid var(--hair);
-  background: color-mix(in srgb, var(--bg) 78%, transparent); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
-.nav .wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; }
+/* The bar is a floating glass pill; the header keeps its 52px so the pinned hero stage offsets stay put. */
+.nav { position: sticky; top: 0; z-index: 30; height: 52px; display: flex; justify-content: center; align-items: center; padding: 0 12px; pointer-events: none; }
+.nav .wrap { pointer-events: auto; width: auto; max-width: 100%; margin: 0; height: 42px; display: flex; align-items: center; gap: 36px; padding: 0 8px 0 16px;
+  border: 1px solid var(--hair); border-radius: 980px; box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+  background: color-mix(in srgb, var(--bg) 72%, transparent); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
 .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); font-weight: 600; font-size: 17px; letter-spacing: -.02em; }
 .brand:hover { text-decoration: none; }
 .brand img { width: 26px; height: 26px; border-radius: 6px; }
-.menu { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+.menu { display: flex; align-items: center; gap: 22px; font-size: 14px; }
 .menu a { color: var(--muted); transition: color .15s; }
+.menu .theme-toggle { margin-inline: -6px; }
 .menu a:hover, .menu a[aria-current] { color: var(--ink); text-decoration: none; }
 .menu .gh { color: var(--btn-ink); background: var(--btn); padding: 6px 15px; border-radius: 980px; font-weight: 500; transition: background-color .15s; }
 .menu .gh:hover { background: var(--btn-hover); color: var(--btn-ink); }
@@ -236,7 +239,7 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
   .toc a { border-left: 0; border-bottom: 1px solid var(--line); white-space: nowrap; }
   .band { padding: 80px 0; }
 }
-@media (max-width: 600px) { .menu a:not(.keep) { display: none; } .menu { gap: 18px; } .hero { padding-top: 56px; } .mbar { gap: 10px; padding: 0 10px; font-size: 12px; } .mbar .d { display: none; } }
+@media (max-width: 600px) { .menu a:not(.keep) { display: none; } .menu { gap: 14px; } .nav .wrap { gap: 18px; } .hero { padding-top: 56px; } .mbar { gap: 10px; padding: 0 10px; font-size: 12px; } .mbar .d { display: none; } }
 @media (prefers-reduced-motion: reduce) { .side, .side *, .cap, .dots i, .desk, .desk::before, .mbar { transition: none !important; } }
 
 /* ---- badge, install cards, terminal ---- */
