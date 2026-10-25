@@ -38,6 +38,7 @@
 | **Native look** | Light, dark or follow macOS. Twelve colours, island mode, highlight for the running event. |
 | **Your arrangement** | Recolour calendars and events, set calendar priority, hide single events. |
 | **Global shortcuts** | Show the sidebar, add an event or open settings from anywhere. |
+| **Fully customizable** | Side, width, island mode, auto-hide, edge preview, theme, 12 colours, timeline and menu bar options, remappable shortcuts. |
 | **Tiny** | One native binary of about 7 MB. No background services. |
 
 ## Install
