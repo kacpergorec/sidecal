@@ -261,7 +261,7 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 .term pre { max-width: 100%; }
 
 /* MCP chip above the hero: glass pill, twinkling sparkles, rolling assistant names, shimmer sweep */
-.chip { position: relative; overflow: hidden; display: flex; align-items: center; gap: 9px; width: max-content; max-width: 100%; margin: 0 auto 26px;
+.chip { position: relative; overflow: hidden; display: flex; align-items: center; gap: 9px; width: max-content; max-width: 100%; margin: 22px auto 0;
   padding: 7px 15px 7px 11px; border-radius: 980px; border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 70%, transparent);
   color: var(--ink); font-size: 14px; font-weight: 500; letter-spacing: -.01em; }
 .chip:hover { text-decoration: none; border-color: var(--muted); }
@@ -283,7 +283,27 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 /* The name box animates to the width of the current name, so the whole pill grows and shrinks with it. */
 .chip .names { display: inline-grid; overflow: hidden; height: 1.4em; transition: width .5s var(--ease); }
 .chip .names b { grid-area: 1 / 1; justify-self: start; font-weight: 600; white-space: nowrap; transform: translateY(110%); opacity: 0;
-  transition: transform .5s var(--ease), opacity .4s; background: linear-gradient(90deg, #ff6a8b, #af52de, #4f8cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  transition: transform .5s var(--ease), opacity .4s; }
+/* each assistant name in its brand colour (near-black brands use the page ink) */
+.chip .names b:nth-child(1) { color: #D97757; }
+.chip .names b:nth-child(2) { color: #1d1d1f; }
+.chip .names b:nth-child(3) { color: #1d1d1f; }
+.chip .names b:nth-child(4) { color: #084CCF; }
+.chip .names b:nth-child(5) { color: #6f55a0; }
+.chip .names b:nth-child(6) { color: #1d1d1f; }
+.chip .names b:nth-child(7) { color: #1d1d1f; }
+@media (prefers-color-scheme: dark) {
+  .chip .names b:nth-child(1) { color: #D97757; }
+  .chip .names b:nth-child(2) { color: #f5f5f7; }
+  .chip .names b:nth-child(3) { color: #f5f5f7; }
+  .chip .names b:nth-child(4) { color: #7fa2ec; }
+  .chip .names b:nth-child(5) { color: #a58bcb; }
+  .chip .names b:nth-child(6) { color: #f5f5f7; }
+  .chip .names b:nth-child(7) { color: #f5f5f7; }
+}
 .chip .names b.on { transform: none; opacity: 1; }
 .chip .names b.off { transform: translateY(-110%); opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .chip::after, .chip .st path { animation: none; } .chip .names, .chip .names b, .chip .tile { transition: none; } }
+
+/* text for search engines and screen readers */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
