@@ -244,10 +244,18 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 .term .copy:hover { background: #3a3a3c; }
 .term pre { background: none; border-radius: 0; margin: 0; padding: 16px 18px; color: #f5f5f7; font-size: 12px; white-space: pre; overflow-x: auto; }
 .term .p { color: #34c759; user-select: none; margin-right: 8px; }
-@media (max-width: 860px) { .ways { grid-template-columns: 1fr; } .hide-s { display: none; } }
+@media (max-width: 860px) { .ways { grid-template-columns: minmax(0, 1fr); } .hide-s { display: none; } }
 
 /* customization cards */
 .cust { margin-top: 48px; }
 .band.alt .grid > div { background: var(--bg); }
 .chips { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .chips li { padding: 5px 12px; border-radius: 980px; border: 1px solid var(--line); color: var(--muted); font-size: 14px; line-height: 1.3; }
+
+/* MCP section */
+.ways.mcp { margin-top: 48px; }
+.ways.mcp .way .chips { margin: 18px 0 0; }
+.band:not(.alt) .way { background: var(--alt); }
+
+.way { min-width: 0; }
+.term pre { max-width: 100%; }

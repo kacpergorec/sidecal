@@ -20,7 +20,7 @@
 </p>
 
 - **No telemetry.**
-- **No network code.** SideCal never talks to the internet.
+- **No network by default.** The only network call is an optional update check (off by default): one small file, once a day.
 - **Built in Rust.**
 - **Local only.** It reads your calendar through Apple's EventKit.
 - **No account, no analytics, no Electron.**
@@ -40,6 +40,7 @@
 | **Global shortcuts** | Show the sidebar, add an event or open settings from anywhere. |
 | **Fully customizable** | Side, width, island mode, auto-hide, edge preview, theme, 12 colours, timeline and menu bar options, remappable shortcuts. |
 | **Claude and MCP** | `sidecal --mcp` is a local MCP server: Claude can read your day and time-block it. No network. |
+| **Optional updates** | Check from the menu bar and install in one click. Off by default. |
 | **Tiny** | One native binary of about 7 MB. No background services. |
 
 ## Install
@@ -82,9 +83,13 @@ For Claude Desktop add this to `claude_desktop_config.json`:
 
 Tools: `list_calendars`, `get_events`, `create_event`, `update_event`. There is no delete tool. Events and calendars you hide in SideCal stay hidden from Claude. Open SideCal once and allow calendar access first.
 
+## Updates
+
+Updates are optional. Use **Check for Updates…** in the menu bar menu, or turn on **Check for Updates Automatically** in Settings. SideCal fetches [`latest.json`](https://kacpergorec.github.io/sidecal/latest.json) from GitHub Pages once a day, verifies the download with SHA-256, and only installs when you click.
+
 ## Privacy
 
-SideCal has no network code and no telemetry. Events are read through EventKit and stay in your calendar. Its own settings live in one JSON file on your Mac. You can verify this: the source is short and has no HTTP client.
+SideCal has no telemetry and no analytics. It makes no network calls unless you turn on the optional update check. Events are read through EventKit and stay in your calendar. Its own settings live in one JSON file on your Mac. You can verify this: the source is short and has no HTTP client.
 
 ## Contributing
 

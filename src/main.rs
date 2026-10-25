@@ -4,6 +4,7 @@
 mod calendar;
 mod mcp;
 mod settings;
+mod updater;
 
 use settings::Settings;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
@@ -474,13 +475,16 @@ fn main() {
                 .build()?;
 
             let settings_item = MenuItem::with_id(app, "settings", "Settings…", true, Some("Cmd+,"))?;
+            let update_item = MenuItem::with_id(app, "update", updater::CHECK_TITLE, true, None::<&str>)?;
+            updater::init(&handle, update_item.clone());
             let quit = MenuItem::with_id(app, "quit", "Quit SideCal", true, None::<&str>)?;
             TrayIconBuilder::with_id(TRAY_ID)
                 .title("Calendar")
-                .menu(&Menu::with_items(app, &[&settings_item, &quit])?)
+                .menu(&Menu::with_items(app, &[&settings_item, &update_item, &quit])?)
                 .show_menu_on_left_click(false)
                 .on_menu_event(|app, e| match e.id().as_ref() {
                     "settings" => show_settings(app),
+                    "update" => updater::on_click(app),
                     "quit" => app.exit(0),
                     _ => {}
                 })
@@ -493,6 +497,7 @@ fn main() {
 
             apply(&handle);
             calendar::request_access();
+            updater::spawn_auto_check(handle.clone());
             spawn_auto_hide(handle);
             Ok(())
         })

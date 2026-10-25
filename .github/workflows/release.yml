@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 jobs:
   build:
@@ -32,6 +33,16 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
+      - name: Stamp the version from the tag
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          V="${TAG#v}"
+          if echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            perl -0pi -e 's/^version = "[^"]*"/version = "'"$V"'"/m' Cargo.toml
+            perl -pi -e 's#(<key>CFBundle(?:Short)?Version(?:String)?</key><string>)[^<]*#${1}'"$V"'#' Info.plist
+            perl -pi -e 's/("version":\s*")[^"]*/${1}'"$V"'/' tauri.conf.json
+          fi
       - name: Build SideCal.app
         env:
           CARGO_PROFILE_RELEASE_LTO: fat
@@ -57,6 +68,9 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') || inputs.tag != ''
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/download-artifact@v4
         with:
           path: dist
@@ -74,3 +88,30 @@ jobs:
             3. First launch: right-click the app, choose **Open**, then **Open** again. The app is not notarized with an Apple Developer ID, so macOS asks once.
 
             If macOS says the app is damaged, run `xattr -dr com.apple.quarantine /Applications/SideCal.app`.
+
+            Already installed? Use **Check for Updates…** in the SideCal menu bar menu.
+      # SideCal's optional update check reads docs/latest.json from GitHub Pages.
+      - name: Publish latest.json
+        continue-on-error: true
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V="${TAG#v}"
+          echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || exit 0
+          BASE="https://github.com/${{ github.repository }}/releases/download/$TAG"
+          cat > docs/latest.json <<EOF
+          {
+            "version": "$V",
+            "assets": {
+              "aarch64": { "url": "$BASE/SideCal-apple-silicon.zip", "sha256": "$(sha256sum dist/SideCal-apple-silicon.zip | cut -d' ' -f1)" },
+              "x86_64": { "url": "$BASE/SideCal-intel.zip", "sha256": "$(sha256sum dist/SideCal-intel.zip | cut -d' ' -f1)" }
+            }
+          }
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/latest.json
+          git commit -m "latest.json for $TAG" || exit 0
+          git push origin HEAD:main
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

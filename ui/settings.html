@@ -96,7 +96,7 @@
 
 <!-- Checkbox settings are filled in from TOGGLES into the groups below (data-keys = which ones). -->
 <section id="gen">
-  <div class="grp" data-keys="launch_at_login"><h3>Startup</h3><div class="list"></div></div>
+  <div class="grp" data-keys="launch_at_login,check_for_updates"><h3>Startup</h3><div class="list"></div></div>
   <div class="grp" data-keys="show_title_in_menu_bar,show_duration_in_menu_bar"><h3>Menu bar</h3><div class="list"></div></div>
   <div class="grp" data-keys="suggest_events"><h3>New events</h3><div class="list"></div></div>
 </section>
@@ -147,7 +147,7 @@ let cfg, cals = [];
 
 // [key, label, optional help text shown in the "?" tooltip]
 const TOGGLES = [
-  ['launch_at_login', 'Launch at Login'], ['display_all_day_events', 'Display All Day Events'],
+  ['launch_at_login', 'Launch at Login'], ['check_for_updates', 'Check for Updates Automatically', 'Off by default. When on, SideCal downloads one small file (latest.json from kacpergorec.github.io) once a day and nothing else is sent. You can also use Check for Updates in the menu bar menu at any time. Installing an update always needs your click.'], ['display_all_day_events', 'Display All Day Events'],
   ['float_above', 'Keep Above Other Windows', 'Keeps the sidebar on top of other windows. Turn it off to let other windows cover it.'],
   ['auto_hide', 'Auto-Hide', 'Slides the sidebar to the screen edge when the cursor leaves it, and back out when you touch the edge.'],
   ['island_mode', 'Island Mode', 'Shows the open sidebar as a floating card: transparent margin around it and rounded corners, like a macOS window.'],

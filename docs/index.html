@@ -102,7 +102,23 @@
         "name": "Is my calendar data private?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. SideCal has no telemetry, no network code and no analytics. It reads your events locally through Apple's EventKit and keeps its own settings in one JSON file on your Mac."
+          "text": "Yes. SideCal has no telemetry and no analytics. It reads your events locally through Apple's EventKit and keeps its own settings in one JSON file on your Mac. The only network call it can make is an optional update check, which is off by default and downloads one small file."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can Claude use SideCal?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Run sidecal --mcp and SideCal acts as a local MCP server over stdio, with no network. Claude can list calendars, read events, add events and move or rename them. It cannot delete events, and events you hide in SideCal stay hidden from Claude."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SideCal update itself?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Optionally. Turn on Check for Updates Automatically in Settings, or use Check for Updates in the menu bar menu. SideCal reads one small file (latest.json) from GitHub Pages, and installing an update always needs your click. With the setting off it makes no network calls."
         }
       },
       {
@@ -204,17 +220,45 @@
   </div>
 </section>
 
+<section class="band" id="claude">
+  <div class="wrap">
+    <p class="eyebrow reveal">MCP</p>
+    <h2 class="reveal" style="--i:1">Let Claude plan your day.</h2>
+    <p class="sub reveal" style="--i:2">SideCal doubles as a local MCP server. Claude reads your calendar and time-blocks it for you. It runs over stdio, so nothing leaves your Mac.</p>
+    <div class="ways mcp">
+      <div class="way reveal" style="--i:1">
+        <h3>Connect it</h3>
+        <p>One command for Claude Code. Claude Desktop setup is in the docs.</p>
+        <div class="term">
+          <div class="bar"><span></span><span></span><span></span><em>Terminal</em><button type="button" class="copy" data-copy="claude mcp add sidecal -- /Applications/SideCal.app/Contents/MacOS/sidecal --mcp">Copy</button></div>
+<pre><code><span class="p">$</span> claude mcp add sidecal -- \
+    /Applications/SideCal.app/Contents/MacOS/sidecal --mcp</code></pre>
+        </div>
+        <p class="small"><a href="documentation.html#claude">Setup guide</a></p>
+      </div>
+      <div class="way reveal" style="--i:2">
+        <h3>What Claude can do</h3>
+        <ul class="chips">
+          <li>List your calendars</li><li>Read events in a date range</li><li>Add events (time blocking)</li><li>Move, resize and rename events</li>
+        </ul>
+        <p class="small">It cannot delete events. Events and calendars you hide in SideCal stay hidden from Claude.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="band" id="more">
   <div class="wrap">
     <p class="eyebrow reveal">And</p>
     <h2 class="reveal" style="--i:1">Small, quiet, yours.</h2>
     <div class="grid">
       <div class="reveal"><h3>Tiny</h3><p>A 7 MB native app with a Rust core. No Electron, no background services.</p></div>
-      <div class="reveal" style="--i:1"><h3>Private</h3><p>No telemetry, no network code, no account. Your events stay in your calendar.</p></div>
+      <div class="reveal" style="--i:1"><h3>Private</h3><p>No telemetry, no account, no network by default. Your events stay in your calendar.</p></div>
       <div class="reveal" style="--i:2"><h3>Keyboard friendly</h3><p>Global shortcuts to show it, add an event or open settings.</p></div>
       <div class="reveal"><h3>Your calendars, your order</h3><p>Set priority between calendars and recolour any calendar or event.</p></div>
       <div class="reveal" style="--i:1"><h3>Hide what you do not need</h3><p>Hide single events from the sidebar without touching your calendar.</p></div>
       <div class="reveal" style="--i:2"><h3>Open source</h3><p>Apache 2.0. Read it, change it, share it.</p></div>
+      <div class="reveal"><h3>Optional updates</h3><p>Check for updates from the menu bar and install with one click. Off by default; one small file, once a day.</p></div>
     </div>
   </div>
 </section>
@@ -259,7 +303,9 @@
       <details><summary>How do I time-block my day on a Mac?</summary><p>Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Everything snaps to 15 minutes and is saved to your Apple Calendar.</p></details>
       <details><summary>Which calendars does SideCal work with?</summary><p>Every calendar in the macOS Calendar app: iCloud, Google, Exchange, CalDAV and local calendars. Add the account in System Settings and it appears in SideCal.</p></details>
       <details><summary>Does SideCal show my next meeting in the menu bar?</summary><p>Yes. The menu bar shows the running event with the time left, for example “Design review (23m left)”, or the next event, for example “Standup in 12m”. You can hide the title or the duration in Settings.</p></details>
-      <details><summary>Is my calendar data private?</summary><p>Yes. SideCal has no telemetry, no network code and no analytics. It reads your events locally through Apple&#x27;s EventKit and keeps its own settings in one JSON file on your Mac.</p></details>
+      <details><summary>Is my calendar data private?</summary><p>Yes. SideCal has no telemetry and no analytics. It reads your events locally through Apple&#x27;s EventKit and keeps its own settings in one JSON file on your Mac. The only network call it can make is an optional update check, which is off by default and downloads one small file.</p></details>
+      <details><summary>Can Claude use SideCal?</summary><p>Yes. Run sidecal --mcp and SideCal acts as a local MCP server over stdio, with no network. Claude can list calendars, read events, add events and move or rename them. It cannot delete events, and events you hide in SideCal stay hidden from Claude.</p></details>
+      <details><summary>Does SideCal update itself?</summary><p>Optionally. Turn on Check for Updates Automatically in Settings, or use Check for Updates in the menu bar menu. SideCal reads one small file (latest.json) from GitHub Pages, and installing an update always needs your click. With the setting off it makes no network calls.</p></details>
       <details><summary>Which Macs and macOS versions are supported?</summary><p>macOS 14 (Sonoma) or newer. SideCal is tested on an Intel Mac running macOS 15. Apple Silicon should work but is untested.</p></details>
       <details><summary>How do I install SideCal?</summary><p>Download SideCal-apple-silicon.zip or SideCal-intel.zip from the latest GitHub release, unzip it and drag SideCal.app to Applications. Or build it yourself: clone the repository and run ./install.sh (needs the Xcode Command Line Tools and Rust).</p></details>
       <details><summary>Can I modify or fork SideCal?</summary><p>Yes. SideCal is licensed under Apache 2.0, so you may change and redistribute it, including commercially. Keep the LICENSE and NOTICE files that credit the author, Kacper Górec, and mark your changes.</p></details>

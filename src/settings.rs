@@ -44,6 +44,8 @@ impl Default for Shortcuts {
 #[serde(default)]
 pub struct Settings {
     pub launch_at_login: bool,
+    /// Asks GitHub Pages for latest.json once a day. Off by default: SideCal makes no network calls unless asked.
+    pub check_for_updates: bool,
     pub float_above: bool,
     pub auto_hide: bool,
     pub show_title_in_menu_bar: bool,
@@ -83,6 +85,7 @@ impl Default for Settings {
     fn default() -> Self {
         Self {
             launch_at_login: false,
+            check_for_updates: false,
             float_above: true,
             auto_hide: true,
             show_title_in_menu_bar: true,

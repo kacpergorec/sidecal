@@ -37,6 +37,8 @@
     <a href="#using">Using the sidebar</a>
     <a href="#edge-preview">Auto-hide and edge preview</a>
     <a href="#shortcuts">Shortcuts</a>
+    <a href="#claude">Use with Claude</a>
+    <a href="#updates">Updates</a>
     <a href="#settings">Settings</a>
     <a href="#data">Your data</a>
     <a href="#troubleshooting">Troubleshooting</a>
@@ -112,6 +114,41 @@ open /Applications/SideCal.app</code></pre>
     </table>
     <p><kbd>Esc</kbd> closes the event form and menus.</p>
 
+    <h2 id="claude">Use with Claude (MCP)</h2>
+    <p>SideCal can run as a local <a href="https://modelcontextprotocol.io">MCP</a> server, so Claude can read your calendar and plan your day. It talks over stdio only; there is no network and no window.</p>
+    <h3>Claude Code</h3>
+    <pre><code>claude mcp add sidecal -- /Applications/SideCal.app/Contents/MacOS/sidecal --mcp</code></pre>
+    <h3>Claude Desktop</h3>
+    <p>Add this to <code>claude_desktop_config.json</code> (Settings → Developer → Edit Config), then restart Claude:</p>
+    <pre><code>{
+  "mcpServers": {
+    "sidecal": {
+      "command": "/Applications/SideCal.app/Contents/MacOS/sidecal",
+      "args": ["--mcp"]
+    }
+  }
+}</code></pre>
+    <h3>Tools</h3>
+    <table>
+      <tr><th>Tool</th><th>What it does</th></tr>
+      <tr><td><code>list_calendars</code></td><td>Calendars shown in SideCal, with ids and whether you can add events to them.</td></tr>
+      <tr><td><code>get_events</code></td><td>Events between two times (ISO 8601, up to 62 days), sorted by start.</td></tr>
+      <tr><td><code>create_event</code></td><td>Adds an event: title, start, end and an optional calendar.</td></tr>
+      <tr><td><code>update_event</code></td><td>Moves, resizes or renames an event. Only this occurrence of a repeating event changes.</td></tr>
+    </table>
+    <p class="callout"><b>Safety:</b> there is no delete tool. Events and calendars you hide in SideCal stay hidden from Claude. Event titles are treated as data, never as instructions.</p>
+    <p class="callout"><b>Permission:</b> open SideCal once and choose Allow Full Access first. If Claude reports that access is missing, restart the MCP client; macOS may ask for the app that launched the server.</p>
+    <p>Times without an offset are read as your Mac's local time. Try: "Block two hours for deep work tomorrow afternoon, after my meetings."</p>
+
+    <h2 id="updates">Updates</h2>
+    <p>Updates are optional and off by default. SideCal makes no network calls unless you ask.</p>
+    <ul>
+      <li><b>Manually:</b> menu bar icon → <b>Check for Updates…</b>. If a newer version exists the item changes to <b>Install SideCal x.y.z</b>; click it to install.</li>
+      <li><b>Automatically:</b> turn on <b>Check for Updates Automatically</b> in Settings → General → Startup. Once a day SideCal downloads one small file, <a href="latest.json"><code>latest.json</code></a>, from this site. Nothing else is sent. An update is only installed when you click it.</li>
+      <li><b>How it installs:</b> it downloads the zip from GitHub Releases, checks its SHA-256, replaces the app and starts it again. The old app is restored if the swap fails.</li>
+    </ul>
+    <p class="callout"><b>After updating:</b> the app is signed ad hoc, so macOS asks for calendar access again once. You can also update by downloading the new zip from <a href="https://github.com/kacpergorec/sidecal/releases/latest">Releases</a>, or by running <code>./install.sh</code> again.</p>
+
     <h2 id="settings">Settings</h2>
     <p>Open Settings from the gear in the sidebar header, the menu bar item, the board's right-click menu or the shortcut. The window can be resized.</p>
     <table>
@@ -130,7 +167,7 @@ open /Applications/SideCal.app</code></pre>
       <li><b>Events</b> stay in the system calendar database. SideCal reads and edits them through Apple's EventKit.</li>
       <li><b>Settings</b>, custom colours and hidden events are stored in <code>~/Library/Application Support/com.kacpergorec.sidecal/settings.json</code>.</li>
       <li><b>Launch at Login</b> writes <code>~/Library/LaunchAgents/com.kacpergorec.sidecal.plist</code>; turning it off removes the file.</li>
-      <li>SideCal contains no network code and no analytics.</li>
+      <li>SideCal has no analytics and no telemetry. Its only network call is the optional <a href="#updates">update check</a>, which is off by default.</li>
     </ul>
     <p>To reset everything, quit SideCal and delete the <code>settings.json</code> file.</p>
 
