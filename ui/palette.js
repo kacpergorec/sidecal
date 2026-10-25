@@ -1,13 +1,16 @@
 // Shared by the sidebar and the settings window: the 12 entry/calendar colours and colour helpers.
 // Every colour has a light-mode and a dark-mode variant; only the palette id is stored.
 const PALETTE = [
-  { id: 'red',    light: '#ff3b30', dark: '#ff453a' }, { id: 'orange', light: '#ff9500', dark: '#ff9f0a' },
-  { id: 'yellow', light: '#ffcc00', dark: '#ffd60a' }, { id: 'green',  light: '#34c759', dark: '#30d158' },
-  { id: 'teal',   light: '#00c7be', dark: '#63e6e2' }, { id: 'sky',    light: '#32ade6', dark: '#64d2ff' },
-  { id: 'blue',   light: '#007aff', dark: '#0a84ff' }, { id: 'indigo', light: '#5856d6', dark: '#5e5ce6' },
+  { id: 'red',    light: '#ff3b30', dark: '#ff453a' }, { id: 'coral',  light: '#ff7a5c', dark: '#ff8a6b' },
+  { id: 'orange', light: '#ff9500', dark: '#ff9f0a' }, { id: 'yellow', light: '#ffcc00', dark: '#ffd60a' },
+  { id: 'lime',   light: '#7ac943', dark: '#a3e05a' }, { id: 'green',  light: '#34c759', dark: '#30d158' },
+  { id: 'teal',   light: '#12b886', dark: '#38d9a9' }, { id: 'blue',   light: '#007aff', dark: '#0a84ff' },
   { id: 'purple', light: '#af52de', dark: '#bf5af2' }, { id: 'pink',   light: '#ff2d55', dark: '#ff375f' },
   { id: 'brown',  light: '#a2845e', dark: '#ac8e68' }, { id: 'gray',   light: '#8e8e93', dark: '#98989d' },
 ];
+// Colours dropped from the palette (too many blues) map onto the nearest remaining one.
+const PALETTE_ALIASES = { sky: 'blue', indigo: 'purple' };
+const scFind = (id) => PALETTE.find((x) => x.id === (PALETTE_ALIASES[id] || id));
 
 const scIsDark = (theme) =>
   theme === 'dark' || (theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);

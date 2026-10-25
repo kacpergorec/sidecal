@@ -7,6 +7,10 @@
   :root { --hour: 40px; --gutter: 22px; }
   * { box-sizing: border-box; margin: 0; }
   [hidden] { display: none !important; }
+  /* "Highlight Active Event": a soft glow along the inside edge of the open sidebar, drawn above everything
+     (hour labels and the time line included), below the modal backdrop. */
+  #glow { position: absolute; inset: 0; z-index: 14; pointer-events: none; border-radius: inherit; transition: box-shadow .3s; }
+  body.collapsed #glow { box-shadow: none !important; }
   #backdrop { position: absolute; inset: 0; z-index: 15; background: var(--scrim); }
   #sel { position: absolute; left: 1px; right: 2px; z-index: 4; border-radius: 6px; pointer-events: none;
     background: color-mix(in srgb, var(--focus) 22%, transparent); border: 1px solid var(--focus);
@@ -104,15 +108,12 @@
     outline: 1px solid color-mix(in srgb, var(--text) 14%, transparent); outline-offset: 0; transition: transform .12s; }
   #cmenu .sw:hover { transform: scale(1.18); }
   #cmenu.list { grid-template-columns: 1fr; gap: 2px; padding: 6px; min-width: 150px; }
-  #cmenu .sep { grid-column: 1 / -1; border-top: 1px solid var(--line); margin: 4px -4px 2px; }
-  #cmenu .act { grid-column: 1 / -1; text-align: left; padding: 6px 8px; border: 0; border-radius: 6px; background: none;
+  #cmenu .acts { grid-column: 1 / -1; display: flex; flex-direction: column; margin: 2px -4px -4px; }
+  #cmenu .act { text-align: left; padding: 6px 8px; border: 0; border-radius: 6px; background: none;
     color: var(--text); font: 500 12px var(--font); cursor: pointer; }
   #cmenu .act:hover { background: var(--hover); }
   #cmenu .act.danger { color: var(--danger); }
   .is-hidden { opacity: .45; outline: 1px dashed var(--muted); outline-offset: -1px; }
-  #cmenu button.reset { grid-column: 1 / -1; font: 500 11px var(--font); color: var(--muted); background: none; border: 0;
-    border-top: 1px solid var(--line); padding: 8px 0 0; margin-top: 2px; cursor: pointer; text-align: center; }
-  #cmenu button.reset:hover { color: var(--text); }
 
   #form { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 20; padding: 12px;
     background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
@@ -157,6 +158,7 @@
 <div id="allday"></div>
 <div id="scroll"><div id="day"><div id="now"></div><div id="sel" hidden></div></div></div>
 
+<div id="glow"></div>
 <div id="backdrop" hidden></div>
 <div id="cmenu" hidden></div>
 <form id="form" hidden>
@@ -255,6 +257,7 @@ function applyTheme() {
   root.style.setProperty('--ww', cfg.width + 2 * pad + 'px');
   if (cfg.island_mode) root.dataset.island = ''; else delete root.dataset.island;
   $('weekday').hidden = !cfg.show_weekday;
+  document.querySelector('header').hidden = !cfg.show_header;
   root.style.setProperty('--strip', cfg.strip_width + 'px');
   root.style.setProperty('--pv-op', cfg.preview_opacity);
   $('date').hidden = !cfg.show_date;
@@ -300,12 +303,12 @@ const tone = (p) => scTone(p, cfg.theme);
 // A calendar can override its colour in Settings → Calendars; otherwise its own colour, livened up.
 const calPref = (e) => (cfg.calendars || []).find((c) => c.id === e.calendar_id) || {};
 function defaultColor(e) {
-  const p = PALETTE.find((x) => x.id === calPref(e).color);
+  const p = scFind(calPref(e).color);
   return p ? tone(p) : scSoften(e.color, cfg.theme);
 }
 function colorOf(e) {
   const custom = (cfg.event_colors || {})[e.id];
-  const p = PALETTE.find((x) => x.id === custom);
+  const p = scFind(custom);
   if (p) return tone(p);
   return /^#/.test(custom || '') ? custom : defaultColor(e);
 }
@@ -327,6 +330,7 @@ function addAction(menu, label, fn, danger) {
   b.textContent = label;
   b.onclick = fn;
   menu.appendChild(b);
+  return b;
 }
 function showMenu(menu, m) {
   menu.hidden = false;
@@ -371,22 +375,18 @@ function openColorMenu(m, e, el) {
     b.onclick = () => commit(p.id);
     menu.appendChild(b);
   }
-  const reset = document.createElement('button');
-  reset.className = 'reset';
-  reset.textContent = 'Use calendar colour';
+  // Actions: a tight list under the swatches; "Use calendar colour" is just another item.
+  const acts = document.createElement('div');
+  acts.className = 'acts';
+  menu.appendChild(acts);
+  const reset = addAction(acts, 'Use calendar colour', () => commit(null));
   reset.onmouseenter = () => preview(defaultColor(e));
   reset.onmouseleave = () => preview(current);
-  reset.onclick = () => commit(null);
-  menu.appendChild(reset);
-
-  const sep = document.createElement('div');
-  sep.className = 'sep';
-  menu.appendChild(sep);
-  addAction(menu, isHiddenEv(e) ? 'Unhide event' : 'Hide event',
+  addAction(acts, isHiddenEv(e) ? 'Unhide event' : 'Hide event',
     () => { invoke('set_event_hidden', { id: e.id, hidden: !isHiddenEv(e) }); closeColorMenu(); });
   if (e.editable) {
     // Two clicks: deleting removes the event from the calendar itself.
-    addAction(menu, 'Delete event', function () {
+    addAction(acts, 'Delete event', function () {
       if (!this.dataset.sure) { this.dataset.sure = '1'; this.textContent = 'Click again to delete'; return; }
       invoke('delete_event', { id: e.id }).then(() => { closeColorMenu(); refresh(); }).catch((err) => console.error(err));
     }, true);
@@ -486,6 +486,8 @@ function render() {
 
   // Menu bar: current event with time left, else the next one.
   const cur = timed.find((e) => e.start <= now && e.end > now);
+  $('glow').style.boxShadow = cfg.show_glowing_border && cur && !document.body.classList.contains('collapsed')
+    ? `inset 0 0 10px 0 color-mix(in srgb, ${colorOf(cur)} 70%, transparent)` : 'none';
   const next = timed.find((e) => e.start > now);
   let title = 'Calendar';
   if (cur) {
