@@ -28,16 +28,18 @@
 
 ## Features
 
-- **24 hours, always in view.** The whole day fits the screen with a live "now" line. No scrolling.
-- **Time-block by dragging.** Drag to create an event, drag an entry to move it, drag its edge to resize. Snaps to 15 minutes and saves to Apple Calendar.
-- **Auto-hide.** The sidebar slides off the screen edge when you move away and comes back when you touch the edge. Left or right side.
-- **Edge preview.** While hidden it leaves a thin, faded strip of your day.
-- **Menu bar countdown.** "Design review (23m left)" while an event runs, "Standup in 12m" before the next one.
-- **Works with every calendar** in the macOS Calendar app: iCloud, Google, Exchange, CalDAV.
-- **Looks native.** Light, dark or follow macOS. Twelve colours, island mode, highlight for the running event.
-- **Yours to arrange.** Recolour calendars and events, set calendar priority, hide single events from the sidebar.
-- **Global shortcuts** to show the sidebar, add an event or open settings.
-- **Tiny.** A single native binary of about 7 MB. No background services.
+| Feature | What it does |
+| --- | --- |
+| **24 hours in view** | The whole day fits the screen with a live "now" line. No scrolling. |
+| **Time blocking** | Drag to create, move or resize events. Snaps to 15 minutes, saves to Apple Calendar. |
+| **Auto-hide** | Slides off the screen edge when you move away, returns when you touch the edge. Left or right side. |
+| **Edge preview** | A thin, faded strip of your day stays on the edge while hidden. |
+| **Menu bar countdown** | "Design review (23m left)" while an event runs, "Standup in 12m" before the next. |
+| **All your calendars** | iCloud, Google, Exchange and CalDAV, through the macOS Calendar app. |
+| **Native look** | Light, dark or follow macOS. Twelve colours, island mode, highlight for the running event. |
+| **Your arrangement** | Recolour calendars and events, set calendar priority, hide single events. |
+| **Global shortcuts** | Show the sidebar, add an event or open settings from anywhere. |
+| **Tiny** | One native binary of about 7 MB. No background services. |
 
 ## Install
 
