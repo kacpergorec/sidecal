@@ -57,7 +57,7 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 /* ---- hero ---- */
 .hero { text-align: center; padding: 88px 0 120px; overflow: hidden; }
 .hero .app { width: 104px; height: 104px; border-radius: 24px; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .18)); }
-.hero h1 { font-size: clamp(44px, 8vw, 88px); margin: 28px auto 20px; max-width: 12em; letter-spacing: -.045em; }
+.hero h1 { font-size: clamp(40px, 7vw, 80px); margin: 28px auto 20px; max-width: 13em; letter-spacing: -.04em; text-wrap: balance; }
 .hero p.lead { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.35; color: var(--muted); max-width: 31em; margin: 0 auto; letter-spacing: -.015em; }
 .hero .cta { display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: center; align-items: center; margin-top: 34px; }
 .hero .meta { margin-top: 20px; font-size: 14px; color: var(--muted); }
