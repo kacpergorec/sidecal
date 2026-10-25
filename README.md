@@ -10,7 +10,21 @@
 <a href="https://kacpergorec.github.io/sidecal/documentation.html">Docs</a>
 </p>
 
-> **No telemetry. No network code. Built in Rust.** SideCal reads your calendar locally through Apple's EventKit and never talks to the internet. No account, no analytics, no Electron.
+<p align="center">
+<a href="https://github.com/kacpergorec/sidecal/releases/latest"><img src="https://img.shields.io/github/v/release/kacpergorec/sidecal?style=flat-square" alt="Latest release"></a>
+<a href="https://github.com/kacpergorec/sidecal/releases"><img src="https://img.shields.io/github/downloads/kacpergorec/sidecal/total?style=flat-square" alt="Downloads"></a>
+<a href="https://github.com/kacpergorec/sidecal/stargazers"><img src="https://img.shields.io/github/stars/kacpergorec/sidecal?style=flat-square" alt="Stars"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/kacpergorec/sidecal?style=flat-square" alt="License"></a>
+<img src="https://img.shields.io/badge/macOS-14%2B-000000?style=flat-square&logo=apple&logoColor=white" alt="macOS 14+">
+<img src="https://img.shields.io/badge/built%20with-Rust-dea584?style=flat-square&logo=rust&logoColor=white" alt="Built with Rust">
+<img src="https://img.shields.io/badge/telemetry-none-34c759?style=flat-square" alt="No telemetry">
+</p>
+
+- **No telemetry.**
+- **No network code.** SideCal never talks to the internet.
+- **Built in Rust.**
+- **Local only.** It reads your calendar through Apple's EventKit.
+- **No account, no analytics, no Electron.**
 
 ## Features
 
