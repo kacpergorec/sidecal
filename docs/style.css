@@ -273,9 +273,17 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 .chip .st path { transform-origin: center; transform-box: fill-box; animation: twinkle 2.4s ease-in-out infinite; }
 .chip .st .b { animation-delay: .8s; } .chip .st .c { animation-delay: 1.6s; }
 @keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.82); } }
-.chip .rot { display: inline-grid; overflow: hidden; height: 1.4em; }
-.chip .rot b { grid-area: 1 / 1; font-weight: 600; white-space: nowrap; transform: translateY(110%); opacity: 0;
+.chip .who { display: inline-flex; align-items: center; gap: 8px; }
+.chip .swap { position: relative; width: 20px; height: 20px; flex: none; }
+.chip .tile { position: absolute; inset: 0; border-radius: 6px; display: grid; place-items: center; opacity: 0; transform: scale(.6) rotate(-20deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); transition: transform .5s var(--ease), opacity .35s; }
+@media (prefers-color-scheme: light) { .chip .tile { box-shadow: none; } }
+.chip .tile.on { opacity: 1; transform: none; }
+.chip .tile svg { width: 68%; height: 68%; fill: #fff; display: block; }
+/* The name box animates to the width of the current name, so the whole pill grows and shrinks with it. */
+.chip .names { display: inline-grid; overflow: hidden; height: 1.4em; transition: width .5s var(--ease); }
+.chip .names b { grid-area: 1 / 1; justify-self: start; font-weight: 600; white-space: nowrap; transform: translateY(110%); opacity: 0;
   transition: transform .5s var(--ease), opacity .4s; background: linear-gradient(90deg, #ff6a8b, #af52de, #4f8cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.chip .rot b.on { transform: none; opacity: 1; }
-.chip .rot b.off { transform: translateY(-110%); opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .chip::after, .chip .st path { animation: none; } .chip .rot b { transition: none; } }
+.chip .names b.on { transform: none; opacity: 1; }
+.chip .names b.off { transform: translateY(-110%); opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .chip::after, .chip .st path { animation: none; } .chip .names, .chip .names b, .chip .tile { transition: none; } }

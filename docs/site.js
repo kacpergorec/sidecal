@@ -87,16 +87,24 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   tiers(); draw();
 })();
 
-// Hero chip: roll through the assistant names.
+// Hero chip: logo and name roll through the assistants; the pill grows and shrinks with the name.
 (() => {
-  const words = [...document.querySelectorAll('.chip .rot b')];
-  if (words.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const words = [...document.querySelectorAll('.chip .names b')];
+  const tiles = [...document.querySelectorAll('.chip .swap .tile')];
+  const box = document.querySelector('.chip .names');
+  if (!box || words.length < 2) return;
+  const fit = (w) => { box.style.width = w.offsetWidth + 'px'; };
+  fit(words[0]);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   let i = 0;
   setInterval(() => {
     const n = (i + 1) % words.length, prev = i;
     words[prev].className = 'off';
     words[n].className = 'on';
+    tiles[prev].classList.remove('on');
+    tiles[n].classList.add('on');
+    fit(words[n]);
     setTimeout(() => (words[prev].className = ''), 600);
     i = n;
-  }, 2000);
+  }, 2200);
 })();
