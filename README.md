@@ -19,29 +19,25 @@
 <img src="https://img.shields.io/badge/telemetry-none-34c759?style=flat-square" alt="No telemetry">
 </p>
 
-- **No telemetry.**
-- **No network by default.** The only network call is an optional update check (off by default): one small file, once a day.
-- **Built in Rust.**
-- **Local only.** It reads your calendar through Apple's EventKit.
-- **No account, no analytics, no Electron.**
+- **No telemetry, no account, no analytics.**
+- **No network by default.** The only network call is an optional update check, off by default.
+- **Small and native.** About 7 MB, no Electron, nothing running in the background.
 
 ## Features
 
 | Feature | What it does |
 | --- | --- |
-| **24 hours in view** | The whole day fits the screen with a live "now" line. No scrolling. |
+| **Your day on the edge** | Today's events on a timeline down the edge of your screen, with a line marking right now. |
 | **Time blocking** | Drag to create, move or resize events. Snaps to 15 minutes, saves to Apple Calendar. |
 | **Auto-hide** | Slides off the screen edge when you move away, returns when you touch the edge. Left or right side. |
 | **Edge preview** | A thin, faded strip of your day stays on the edge while hidden. |
 | **Menu bar countdown** | "Design review (23m left)" while an event runs, "Standup in 12m" before the next. |
 | **All your calendars** | iCloud, Google, Exchange and CalDAV, through the macOS Calendar app. |
-| **Native look** | Light, dark or follow macOS. Twelve colours, island mode, highlight for the running event. |
-| **Your arrangement** | Recolour calendars and events, set calendar priority, hide single events. |
+| **Your colours, your order** | Recolour calendars and events, set calendar priority, hide single events, highlight the running event. |
+| **Island mode** | Float the sidebar as a card a little off the screen edge. |
 | **Global shortcuts** | Show the sidebar, add an event or open settings from anywhere. |
-| **Fully customizable** | Side, width, island mode, auto-hide, edge preview, theme, 12 colours, timeline and menu bar options, remappable shortcuts. |
-| **AI assistants (MCP)** | `sidecal --mcp` is a local MCP server: Claude, Cursor or any MCP client can read your day and time-block it. No network. |
+| **AI assistants (MCP)** | Claude, Cursor or any MCP client can read your day and time-block it, locally. One-click setup for Claude Desktop. |
 | **Optional updates** | Check from the menu bar and install in one click. Off by default. |
-| **Tiny** | One native binary of about 7 MB. No background services. |
 
 ## Install
 
