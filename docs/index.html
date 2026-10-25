@@ -99,7 +99,7 @@
         "name": "Is my calendar data private?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. SideCal has no network code and no analytics. It reads your events locally through Apple's EventKit and keeps its own settings in one JSON file on your Mac."
+          "text": "Yes. SideCal has no telemetry, no network code and no analytics. It reads your events locally through Apple's EventKit and keeps its own settings in one JSON file on your Mac."
         }
       },
       {
@@ -115,7 +115,7 @@
         "name": "How do I install SideCal?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "There is no prebuilt download yet. Clone the repository from GitHub and run ./install.sh. You need the Xcode Command Line Tools and Rust, and the first build takes a few minutes."
+          "text": "Download SideCal-apple-silicon.zip or SideCal-intel.zip from the latest GitHub release, unzip it and drag SideCal.app to Applications. Or build it yourself: clone the repository and run ./install.sh (needs the Xcode Command Line Tools and Rust)."
         }
       },
       {
@@ -148,7 +148,8 @@
       <a href="#edge-preview">Features</a>
       <a href="#faq">FAQ</a>
       <a class="keep" href="documentation.html">Docs</a>
-      <a class="gh keep" href="https://github.com/kacpergorec/sidecal">GitHub</a>
+      <a class="hide-s" href="https://github.com/kacpergorec/sidecal">GitHub</a>
+      <a class="gh keep" href="https://github.com/kacpergorec/sidecal/releases/latest">Download</a>
     </nav>
   </div>
 </header>
@@ -156,33 +157,27 @@
 <main>
 <section class="hero">
   <div class="wrap">
+    <p class="pill reveal"><i></i>No telemetry · No network code · Built in Rust</p>
     <img class="app reveal" src="icon.png" alt="SideCal app icon" width="104" height="104">
     <h1 class="reveal" style="--i:1">Your day, on the edge of your screen.</h1>
     <p class="lead reveal" style="--i:2">SideCal is a free sidebar calendar for macOS. Time-block by dragging, see what is next in the menu bar, and let it slide away when you do not need it.</p>
     <div class="cta reveal" style="--i:3">
-      <a class="btn" href="https://github.com/kacpergorec/sidecal">View on GitHub</a>
-      <a class="more" href="#start">How to install</a>
+      <a class="btn" href="https://github.com/kacpergorec/sidecal/releases/latest">Download for Mac</a>
+      <a class="more" href="#start">Other ways to install</a>
     </div>
-    <p class="meta reveal" style="--i:4">Free and open source · macOS 14 or later</p>
+    <p class="meta reveal" style="--i:4">Free and open source · macOS 14 or later · Apple Silicon and Intel</p>
   </div>
 
   <div class="scene reveal" style="--i:4" aria-label="Illustration: the SideCal sidebar on a Mac desktop">
     <div class="desk">
       <div class="mbar"><b>Design review (23m left)</b><span>Tue 27 Oct</span><span>11:07</span></div>
       <div class="side">
-        <div class="day"><b>Tuesday</b><small>27 October 2026</small></div>
-        <div class="tl">
-          <div class="h" style="top:0"><span>8</span></div><div class="h" style="top:10%"><span>9</span></div>
-          <div class="h" style="top:20%"><span>10</span></div><div class="h" style="top:30%"><span>11</span></div>
-          <div class="h" style="top:40%"><span>12</span></div><div class="h" style="top:50%"><span>13</span></div>
-          <div class="h" style="top:60%"><span>14</span></div><div class="h" style="top:70%"><span>15</span></div>
-          <div class="h" style="top:80%"><span>16</span></div><div class="h" style="top:90%"><span>17</span></div>
-          <div class="e" style="top:5%;height:5%;background:#ff9500;padding-top:0;padding-bottom:0">Plan the day</div>
-          <div class="e" style="top:20%;height:15%;background:#007aff;color:#fff">Design review<small>10:00–11:30</small></div>
-          <div class="e" style="top:40%;height:10%;background:#34c759">Lunch</div>
-          <div class="e" style="top:60%;height:25%;background:#af52de;color:#fff">Deep work<small>14:00–16:30</small></div>
-          <div class="now" style="top:31.2%"></div>
-        </div>
+        <header class="sc-head">
+          <div class="tools"><i><svg viewBox="0 0 16 16"><path d="M2 4h6.5M11.9 4H14M2 8h2.5M7.9 8H14M2 12h7.5M12.9 12H14"/><circle cx="10.2" cy="4" r="1.7"/><circle cx="6.2" cy="8" r="1.7"/><circle cx="11.2" cy="12" r="1.7"/></svg></i></div>
+          <b>Tuesday</b><span>27 October</span>
+          <div class="tools r"><i><svg viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></svg></i></div>
+        </header>
+        <div class="sc-day"><div class="grid24"><div class="hour" style="top:0px"><span>0</span></div><div class="hour" style="top:22px"><span>1</span></div><div class="hour" style="top:44px"><span>2</span></div><div class="hour" style="top:66px"><span>3</span></div><div class="hour" style="top:88px"><span>4</span></div><div class="hour" style="top:110px"><span>5</span></div><div class="hour" style="top:132px"><span>6</span></div><div class="hour" style="top:154px"><span>7</span></div><div class="hour" style="top:176px"><span>8</span></div><div class="hour" style="top:198px"><span>9</span></div><div class="hour" style="top:220px"><span>10</span></div><div class="hour" style="top:242px"><span>11</span></div><div class="hour" style="top:264px"><span>12</span></div><div class="hour" style="top:286px"><span>13</span></div><div class="hour" style="top:308px"><span>14</span></div><div class="hour" style="top:330px"><span>15</span></div><div class="hour" style="top:352px"><span>16</span></div><div class="hour" style="top:374px"><span>17</span></div><div class="hour" style="top:396px"><span>18</span></div><div class="hour" style="top:418px"><span>19</span></div><div class="hour" style="top:440px"><span>20</span></div><div class="hour" style="top:462px"><span>21</span></div><div class="hour" style="top:484px"><span>22</span></div><div class="hour" style="top:506px"><span>23</span></div><div class="ev l1" style="top:154.0px;height:21.0px;background:#34c759;color:#111;--ev-c:#34c759"><span class="tt">Morning run</span><span class="tm">7:00–8:00</span></div><div class="ev l1" style="top:198.0px;height:16.0px;background:#ff9500;color:#111;--ev-c:#ff9500"><span class="tt">Standup</span><span class="tm">9:00–9:30</span></div><div class="ev l1 active" style="top:220.0px;height:32.0px;background:#007aff;color:#fff;--ev-c:#007aff"><span class="tt">Design review</span><span class="tm">10:00–11:30</span></div><div class="ev l1" style="top:275.0px;height:21.0px;background:#12b886;color:#111;--ev-c:#12b886"><span class="tt">Lunch with Anna</span><span class="tm">12:30–13:30</span></div><div class="ev l2" style="top:308.0px;height:54.0px;background:#af52de;color:#fff;--ev-c:#af52de"><span class="tt">Deep work</span><span class="tm">14:00–16:30</span></div><div class="ev l1" style="top:374.0px;height:21.0px;background:#ff7a5c;color:#111;--ev-c:#ff7a5c"><span class="tt">Gym</span><span class="tm">17:00–18:00</span></div><div class="ev l1" style="top:429.0px;height:32.0px;background:#ff2d55;color:#fff;--ev-c:#ff2d55"><span class="tt">Dinner</span><span class="tm">19:30–21:00</span></div><div class="now" style="top:244.6px"></div></div></div>
       </div>
     </div>
   </div>
@@ -238,8 +233,8 @@
     <p class="eyebrow reveal">And</p>
     <h2 class="reveal" style="--i:1">Small, quiet, yours.</h2>
     <div class="grid">
-      <div class="reveal"><h3>Tiny</h3><p>A 7 MB app written in Rust. No Electron, no background services.</p></div>
-      <div class="reveal" style="--i:1"><h3>Private</h3><p>No network code, no account, no analytics. Your events stay in your calendar.</p></div>
+      <div class="reveal"><h3>Tiny</h3><p>A 7 MB native app with a Rust core. No Electron, no background services.</p></div>
+      <div class="reveal" style="--i:1"><h3>Private</h3><p>No telemetry, no network code, no account. Your events stay in your calendar.</p></div>
       <div class="reveal" style="--i:2"><h3>Keyboard friendly</h3><p>Global shortcuts to show it, add an event or open settings.</p></div>
       <div class="reveal"><h3>Your calendars, your order</h3><p>Set priority between calendars and recolour any calendar or event.</p></div>
       <div class="reveal" style="--i:1"><h3>Hide what you do not need</h3><p>Hide single events from the sidebar without touching your calendar.</p></div>
@@ -251,13 +246,32 @@
 <section class="band alt" id="start">
   <div class="wrap">
     <p class="eyebrow reveal">Get started</p>
-    <h2 class="reveal" style="--i:1">Build it in one command.</h2>
-    <div class="steps reveal" style="--i:2">
-      <pre><code>git clone https://github.com/kacpergorec/sidecal.git
-cd sidecal
-./install.sh</code></pre>
+    <h2 class="reveal" style="--i:1">Two ways in. Pick one.</h2>
+    <div class="ways">
+      <div class="way reveal" style="--i:1">
+        <span class="tag">Easiest</span>
+        <h3>Download the app</h3>
+        <p>No tools needed. Grab the zip for your Mac from Releases.</p>
+        <ol>
+          <li>Download <b>SideCal-apple-silicon.zip</b> (M1 and newer) or <b>SideCal-intel.zip</b>.</li>
+          <li>Unzip and drag <b>SideCal.app</b> to Applications.</li>
+          <li>Right-click it, choose <b>Open</b>, then <b>Open</b> again. macOS asks once because the app is not notarized.</li>
+        </ol>
+        <a class="btn" href="https://github.com/kacpergorec/sidecal/releases/latest">Download latest release</a>
+      </div>
+      <div class="way reveal" style="--i:2">
+        <span class="tag">For developers</span>
+        <h3>Build from source</h3>
+        <p>Needs macOS 14+, Xcode Command Line Tools and <a href="https://rustup.rs">Rust</a>.</p>
+        <div class="term">
+          <div class="bar"><span></span><span></span><span></span><em>Terminal</em><button type="button" class="copy" data-copy="git clone https://github.com/kacpergorec/sidecal.git&#10;cd sidecal&#10;./install.sh">Copy</button></div>
+<pre><code><span class="p">$</span> git clone https://github.com/kacpergorec/sidecal.git
+<span class="p">$</span> cd sidecal
+<span class="p">$</span> ./install.sh</code></pre>
+        </div>
+        <p class="small">The first build takes a few minutes. <a href="documentation.html#install">Full instructions</a></p>
+      </div>
     </div>
-    <p class="note reveal">Needs macOS 14 or later, the Xcode Command Line Tools and <a href="https://rustup.rs">Rust</a>. <a href="documentation.html#install">Full instructions</a></p>
   </div>
 </section>
 
@@ -271,9 +285,9 @@ cd sidecal
       <details><summary>How do I time-block my day on a Mac?</summary><p>Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Everything snaps to 15 minutes and is saved to your Apple Calendar.</p></details>
       <details><summary>Which calendars does SideCal work with?</summary><p>Every calendar in the macOS Calendar app: iCloud, Google, Exchange, CalDAV and local calendars. Add the account in System Settings and it appears in SideCal.</p></details>
       <details><summary>Does SideCal show my next meeting in the menu bar?</summary><p>Yes. The menu bar shows the running event with the time left, for example “Design review (23m left)”, or the next event, for example “Standup in 12m”. You can hide the title or the duration in Settings.</p></details>
-      <details><summary>Is my calendar data private?</summary><p>Yes. SideCal has no network code and no analytics. It reads your events locally through Apple&#x27;s EventKit and keeps its own settings in one JSON file on your Mac.</p></details>
+      <details><summary>Is my calendar data private?</summary><p>Yes. SideCal has no telemetry, no network code and no analytics. It reads your events locally through Apple&#x27;s EventKit and keeps its own settings in one JSON file on your Mac.</p></details>
       <details><summary>Which Macs and macOS versions are supported?</summary><p>macOS 14 (Sonoma) or newer. SideCal is tested on an Intel Mac running macOS 15. Apple Silicon should work but is untested.</p></details>
-      <details><summary>How do I install SideCal?</summary><p>There is no prebuilt download yet. Clone the repository from GitHub and run ./install.sh. You need the Xcode Command Line Tools and Rust, and the first build takes a few minutes.</p></details>
+      <details><summary>How do I install SideCal?</summary><p>Download SideCal-apple-silicon.zip or SideCal-intel.zip from the latest GitHub release, unzip it and drag SideCal.app to Applications. Or build it yourself: clone the repository and run ./install.sh (needs the Xcode Command Line Tools and Rust).</p></details>
       <details><summary>Can I modify or fork SideCal?</summary><p>Yes. SideCal is licensed under Apache 2.0, so you may change and redistribute it, including commercially. Keep the LICENSE and NOTICE files that credit the author, Kacper Górec, and mark your changes.</p></details>
       <details><summary>Who makes SideCal?</summary><p>SideCal is made by Kacper Górec and written in Rust with Tauri.</p></details>
     </div>
@@ -284,7 +298,7 @@ cd sidecal
 <footer>
   <div class="wrap">
     <span>SideCal by Kacper Górec. Open source under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.</span>
-    <span><a href="documentation.html">Documentation</a> · <a href="https://github.com/kacpergorec/sidecal">GitHub</a> · <a href="https://github.com/kacpergorec/sidecal/issues">Report an issue</a></span>
+    <span><a href="documentation.html">Documentation</a> · <a href="https://github.com/kacpergorec/sidecal/releases">Releases</a> · <a href="https://github.com/kacpergorec/sidecal">GitHub</a> · <a href="https://github.com/kacpergorec/sidecal/issues">Report an issue</a></span>
   </div>
 </footer>
 

@@ -50,8 +50,6 @@
   body.collapsed #day { margin-left: var(--dot); }
   body.collapsed #now { left: calc(var(--dot) * -1); }
   body.collapsed #now::before { width: var(--dot); height: var(--dot); top: calc((1.5px - var(--dot)) / 2); }
-  /* Hovering the strip: preview bars fade out in 0.1 s while the sidebar is about to open. */
-  body.collapsed.hover .ev, body.collapsed.hover .ev.past, body.collapsed.hover .ev.active, body.collapsed.hover #now { opacity: 0; transition: opacity .1s linear; }
   /* Transitions live on the collapsed state only: collapsing animates, expanding is instant. */
   body.collapsed { transition: width .16s ease-out, min-width .16s ease-out, left .16s ease-out, right .16s ease-out, top .16s ease-out,
     bottom .16s ease-out, border-radius .16s ease-out, background-color .16s, border-color .16s; }
@@ -637,14 +635,11 @@ async function refresh() {
 }
 
 function setCollapsed(on) {
-  document.body.classList.remove('hover');
   document.body.classList.toggle('collapsed', on);
   if (on) closeForm();
   render();
 }
 new ResizeObserver(() => render()).observe($('scroll'));
-document.addEventListener('mouseover', () => { if (document.body.classList.contains('collapsed')) document.body.classList.add('hover'); });
-document.documentElement.addEventListener('mouseleave', () => document.body.classList.remove('hover'));
 listen('collapsed', (e) => setCollapsed(e.payload));
 listen('settings-changed', () => { calendars = []; loadConfig().then(refresh); });
 listen('new-event', () => openForm(null));

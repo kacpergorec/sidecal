@@ -47,8 +47,15 @@
     <p class="lede">Everything about installing, using and configuring SideCal, a free sidebar calendar for macOS.</p>
 
     <h2 id="install">Install</h2>
-    <p>There is no prebuilt download yet (the app is not notarized with an Apple Developer ID), so you build it from source. It is one command.</p>
-    <h3>Requirements</h3>
+    <p>Two options: download the app from GitHub Releases, or build it from source.</p>
+    <h3>Download (no tools needed)</h3>
+    <ol>
+      <li>Open the <a href="https://github.com/kacpergorec/sidecal/releases/latest">latest release</a> and download <b>SideCal-apple-silicon.zip</b> (M1 and newer) or <b>SideCal-intel.zip</b>.</li>
+      <li>Unzip it and drag <b>SideCal.app</b> to <b>Applications</b>.</li>
+      <li>Right-click the app, choose <b>Open</b>, then <b>Open</b> again. The app is not notarized with an Apple Developer ID, so macOS asks once.</li>
+    </ol>
+    <p class="callout"><b>"SideCal is damaged":</b> run <code>xattr -dr com.apple.quarantine /Applications/SideCal.app</code> in Terminal, then open it again.</p>
+    <h3>Build from source: requirements</h3>
     <ul>
       <li>macOS 14 (Sonoma) or newer</li>
       <li>Xcode Command Line Tools: <code>xcode-select --install</code></li>
@@ -91,7 +98,7 @@ open /Applications/SideCal.app</code></pre>
 
     <h2 id="edge-preview">Auto-hide and edge preview</h2>
     <p>With <b>Auto-Hide</b> on, the sidebar slides to the screen edge about a quarter of a second after the mouse leaves it. With <b>Edge preview</b> on, a thin strip stays behind: your events as faint bars, with a dot and a line for the current time. The running event stays at full strength.</p>
-    <p>Resting the mouse on the strip, or pushing it against the screen edge, opens the sidebar. Turn Edge preview off and the sidebar disappears completely instead; the screen edge still brings it back. You can set the strip's width (7 to 40 px) and opacity in Settings → Sidebar.</p>
+    <p>Only pushing the mouse against the screen edge itself opens the sidebar; resting on the strip does not. Turn Edge preview off and the sidebar disappears completely instead; the screen edge still brings it back. You can set the strip's width (7 to 40 px) and opacity in Settings → Sidebar.</p>
 
     <h2 id="shortcuts">Shortcuts</h2>
     <p>Global shortcuts work in any app. Click a field in Settings → Shortcuts and press the new combination (include <kbd>Ctrl</kbd>, <kbd>Alt</kbd> or <kbd>Cmd</kbd>).</p>
