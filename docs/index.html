@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SideCal: free sidebar calendar for macOS with time blocking and a menu bar countdown</title>
+<meta name="description" content="SideCal is a free, open-source sidebar calendar (side calendar) for macOS. See your whole day at a glance, time-block by dragging, and get a menu bar countdown to your next event. Works with Apple Calendar: iCloud, Google, Exchange.">
+<meta name="author" content="Kacper Górec">
+<meta name="theme-color" content="#fbfbfa">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SideCal">
+<meta property="og:title" content="SideCal: the free sidebar calendar for macOS">
+<meta property="og:description" content="Time blocking by dragging, a 24-hour sidebar that hides at the screen edge, and a menu bar countdown. Free, open source, tiny.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SideCal: the free sidebar calendar for macOS">
+<meta name="twitter:description" content="Time blocking by dragging, a 24-hour sidebar that hides at the screen edge, and a menu bar countdown. Free, open source, tiny.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SideCal",
+  "alternateName": ["Sidebar Calendar", "Side Calendar"],
+  "description": "Free, open-source sidebar calendar for macOS with time blocking by dragging, an auto-hiding 24-hour timeline and a menu bar countdown. Works with Apple Calendar (iCloud, Google, Exchange).",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "macOS 14 or later",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Kacper Górec" },
+  "keywords": "sidebar calendar, side calendar, macOS calendar, menu bar calendar, time blocking, timeboxing, productivity, open source"
+}
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="./">SideCal</a>
+    <nav aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#start">Get started</a>
+      <a href="#faq">FAQ</a>
+      <a class="keep" href="documentation.html">Docs</a>
+      <a class="keep" data-repo="" href="#">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="tag blue reveal">Free · Open source · macOS</span>
+      <h1 class="reveal" style="--i:1">The sidebar calendar for macOS that stays out of the way.</h1>
+      <p class="lead reveal" style="--i:2">SideCal keeps today's Apple Calendar on the edge of your screen as a 24-hour timeline. Time-block your day by dragging, see what is next in the menu bar, and let the sidebar slide away when you are done looking.</p>
+      <div class="cta reveal" style="--i:3">
+        <a class="btn" data-repo="" href="#">Get it on GitHub</a>
+        <a class="btn ghost" href="documentation.html">Read the docs</a>
+      </div>
+      <p class="facts reveal" style="--i:4">
+        <span><b>Free</b> forever, Apache 2.0</span>
+        <span><b>7 MB</b>, written in Rust</span>
+        <span><b>No network</b>, no telemetry</span>
+      </p>
+    </div>
+
+    <div class="stage reveal" style="--i:3" aria-label="Illustration of the SideCal sidebar">
+      <div class="menubar"><i></i><span>Design review (23m left)</span></div>
+      <div class="window">
+        <div class="chrome"><span></span><span></span><span></span></div>
+        <div class="cal-head"><b>Tuesday</b><small>27 October 2026</small></div>
+        <div class="grid24">
+          <div class="h" style="top:0"><span>8</span></div><div class="h" style="top:31px"><span>9</span></div>
+          <div class="h" style="top:62px"><span>10</span></div><div class="h" style="top:93px"><span>11</span></div>
+          <div class="h" style="top:124px"><span>12</span></div><div class="h" style="top:155px"><span>13</span></div>
+          <div class="h" style="top:186px"><span>14</span></div><div class="h" style="top:217px"><span>15</span></div>
+          <div class="h" style="top:248px"><span>16</span></div><div class="h" style="top:279px"><span>17</span></div>
+          <div class="e" style="top:16px;height:17px;background:#ff9500;padding-top:0;padding-bottom:0">Plan the day</div>
+          <div class="e" style="top:62px;height:46px;background:#007aff;color:#fff">Design review<small>10:00–11:30</small></div>
+          <div class="e" style="top:124px;height:31px;background:#34c759">Lunch</div>
+          <div class="e" style="top:186px;height:77px;background:#af52de;color:#fff">Deep work<small>14:00–16:30</small></div>
+          <div class="now" style="top:98px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="features">
+  <div class="wrap">
+    <p class="eyebrow reveal">What it does</p>
+    <h2 class="reveal" style="--i:1">A side calendar built for time blocking.</h2>
+    <p class="sub reveal" style="--i:2">Everything you need to plan the day in the margin of your screen, and nothing that gets in the way of your work.</p>
+
+    <div class="bento">
+      <article class="card wide reveal">
+        <h3>Hides at the edge, leaves a trace</h3>
+        <p>Move the mouse away and the sidebar slides to the screen edge. A faint strip keeps your events and the current time in view; touch the edge and it opens again.</p>
+        <div class="viz strip" aria-hidden="true">
+          <i style="margin-top:8px;height:22px;background:#ff9500"></i><i style="margin-top:36px;height:40px;background:#007aff"></i>
+          <i style="margin-top:84px;height:20px;background:#34c759"></i><i style="margin-top:50px;height:56px;background:#af52de"></i>
+          <span class="gap"></span>
+        </div>
+      </article>
+      <article class="card reveal" style="--i:1">
+        <h3>Block time by dragging</h3>
+        <p>Drag on the timeline to create an event, drag an entry to move it, drag its edge to resize. Everything snaps to 15 minutes.</p>
+      </article>
+      <article class="card reveal">
+        <h3>Menu bar countdown</h3>
+        <p>"Design review (23m left)" while an event runs, "Standup in 12m" before the next one. Always one glance away.</p>
+      </article>
+      <article class="card reveal" style="--i:1">
+        <h3>Twelve colours, two themes</h3>
+        <p>Colour a single event or a whole calendar. Each colour has a light and a dark variant.</p>
+        <div class="viz swatches" aria-hidden="true">
+          <i style="background:#ff3b30"></i><i style="background:#ff7a5c"></i><i style="background:#ff9500"></i><i style="background:#ffcc00"></i>
+          <i style="background:#7ac943"></i><i style="background:#34c759"></i><i style="background:#12b886"></i><i style="background:#007aff"></i>
+          <i style="background:#af52de"></i><i style="background:#ff2d55"></i><i style="background:#a2845e"></i><i style="background:#8e8e93"></i>
+        </div>
+      </article>
+      <article class="card reveal" style="--i:2">
+        <h3>Light, dark, or auto</h3>
+        <p>Follows macOS, or pick one. Optional island mode floats the sidebar as a rounded card.</p>
+      </article>
+      <article class="card reveal">
+        <div class="stat">7 MB<small>binary, about 100 MB RAM with WebKit. No Electron, no npm.</small></div>
+      </article>
+      <article class="card wide reveal" style="--i:1">
+        <h3>Keyboard friendly</h3>
+        <p>Global shortcuts work from any app and can be changed in Settings.</p>
+        <div class="viz keys">
+          <div><span>Show or hide the sidebar</span><span><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Cmd</kbd> <kbd>S</kbd></span></div>
+          <div><span>New event</span><span><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Cmd</kbd> <kbd>N</kbd></span></div>
+          <div><span>Open settings</span><span><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Cmd</kbd> <kbd>,</kbd></span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="start">
+  <div class="wrap">
+    <p class="eyebrow reveal">Get started</p>
+    <h2 class="reveal" style="--i:1">Three steps, one command.</h2>
+    <ol class="steps">
+      <li class="reveal"><h3>Build and install</h3><p>Clone the repository, then run <code>./install.sh</code>. It builds the app and puts it in Applications.</p></li>
+      <li class="reveal" style="--i:1"><h3>Allow calendar access</h3><p>macOS asks once. SideCal reads your calendars locally, with no account and no network.</p></li>
+      <li class="reveal" style="--i:2"><h3>Drag to plan</h3><p>Open the sidebar from the menu bar and drag out your first block of time.</p></li>
+    </ol>
+    <p class="sub reveal" style="margin-top:28px;color:var(--muted)">Needs macOS 14 or newer, the Xcode Command Line Tools and <a href="https://rustup.rs">Rust</a>. Full instructions in the <a href="documentation.html#install">documentation</a>.</p>
+  </div>
+</section>
+
+<section class="block" id="faq">
+  <div class="wrap">
+    <p class="eyebrow reveal">Questions</p>
+    <h2 class="reveal" style="--i:1">Good to know.</h2>
+    <div class="faq reveal" style="--i:2">
+      <details><summary>Is SideCal really free?</summary>
+        <p>Yes. It is open source under the Apache License 2.0: use it, change it, share it, even commercially. If you redistribute it, keep the licence and the NOTICE file that credit Kacper Górec.</p></details>
+      <details><summary>Which calendars does it show?</summary>
+        <p>Every calendar in the macOS Calendar app: iCloud, Google, Exchange, CalDAV and local ones. Add an account in System Settings and it appears in SideCal.</p></details>
+      <details><summary>Does it send my data anywhere?</summary>
+        <p>No. The app contains no network code and no analytics. Your events stay in the system calendar; colours, hidden events and settings live in one JSON file on your Mac.</p></details>
+      <details><summary>Is there a download?</summary>
+        <p>Not yet. The app is not notarized with an Apple Developer ID, so you build it yourself with one command. It takes a few minutes the first time.</p></details>
+      <details><summary>Does it work on Apple Silicon?</summary>
+        <p>It should, but it has only been tested on an Intel Mac with macOS 15. Reports from other machines are welcome.</p></details>
+      <details><summary>How is it different from a calendar app?</summary>
+        <p>It does one thing: keep today in view while you work. It hides when you do not need it, shows the next event in the menu bar, and lets you block time without opening a full calendar window.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>SideCal by Kacper Górec. Open source under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.</span>
+    <span><a href="documentation.html">Documentation</a> · <a data-repo="" href="#">GitHub</a> · <a data-repo="/issues" href="#">Report an issue</a></span>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

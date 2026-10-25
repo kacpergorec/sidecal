@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SideCal documentation: install, use and configure the macOS sidebar calendar</title>
+<meta name="description" content="How to install, use and configure SideCal, the free open-source sidebar calendar for macOS: auto-hide, edge preview, time blocking by dragging, menu bar countdown, shortcuts and settings.">
+<meta name="author" content="Kacper Górec">
+<meta name="theme-color" content="#fbfbfa">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="./">SideCal</a>
+    <nav aria-label="Main">
+      <a href="./#features">Features</a>
+      <a href="./#faq">FAQ</a>
+      <a class="keep" href="documentation.html" aria-current="page">Docs</a>
+      <a class="keep" data-repo="" href="#">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap docs">
+  <aside class="toc" aria-label="On this page">
+    <a href="#install">Install</a>
+    <a href="#first-launch">First launch</a>
+    <a href="#using">Using the sidebar</a>
+    <a href="#edge-preview">Auto-hide and edge preview</a>
+    <a href="#shortcuts">Shortcuts</a>
+    <a href="#settings">Settings</a>
+    <a href="#data">Your data</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+    <a href="#build">Building and contributing</a>
+    <a href="#license">License</a>
+  </aside>
+
+  <article class="doc">
+    <h1>Documentation</h1>
+    <p class="lede">Everything about installing, using and configuring SideCal, a free sidebar calendar for macOS.</p>
+
+    <h2 id="install">Install</h2>
+    <p>There is no prebuilt download yet (the app is not notarized with an Apple Developer ID), so you build it from source. It is one command.</p>
+    <h3>Requirements</h3>
+    <ul>
+      <li>macOS 14 (Sonoma) or newer</li>
+      <li>Xcode Command Line Tools: <code>xcode-select --install</code></li>
+      <li>Rust (stable) from <a href="https://rustup.rs">rustup.rs</a></li>
+    </ul>
+    <h3>Build and install</h3>
+    <p>Clone the repository, open a terminal in its folder and run:</p>
+    <pre><code>./install.sh
+open /Applications/SideCal.app</code></pre>
+    <p>The first build compiles about 400 Rust crates and takes a few minutes. Later builds take about a minute. To build without installing, run <code>./build-app.sh</code>; it creates <code>SideCal.app</code> in the project folder.</p>
+    <p class="note"><b>Tested on:</b> an Intel Mac with macOS 15. Apple Silicon should work but is untested.</p>
+
+    <h2 id="first-launch">First launch</h2>
+    <ol>
+      <li>macOS asks for calendar access. Choose <b>Allow Full Access</b>. Without it the sidebar shows a waiting message.</li>
+      <li>SideCal has no Dock icon. It lives in the menu bar and shows your next event there.</li>
+      <li>Click the menu bar text to show or hide the sidebar. Right-click it for <b>Settings</b> and <b>Quit</b>.</li>
+      <li>To start at login, copy the app to <code>/Applications</code> first, then turn on <b>Launch at Login</b> in Settings → General.</li>
+    </ol>
+    <p class="note"><b>After updating:</b> the app is signed ad hoc, so macOS sees every rebuilt copy as a new app and asks for calendar access once more.</p>
+
+    <h2 id="using">Using the sidebar</h2>
+    <table>
+      <tr><th>Do this</th><th>To get this</th></tr>
+      <tr><td>Drag on an empty spot of the timeline</td><td>Create an event. A form opens with the range you dragged.</td></tr>
+      <tr><td>Click the <b>+</b> button</td><td>Create an event at the next free half hour (if <i>Suggest Events</i> is on).</td></tr>
+      <tr><td>Click an entry</td><td>Edit its title, calendar and times.</td></tr>
+      <tr><td>Drag an entry</td><td>Move it. Snaps to 15 minutes.</td></tr>
+      <tr><td>Drag the top or bottom edge of an entry</td><td>Change its start or end.</td></tr>
+      <tr><td>Right-click an entry</td><td>Choose a colour, hide the event, or delete it (asks twice).</td></tr>
+      <tr><td>Right-click the empty board</td><td>Reload, show or hide hidden events, open Settings.</td></tr>
+    </table>
+    <p>Events from calendars that are read-only (holidays, subscriptions) can be coloured and hidden but not edited. Editing or deleting a repeating event changes only the occurrence you touched.</p>
+    <h3>Colours</h3>
+    <p>Right-click an entry to give that event one of twelve colours. To recolour a whole calendar, open Settings → Calendars and click its colour square. Every colour has a light and a dark variant, and text switches between black and white for contrast. Colours you choose are stored in SideCal's settings, not in your calendar.</p>
+    <h3>Calendar priority</h3>
+    <p>In Settings → Calendars, drag the handle to reorder calendars. When events overlap, the calendar higher in the list takes the left column and is drawn on top. It is also the default calendar for new events.</p>
+    <h3>Hiding events</h3>
+    <p>Right-click → <b>Hide event</b> removes an entry from the sidebar and the menu bar countdown. The event stays in your calendar. Right-click the board and choose <b>Show hidden events</b> to see them again, drawn faded with a dashed outline.</p>
+
+    <h2 id="edge-preview">Auto-hide and edge preview</h2>
+    <p>With <b>Auto-Hide</b> on, the sidebar slides to the screen edge about a quarter of a second after the mouse leaves it. With <b>Edge preview</b> on, a thin strip stays behind: your events as faint bars, with a dot and a line for the current time. The running event stays at full strength.</p>
+    <p>Resting the mouse on the strip, or pushing it against the screen edge, opens the sidebar. Turn Edge preview off and the sidebar disappears completely instead; the screen edge still brings it back. You can set the strip's width (7 to 40 px) and opacity in Settings → Sidebar.</p>
+
+    <h2 id="shortcuts">Shortcuts</h2>
+    <p>Global shortcuts work in any app. Click a field in Settings → Shortcuts and press the new combination (include <kbd>Ctrl</kbd>, <kbd>Alt</kbd> or <kbd>Cmd</kbd>).</p>
+    <table>
+      <tr><th>Default</th><th>Action</th></tr>
+      <tr><td><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Cmd</kbd> <kbd>S</kbd></td><td>Show or hide the sidebar</td></tr>
+      <tr><td><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Cmd</kbd> <kbd>N</kbd></td><td>New event</td></tr>
+      <tr><td><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Cmd</kbd> <kbd>,</kbd></td><td>Open settings</td></tr>
+    </table>
+    <p><kbd>Esc</kbd> closes the event form and menus.</p>
+
+    <h2 id="settings">Settings</h2>
+    <p>Open Settings from the gear in the sidebar header, the menu bar item, the board's right-click menu or the shortcut. The window can be resized.</p>
+    <table>
+      <tr><th>Tab</th><th>What you can change</th></tr>
+      <tr><td><b>Calendars</b></td><td>Show or hide calendars, drag to set priority, change a calendar's colour, mark it as productive.</td></tr>
+      <tr><td><b>General</b></td><td>Launch at Login. Show Event Title and Show Event Duration in the menu bar. Suggest Events.</td></tr>
+      <tr><td><b>Appearance</b></td><td>Light, dark or auto. Island Mode. Show Header, Weekday and Date. 12-hour clock (hours 1 to 12, no AM/PM). Time indicator. All-day events. Highlight Active Event.</td></tr>
+      <tr><td><b>Sidebar</b></td><td>Left or right edge, width, Keep Above Other Windows, Auto-Hide, and the Edge preview (on or off, width, opacity).</td></tr>
+      <tr><td><b>Shortcuts</b></td><td>Use Global Hotkeys, and the three shortcuts.</td></tr>
+      <tr><td><b>Productivity</b></td><td>Hours spent in calendars marked as productive, today and this week. Click a number to copy it.</td></tr>
+    </table>
+    <p>Hover the <b>?</b> next to an option for a short explanation.</p>
+
+    <h2 id="data">Your data</h2>
+    <ul>
+      <li><b>Events</b> stay in the system calendar database. SideCal reads and edits them through Apple's EventKit.</li>
+      <li><b>Settings</b>, custom colours and hidden events are stored in <code>~/Library/Application Support/pl.deploys.sidebarcalendar/settings.json</code>.</li>
+      <li><b>Launch at Login</b> writes <code>~/Library/LaunchAgents/pl.deploys.sidebarcalendar.plist</code>; turning it off removes the file.</li>
+      <li>SideCal contains no network code and no analytics.</li>
+    </ul>
+    <p>To reset everything, quit SideCal and delete the <code>settings.json</code> file.</p>
+
+    <h2 id="troubleshooting">Troubleshooting</h2>
+    <h3>The sidebar says "Waiting for calendar access"</h3>
+    <p>Open System Settings → Privacy &amp; Security → Calendars and allow SideCal full access. This happens again after every rebuild.</p>
+    <h3>I can't find the sidebar</h3>
+    <p>It may be auto-hidden: push the mouse against the screen edge, or press the show/hide shortcut, or click the menu bar text. If the menu bar is crowded, macOS can hide the item; close some other menu bar apps.</p>
+    <h3>A shortcut does nothing</h3>
+    <p>Check that <b>Use Global Hotkeys</b> is on (Settings → Shortcuts) and that another app is not using the same combination.</p>
+    <h3>An event lost its colour or reappeared</h3>
+    <p>Colours and hidden flags follow the event's identifier. Some calendar providers issue a new identifier after a sync, which resets them.</p>
+
+    <h2 id="build">Building and contributing</h2>
+    <p>The app is Rust and Tauri on the outside and plain HTML, CSS and JavaScript on the inside, with no bundler and no npm.</p>
+    <table>
+      <tr><th>File</th><th>Role</th></tr>
+      <tr><td><code>src/calendar.rs</code></td><td>EventKit bridge: access, read, create, update, delete</td></tr>
+      <tr><td><code>src/main.rs</code></td><td>Windows, menu bar item, shortcuts, auto-hide and slide animation</td></tr>
+      <tr><td><code>src/settings.rs</code></td><td>Settings model and persistence</td></tr>
+      <tr><td><code>ui/index.html</code></td><td>The sidebar</td></tr>
+      <tr><td><code>ui/settings.html</code></td><td>The settings window</td></tr>
+    </table>
+    <p>After changing <code>src/</code> or <code>ui/</code>, run <code>./build-app.sh</code>. Contributions are welcome: see <code>CONTRIBUTING.md</code> in the repository.</p>
+
+    <h2 id="license">License</h2>
+    <p>Copyright 2026 Kacper Górec. SideCal is released under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>. You may use, modify and distribute it, including commercially, as long as you keep the <code>LICENSE</code> and <code>NOTICE</code> files that credit Kacper Górec, and state your changes. The software is provided as is, without warranty.</p>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>SideCal by Kacper Górec. Open source under the Apache License 2.0.</span>
+    <span><a href="./">Home</a> · <a data-repo="" href="#">GitHub</a> · <a data-repo="/issues" href="#">Report an issue</a></span>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
