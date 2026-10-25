@@ -1,5 +1,5 @@
 // Copyright 2026 Kacper Górec. Licensed under the Apache License, Version 2.0.
-// Small helpers for the project site: scroll reveal, GitHub links and the docs table of contents.
+// Small helpers for the project site: scroll reveal and the docs table of contents.
 
 // Fade elements in as they enter the viewport (IntersectionObserver, never a scroll listener).
 const reveal = [...document.querySelectorAll('.reveal')];
@@ -11,14 +11,6 @@ if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: re
 } else {
   reveal.forEach((el) => el.classList.add('in'));
 }
-
-// Links to the repository are derived from the Pages address (https://USER.github.io/REPO/),
-// so the site needs no configuration. Opened from disk, those links are hidden.
-const m = /^([^.]+)\.github\.io$/.exec(location.hostname);
-const repo = m && location.pathname.split('/')[1] ? `https://github.com/${m[1]}/${location.pathname.split('/')[1]}` : '';
-document.querySelectorAll('[data-repo]').forEach((a) => {
-  if (repo) a.href = repo + a.dataset.repo; else a.hidden = true;
-});
 
 // Highlight the current section in the docs table of contents.
 const links = [...document.querySelectorAll('.toc a')];
