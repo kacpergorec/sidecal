@@ -158,7 +158,7 @@ pub fn save(app: &AppHandle, settings: &Settings) -> Result<(), String> {
 /// Launch at login via a per-user LaunchAgent (no extra dependencies).
 pub fn set_launch_at_login(enabled: bool) -> Result<(), String> {
     let home = std::env::var("HOME").map_err(|e| e.to_string())?;
-    let plist = PathBuf::from(home).join("Library/LaunchAgents/pl.deploys.sidebarcalendar.plist");
+    let plist = PathBuf::from(home).join("Library/LaunchAgents/com.kacpergorec.sidecal.plist");
     if !enabled {
         let _ = std::fs::remove_file(plist);
         return Ok(());
@@ -169,7 +169,7 @@ pub fn set_launch_at_login(enabled: bool) -> Result<(), String> {
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>Label</key><string>pl.deploys.sidebarcalendar</string>
+  <key>Label</key><string>com.kacpergorec.sidecal</string>
   <key>ProgramArguments</key><array><string>{}</string></array>
   <key>RunAtLoad</key><true/>
 </dict>
