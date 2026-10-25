@@ -74,6 +74,10 @@
   #keys.on { display: grid; gap: 18px; }
   #keys .hint { margin-top: 4px; }
   .credit { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11.5px; text-align: center; }
+  .act { padding: 6px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); font: 500 12px var(--font); cursor: pointer; }
+  .act:hover { background: var(--hover); }
+  .act:disabled { opacity: .6; cursor: default; }
+  #connect-out { white-space: pre-line; margin-top: 0; }
   .hint { color: var(--muted); font-size: 11.5px; margin-top: 16px; max-width: 58ch; }
 
   .stat { display: flex; justify-content: space-between; align-items: baseline; padding: 18px 20px; border: 1px solid var(--line);
@@ -99,6 +103,10 @@
   <div class="grp" data-keys="launch_at_login,check_for_updates"><h3>Startup</h3><div class="list"></div></div>
   <div class="grp" data-keys="show_title_in_menu_bar,show_duration_in_menu_bar"><h3>Menu bar</h3><div class="list"></div></div>
   <div class="grp" data-keys="suggest_events"><h3>New events</h3><div class="list"></div></div>
+  <div class="grp"><h3>AI assistants</h3><div class="list">
+    <div class="row"><button id="connect" class="act">Add to Claude and Cursor</button></div>
+    <p class="hint" id="connect-out">Registers SideCal's local MCP server with Claude Desktop, Claude Code and Cursor. It only edits their config files; nothing is sent over the network.</p>
+  </div></div>
 </section>
 
 <section id="app">
@@ -332,6 +340,13 @@ async function renderProductivity() {
   $('p-today').lastElementChild.textContent = await hoursBetween(d.getTime(), d.getTime() + 864e5);
   $('p-week').lastElementChild.textContent = await hoursBetween(mon.getTime(), mon.getTime() + 7 * 864e5);
 }
+$('connect').onclick = async () => {
+  const b = $('connect'), out = $('connect-out');
+  b.disabled = true; out.textContent = 'Working…';
+  try { out.textContent = (await invoke('connect_assistants')).join('\n'); }
+  catch (e) { out.textContent = String(e); }
+  b.disabled = false;
+};
 document.querySelectorAll('.stat').forEach((s) => (s.onclick = () => navigator.clipboard.writeText(s.lastElementChild.textContent)));
 
 document.querySelectorAll('#tabs button').forEach((b) => {

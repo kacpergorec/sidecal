@@ -13,6 +13,7 @@ Free sidebar calendar for macOS. Rust + Tauri 2 backend, plain HTML/CSS/JS UI (n
 
 - `src/main.rs` window, tray, sliding/auto-hide, commands. `src/calendar.rs` EventKit bridge. `src/settings.rs` settings JSON.
 - `src/mcp.rs` `sidecal --mcp`: stdio MCP server (list_calendars, get_events, create_event, update_event; deliberately no delete).
+- `src/assistants.rs` Settings button "Add to Claude and Cursor": writes `mcpServers.sidecal` into Claude Desktop/Cursor configs and runs `claude mcp add`. `mcpb/` is the Claude Desktop extension (manifest, launcher script); the release workflow zips it to `SideCal.mcpb`.
 - `src/updater.rs` optional update check/install via `docs/latest.json`; shells out to `/usr/bin/curl`, off by default.
 - `ui/` the sidebar and settings windows. `ui/theme.css` holds the design tokens (light and dark must both work).
 - `docs/` the GitHub Pages site (deployed from `main` `/docs`): `index.html`, `documentation.html`, `style.css`, `site.js`.

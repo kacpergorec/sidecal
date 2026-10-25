@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 // Copyright 2026 Kacper Górec. Licensed under the Apache License, Version 2.0 (see LICENSE and NOTICE).
 
+mod assistants;
 mod calendar;
 mod mcp;
 mod settings;
@@ -35,6 +36,12 @@ fn grace(app: &AppHandle, secs: u64) {
 }
 
 // ---- commands -------------------------------------------------------------
+
+/// Settings > General > Add to Claude and Cursor. Runs off the main thread: it may start a shell.
+#[tauri::command]
+async fn connect_assistants() -> Vec<String> {
+    tauri::async_runtime::spawn_blocking(assistants::connect).await.unwrap_or_default()
+}
 
 #[tauri::command]
 fn has_access() -> bool {
@@ -433,6 +440,7 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
+            connect_assistants,
             has_access,
             get_events,
             get_calendars,

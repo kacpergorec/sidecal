@@ -70,7 +70,12 @@ The first build takes a few minutes. `./build-app.sh` builds `SideCal.app` witho
 
 SideCal can run as a local [MCP](https://modelcontextprotocol.io) server, so any MCP-capable assistant (Claude, Cursor and others) can read your calendar and plan your day. It talks over stdio only, with no network.
 
-Point your client at this command:
+The quickest ways to connect:
+
+- **Claude Desktop extension:** download `SideCal.mcpb` from the [latest release](https://github.com/kacpergorec/sidecal/releases/latest) and open it. Install SideCal first.
+- **From the app:** Settings > General > **Add to Claude and Cursor** registers SideCal with Claude Desktop, Claude Code and Cursor for you (it only edits their config files).
+
+Or point any client at this command:
 
 ```
 /Applications/SideCal.app/Contents/MacOS/sidecal --mcp

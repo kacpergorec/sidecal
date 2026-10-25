@@ -75,12 +75,22 @@ jobs:
         with:
           path: dist
           merge-multiple: true
+      # Claude Desktop extension: a zip with a launcher that runs the installed SideCal.app (same for both Macs).
+      - name: Pack the Claude Desktop extension
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          V="${TAG#v}"
+          echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' && sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$V\"/" mcpb/manifest.json
+          (cd mcpb && zip -qr ../dist/SideCal.mcpb manifest.json icon.png server)
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.tag || github.ref_name }}
           target_commitish: ${{ github.sha }}
           generate_release_notes: true
-          files: dist/*.zip
+          files: |
+            dist/*.zip
+            dist/SideCal.mcpb
           body: |
             ## Install
             1. Download **SideCal-apple-silicon.zip** (M1 and newer) or **SideCal-intel.zip** (Intel Macs).
@@ -88,6 +98,8 @@ jobs:
             3. First launch: right-click the app, choose **Open**, then **Open** again. The app is not notarized with an Apple Developer ID, so macOS asks once.
 
             If macOS says the app is damaged, run `xattr -dr com.apple.quarantine /Applications/SideCal.app`.
+
+            Use Claude Desktop? Open **SideCal.mcpb** after installing the app to let Claude read and time-block your calendar.
 
             Already installed? Use **Check for Updates…** in the SideCal menu bar menu.
       # SideCal's optional update check reads docs/latest.json from GitHub Pages.

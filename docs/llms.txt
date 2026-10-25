@@ -5,4 +5,5 @@
 - [Website](https://kacpergorec.github.io/sidecal/)
 - [Documentation](https://kacpergorec.github.io/sidecal/documentation.html): install, usage, settings, shortcuts
 - [Download](https://github.com/kacpergorec/sidecal/releases/latest): Apple Silicon and Intel builds, macOS 14 or later
+- [Claude Desktop extension](https://github.com/kacpergorec/sidecal/releases/latest/download/SideCal.mcpb): one-click MCP setup for Claude Desktop (install SideCal first)
 - [Source](https://github.com/kacpergorec/sidecal)

@@ -118,6 +118,8 @@ open /Applications/SideCal.app</code></pre>
 
     <h2 id="ai">Use with AI assistants (MCP)</h2>
     <p>SideCal can run as a local <a href="https://modelcontextprotocol.io">MCP</a> server, so any MCP-capable assistant (Claude, Cursor and others) can read your calendar and plan your day. It talks over stdio only; there is no network and no window.</p>
+    <h3>One click</h3>
+    <p>Install SideCal, then either download <a href="https://github.com/kacpergorec/sidecal/releases/latest/download/SideCal.mcpb">SideCal.mcpb</a> and open it with Claude Desktop, or open SideCal's Settings → General and press <b>Add to Claude and Cursor</b>. The button adds SideCal to Claude Desktop, Claude Code and Cursor; it only edits their config files, so restart the app afterwards. The commands below do the same by hand.</p>
     <h3>Any MCP client</h3>
     <p>Configure a stdio server with this command and the argument <code>--mcp</code>:</p>
     <pre><code>/Applications/SideCal.app/Contents/MacOS/sidecal --mcp</code></pre>

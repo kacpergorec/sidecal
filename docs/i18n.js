@@ -159,7 +159,8 @@ window.SC_I18N = {
    "SideCal: free sidebar calendar for macOS with time blocking and a menu bar countdown": "SideCal: darmowy kalendarz w panelu bocznym dla macOS z blokowaniem czasu i odliczaniem w pasku menu",
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal to darmowy kalendarz w panelu bocznym dla macOS, na otwartej licencji. Planuj dzień przeciąganiem, zobacz następne wydarzenie w pasku menu, synchronizuj z Kalendarzem Apple (iCloud, Google, Exchange) i pozwól asystentom AI, takim jak Claude i Cursor, układać plan dnia przez lokalny serwer MCP.",
    "SideCal: the free sidebar calendar for macOS": "SideCal: darmowy kalendarz w panelu bocznym dla macOS",
-   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Darmowy kalendarz w panelu bocznym dla macOS: planowanie przeciąganiem, autoukrywanie, odliczanie w pasku menu i lokalny serwer MCP, dzięki któremu asystenci AI, jak Claude i Cursor, pomogą ci zaplanować dzień."
+   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Darmowy kalendarz w panelu bocznym dla macOS: planowanie przeciąganiem, autoukrywanie, odliczanie w pasku menu i lokalny serwer MCP, dzięki któremu asystenci AI, jak Claude i Cursor, pomogą ci zaplanować dzień.",
+   "Claude Desktop extension (.mcpb)": "Rozszerzenie do Claude Desktop (.mcpb)"
   }
  },
  "de": {
@@ -319,7 +320,8 @@ window.SC_I18N = {
    "SideCal: free sidebar calendar for macOS with time blocking and a menu bar countdown": "SideCal: kostenloser Seitenleisten-Kalender für macOS mit Zeitblöcken und Countdown in der Menüleiste",
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal ist ein kostenloser Open-Source-Seitenleisten-Kalender für macOS. Plane Zeitblöcke per Ziehen, sieh den nächsten Termin in der Menüleiste, synchronisiere mit dem Apple-Kalender (iCloud, Google, Exchange) und lass KI-Assistenten wie Claude und Cursor deinen Tag über einen lokalen MCP-Server planen.",
    "SideCal: the free sidebar calendar for macOS": "SideCal: der kostenlose Seitenleisten-Kalender für macOS",
-   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Kostenloser Seitenleisten-Kalender für macOS: Zeitblöcke per Ziehen, automatisches Ausblenden, Countdown in der Menüleiste und ein lokaler MCP-Server, über den KI-Assistenten wie Claude und Cursor deinen Tag planen."
+   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Kostenloser Seitenleisten-Kalender für macOS: Zeitblöcke per Ziehen, automatisches Ausblenden, Countdown in der Menüleiste und ein lokaler MCP-Server, über den KI-Assistenten wie Claude und Cursor deinen Tag planen.",
+   "Claude Desktop extension (.mcpb)": "Erweiterung für Claude Desktop (.mcpb)"
   }
  },
  "es": {
@@ -479,7 +481,8 @@ window.SC_I18N = {
    "SideCal: free sidebar calendar for macOS with time blocking and a menu bar countdown": "SideCal: calendario lateral gratuito para macOS con bloques de tiempo y cuenta atrás en la barra de menús",
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal es un calendario lateral gratuito y de código abierto para macOS. Bloquea tiempo arrastrando, mira tu próximo evento en la barra de menús, sincroniza con el Calendario de Apple (iCloud, Google, Exchange) y deja que asistentes de IA como Claude y Cursor planifiquen tu día mediante un servidor MCP local.",
    "SideCal: the free sidebar calendar for macOS": "SideCal: el calendario lateral gratuito para macOS",
-   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Calendario lateral gratuito para macOS: bloques de tiempo arrastrando, ocultación automática, cuenta atrás en la barra de menús y un servidor MCP local para que asistentes de IA como Claude y Cursor planifiquen tu día."
+   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Calendario lateral gratuito para macOS: bloques de tiempo arrastrando, ocultación automática, cuenta atrás en la barra de menús y un servidor MCP local para que asistentes de IA como Claude y Cursor planifiquen tu día.",
+   "Claude Desktop extension (.mcpb)": "Extensión para Claude Desktop (.mcpb)"
   }
  },
  "fr": {
@@ -639,7 +642,8 @@ window.SC_I18N = {
    "SideCal: free sidebar calendar for macOS with time blocking and a menu bar countdown": "SideCal : calendrier gratuit en barre latérale pour macOS avec blocs de temps et compte à rebours dans la barre des menus",
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal est un calendrier gratuit et open source en barre latérale pour macOS. Planifiez en faisant glisser, voyez votre prochain événement dans la barre des menus, synchronisez avec le Calendrier Apple (iCloud, Google, Exchange) et laissez des assistants IA comme Claude et Cursor planifier votre journée via un serveur MCP local.",
    "SideCal: the free sidebar calendar for macOS": "SideCal : le calendrier gratuit en barre latérale pour macOS",
-   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Calendrier gratuit en barre latérale pour macOS : blocs de temps par glisser, masquage auto, compte à rebours dans la barre des menus et serveur MCP local pour que des assistants IA comme Claude et Cursor planifient votre journée."
+   "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Calendrier gratuit en barre latérale pour macOS : blocs de temps par glisser, masquage auto, compte à rebours dans la barre des menus et serveur MCP local pour que des assistants IA comme Claude et Cursor planifient votre journée.",
+   "Claude Desktop extension (.mcpb)": "Extension pour Claude Desktop (.mcpb)"
   }
  }
 };

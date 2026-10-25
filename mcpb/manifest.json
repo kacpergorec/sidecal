@@ -1,0 +1,39 @@
+{
+  "manifest_version": "0.3",
+  "name": "sidecal",
+  "display_name": "SideCal",
+  "version": "0.1.0",
+  "description": "Let Claude read and time-block your Apple Calendar through SideCal, a local MCP server. No network.",
+  "long_description": "SideCal must be installed in Applications and opened once, with calendar access allowed. Claude can then list your calendars, read events, add events and move or rename them. It cannot delete events, and events you hide in SideCal stay hidden from Claude.",
+  "author": {
+    "name": "Kacper Górec",
+    "url": "https://kacpergorec.github.io/sidecal/"
+  },
+  "homepage": "https://kacpergorec.github.io/sidecal/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kacpergorec/sidecal"
+  },
+  "license": "Apache-2.0",
+  "icon": "icon.png",
+  "server": {
+    "type": "binary",
+    "entry_point": "server/run.sh",
+    "mcp_config": {
+      "command": "${__dirname}/server/run.sh",
+      "args": [],
+      "env": {}
+    }
+  },
+  "tools": [
+    { "name": "list_calendars", "description": "List the calendars shown in SideCal." },
+    { "name": "get_events", "description": "Read events between two times." },
+    { "name": "create_event", "description": "Add an event (time blocking)." },
+    { "name": "update_event", "description": "Move, resize or rename an event." }
+  ],
+  "keywords": ["calendar", "macos", "time-blocking", "productivity"],
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin"]
+  }
+}
