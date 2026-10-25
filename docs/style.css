@@ -55,7 +55,7 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .more::after { content: " ›"; }
 
 /* ---- hero ---- */
-.hero { text-align: center; padding: 88px 0 0; overflow: hidden; }
+.hero { text-align: center; padding: 88px 0 120px; overflow: hidden; }
 .hero .app { width: 104px; height: 104px; border-radius: 24px; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .18)); }
 .hero h1 { font-size: clamp(44px, 8vw, 88px); margin: 28px auto 20px; max-width: 12em; letter-spacing: -.045em; }
 .hero p.lead { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.35; color: var(--muted); max-width: 31em; margin: 0 auto; letter-spacing: -.015em; }
@@ -110,9 +110,12 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .side.collapsed { width: 10px; right: 0; top: 28px; bottom: 0; border-radius: 0; background: transparent; border-color: transparent; }
 .side.collapsed::after { opacity: 0; }
 .side.collapsed .sc-head, .side.collapsed .hour, .side.collapsed .ev > span { opacity: 0; }
-.side.collapsed .ev { opacity: .6; }
+/* Same as the app: thin 2px-radius bars across the strip, "now" dot in its own column on the outer edge. */
+.side.collapsed .ev { opacity: .6; left: calc(100% - 6px); right: 1px; border-radius: 2px; padding: 0; min-height: 0; box-shadow: none; }
+.side.collapsed .now { left: calc(100% - 8px); }
+.side.collapsed .now::before { width: 3.5px; height: 3.5px; top: -1px; }
 .side.collapsed .ev.active { opacity: 1; }
-.sc-head, .hour, .ev > span, .ev { transition: opacity var(--t) var(--ease), background-color var(--t), color var(--t); }
+.sc-head, .hour, .ev > span, .ev, .now { transition: opacity var(--t) var(--ease), background-color var(--t), color var(--t), left var(--t) var(--ease), right var(--t) var(--ease), border-radius var(--t), padding var(--t); }
 
 .sc-head { position: relative; text-align: center; padding: 6px 30px 6px; min-height: 32px; border-bottom: 1px solid var(--line); flex: none; }
 .sc-head b { display: block; font: 500 14px/1.15 var(--serif); letter-spacing: -.02em; color: var(--text); }
@@ -133,6 +136,7 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .ev.l2 { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 1px; padding-top: 4px; }
 .ev.l2 .tt { flex: 0 1 auto; width: 100%; }
 .ev:not(.l2) .tm { display: none; }
+.side.collapsed .ev.active { box-shadow: none; }
 .ev.active { z-index: 7; box-shadow: 0 0 0 1px var(--bg), 0 0 0 2.5px var(--ev-c), 0 0 8px 1px color-mix(in srgb, var(--ev-c) 45%, transparent); }
 .ev.ghost { opacity: 0; transform: scaleY(.2); transform-origin: top; }
 .ev.ghost.on { opacity: 1; transform: none; transition: opacity .35s, transform .5s var(--ease); }
@@ -218,9 +222,6 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 @media (prefers-reduced-motion: reduce) { .side, .side *, .cap, .dots i, .desk, .mbar { transition: none !important; } }
 
 /* ---- badge, install cards, terminal ---- */
-.pill { display: flex; width: max-content; max-width: 100%; margin: 0 auto 26px; align-items: center; gap: 9px; padding: 6px 14px; border-radius: 980px; border: 1px solid var(--line);
-  background: var(--surface); color: var(--muted); font-size: 14px; font-weight: 500; letter-spacing: -.01em; }
-.pill i { width: 8px; height: 8px; border-radius: 50%; background: #34c759; box-shadow: 0 0 0 3px color-mix(in srgb, #34c759 25%, transparent); }
 .ways { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 56px; text-align: left; }
 .way { background: var(--surface); border-radius: 24px; padding: 34px; display: flex; flex-direction: column; align-items: flex-start; }
 .way h3 { font-size: 28px; letter-spacing: -.03em; margin-bottom: 8px; }
