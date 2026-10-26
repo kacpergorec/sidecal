@@ -61,6 +61,8 @@ pub struct Settings {
     pub theme: String,
     /// "left" | "right"
     pub side: String,
+    /// "solid" | "tinted"
+    pub event_style: String,
     pub width: f64,
     pub show_date: bool,
     pub show_header: bool,
@@ -99,6 +101,7 @@ impl Default for Settings {
             suggest_events: true,
             theme: "system".into(),
             side: "right".into(),
+            event_style: "tinted".into(),
             width: 190.0,
             show_date: true,
             show_header: true,

@@ -76,6 +76,7 @@
   #allday { padding: 4px 4px 0 var(--gutter); }
   #allday div { border-radius: 6px; padding: 2px 6px; margin-bottom: 2px; font-weight: 500;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #allday div, .ev { background: var(--ev-c); color: var(--ev-ink); }
   #scroll { flex: 1; overflow: hidden; min-height: 0; }
   #day { position: relative; height: 100%; margin-left: var(--gutter); }
   .hour { position: absolute; left: calc(var(--gutter) * -1); right: 0; border-top: 1px solid var(--line); pointer-events: none; }
@@ -97,6 +98,16 @@
   .ev.active { z-index: 7; box-shadow: 0 0 0 1px var(--bg), 0 0 0 2.5px var(--ev-c), 0 0 8px 1px color-mix(in srgb, var(--ev-c) 45%, transparent); }
   .ev.editable { cursor: grab; }
   .ev.dragging { z-index: 8; cursor: grabbing; outline: 2px solid var(--text); outline-offset: -1px; }
+  /* Event style "Tinted": a soft tint of the event colour, a hairline in the same hue and a solid bar on the left.
+     Only in the open sidebar; the edge preview keeps solid bars. */
+  [data-ev="tinted"] body:not(.collapsed) :is(#allday div, .ev) { background: color-mix(in srgb, var(--ev-c) 18%, var(--bg));
+    border: 1px solid color-mix(in srgb, var(--ev-c) 40%, transparent); color: var(--text); font-weight: 600; }
+  [data-ev="tinted"] body:not(.collapsed) :is(#allday div, .ev)::before { content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px;
+    width: 3px; border-radius: 2px; background: var(--ev-c); }
+  [data-ev="tinted"] body:not(.collapsed) #allday div { position: relative; padding-left: 11px; }
+  [data-ev="tinted"] body:not(.collapsed) .ev { padding-left: 11px; }
+  [data-ev="tinted"] body:not(.collapsed) .ev.l1::before { top: 2px; bottom: 2px; }   /* short entries: keep the bar visible */
+  [data-ev="tinted"] body:not(.collapsed) .ev .tm { font-weight: 500; color: var(--muted); opacity: 1; }
   #tip { position: absolute; z-index: 12; left: 2px; padding: 2px 7px; border-radius: 6px; background: var(--panel);
     border: 1px solid var(--line); color: var(--text); font: 500 10.5px var(--font); font-variant-numeric: tabular-nums;
     pointer-events: none; white-space: nowrap; }
@@ -145,6 +156,7 @@
     header { padding-left: 34px; padding-right: 34px; }
     .ev { padding: 0 4px; gap: 4px; }
     .ev.l2 { padding-top: 3px; }
+    [data-ev="tinted"] body:not(.collapsed) .ev { padding-left: 10px; }
   }
   html.boot * { transition: none !important; }
 </style>
@@ -265,6 +277,7 @@ function applyTheme() {
   root.style.setProperty('--pv-op', cfg.preview_opacity);
   $('date').hidden = !cfg.show_date;
   root.dataset.side = cfg.side;
+  root.dataset.ev = cfg.event_style;
   document.querySelectorAll('.hour').forEach((el) => (el.innerHTML = `<span>${hourLabel(+el.dataset.h)}</span>`));
   $('now').hidden = !cfg.show_time_indicator;
 }
@@ -300,6 +313,8 @@ function ink(hex) {
   const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
   return 1.05 / (L + 0.05) >= (L + 0.05) / 0.05 ? '#ffffff' : '#111111';
 }
+// Entry colour plus its text colour (used by the solid event style).
+const paint = (el, c) => { el.style.setProperty('--ev-c', c); el.style.setProperty('--ev-ink', ink(c)); };
 const darkMq = matchMedia('(prefers-color-scheme: dark)');
 const isDark = () => scIsDark(cfg.theme);
 const tone = (p) => scTone(p, cfg.theme);
@@ -367,7 +382,7 @@ function openColorMenu(m, e, el) {
   const current = colorOf(e);
   const menu = $('cmenu');
   menu.classList.remove('list');
-  const preview = (c) => { el.style.background = c; el.style.color = ink(c); };
+  const preview = (c) => paint(el, c);
   const commit = (id) => { invoke('set_event_color', { id: e.id, color: id }); closeColorMenu(); };
   menu.innerHTML = '';
   for (const p of PALETTE) {
@@ -457,8 +472,7 @@ function render() {
   if (cfg.display_all_day_events) {
     for (const e of shown.filter((e) => e.all_day).sort((a, b) => rank(a) - rank(b))) {
       const el = document.createElement('div');
-      el.style.background = colorOf(e);
-      el.style.color = ink(colorOf(e));
+      paint(el, colorOf(e));
       el.textContent = e.title;
       if (isHiddenEv(e)) el.classList.add('is-hidden');
       el.oncontextmenu = (m) => { m.preventDefault(); openColorMenu(m, e, el); };
@@ -468,13 +482,12 @@ function render() {
   for (const e of [...timed].sort((a, b) => rank(b) - rank(a))) {
     const el = document.createElement('div');
     el.className = 'ev' + (e.editable ? ' editable' : '');
-    el.style.cssText = `left:calc(${(e.col / e.cols) * 100}% + 3px);width:calc(${100 / e.cols}% - 6px);` +
-      `background:${colorOf(e)};color:${ink(colorOf(e))}`;
+    el.style.cssText = `left:calc(${(e.col / e.cols) * 100}% + 3px);width:calc(${100 / e.cols}% - 6px)`;
+    paint(el, colorOf(e));
     styleEv(el, e, e.start, e.end);
     if (isHiddenEv(e)) el.classList.add('is-hidden');
     if (cfg.show_glowing_border && e.start <= now && e.end > now) {
       el.classList.add('active');
-      el.style.setProperty('--ev-c', colorOf(e));
     }
     el.oncontextmenu = (m) => { m.preventDefault(); openColorMenu(m, e, el); };
     if (e.editable) {
