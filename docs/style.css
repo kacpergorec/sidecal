@@ -252,6 +252,10 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 .way ol b { color: var(--ink); font-weight: 600; }
 .way .btn { margin-top: auto; }
 .way .small { margin-top: 14px; font-size: 14px; }
+/* Claude Desktop extension button: Claude's own orange and spark, like the hero chip tile. */
+.way .btn.claude { margin-top: 22px; background: #d97757; color: #fff; }
+.way .btn.claude:hover { background: #c4633f; color: #fff; }
+.btn.claude svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
 .term { width: 100%; margin-top: 18px; border-radius: 12px; overflow: hidden; background: #1c1c1e; border: 1px solid #38383a; }
 .term .bar { display: flex; align-items: center; gap: 7px; padding: 10px 12px; background: #2a2a2c; }
 .term .bar span { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }

@@ -132,7 +132,6 @@ window.SC_I18N = {
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal to darmowy kalendarz w panelu bocznym dla macOS, na otwartej licencji. Planuj dzień przeciąganiem, zobacz następne wydarzenie w pasku menu, synchronizuj z Kalendarzem Apple (iCloud, Google, Exchange) i pozwól asystentom AI, takim jak Claude i Cursor, układać plan dnia przez lokalny serwer MCP.",
    "SideCal: the free sidebar calendar for macOS": "SideCal: darmowy kalendarz w panelu bocznym dla macOS",
    "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Darmowy kalendarz w panelu bocznym dla macOS: planowanie przeciąganiem, autoukrywanie, odliczanie w pasku menu i lokalny serwer MCP, dzięki któremu asystenci AI, jak Claude i Cursor, pomogą ci zaplanować dzień.",
-   "Claude Desktop extension (.mcpb)": "Rozszerzenie do Claude Desktop (.mcpb)",
    "Today's events on a timeline down the edge of your screen, with a line marking right now.": "Dzisiejsze wydarzenia na osi czasu wzdłuż krawędzi ekranu, z linią, która pokazuje, gdzie jesteś teraz.",
    "Prefer it detached? Island mode floats it a little off the screen edge.": "Wolisz, żeby nie przylegał do krawędzi? Tryb wyspy odsuwa go od brzegu jak osobną kartę.",
    "Colours": "Kolory",
@@ -148,7 +147,9 @@ window.SC_I18N = {
    "Download it or build it.": "Pobierz albo zbuduj sam.",
    "Is SideCal free?": "Czy SideCal jest darmowy?",
    "How do I plan my day with it?": "Jak zaplanować w nim dzień?",
-   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Otwórz SideCal i przeciągnij po pustym miejscu na osi czasu, żeby dodać wydarzenie. Złap wpis, żeby go przesunąć, albo jego górny lub dolny brzeg, żeby zmienić długość. Zmiany trafiają od razu do Kalendarza Apple."
+   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Otwórz SideCal i przeciągnij po pustym miejscu na osi czasu, żeby dodać wydarzenie. Złap wpis, żeby go przesunąć, albo jego górny lub dolny brzeg, żeby zmienić długość. Zmiany trafiają od razu do Kalendarza Apple.",
+   "Add to Claude Desktop": "Dodaj do Claude Desktop",
+   "Opens in Claude Desktop. Install SideCal first. In the app, Settings → General → Add to Claude and Cursor does the same for Claude Code and Cursor.": "Otwiera się w Claude Desktop. Najpierw zainstaluj SideCal. Dla Claude Code i Cursora użyj w aplikacji Ustawienia → General → Add to Claude and Cursor."
   }
  },
  "de": {
@@ -281,7 +282,6 @@ window.SC_I18N = {
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal ist ein kostenloser Open-Source-Seitenleisten-Kalender für macOS. Plane Zeitblöcke per Ziehen, sieh den nächsten Termin in der Menüleiste, synchronisiere mit dem Apple-Kalender (iCloud, Google, Exchange) und lass KI-Assistenten wie Claude und Cursor deinen Tag über einen lokalen MCP-Server planen.",
    "SideCal: the free sidebar calendar for macOS": "SideCal: der kostenlose Seitenleisten-Kalender für macOS",
    "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Kostenloser Seitenleisten-Kalender für macOS: Zeitblöcke per Ziehen, automatisches Ausblenden, Countdown in der Menüleiste und ein lokaler MCP-Server, über den KI-Assistenten wie Claude und Cursor deinen Tag planen.",
-   "Claude Desktop extension (.mcpb)": "Erweiterung für Claude Desktop (.mcpb)",
    "Today's events on a timeline down the edge of your screen, with a line marking right now.": "Die heutigen Termine als Zeitleiste am Bildschirmrand, mit einer Linie für den aktuellen Moment.",
    "Prefer it detached? Island mode floats it a little off the screen edge.": "Lieber frei schwebend? Im Inselmodus rückt die Leiste etwas vom Rand ab.",
    "Colours": "Farben",
@@ -297,7 +297,9 @@ window.SC_I18N = {
    "Download it or build it.": "Herunterladen oder selbst bauen.",
    "Is SideCal free?": "Ist SideCal kostenlos?",
    "How do I plan my day with it?": "Wie plane ich damit meinen Tag?",
-   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Öffne SideCal und ziehe auf einer freien Stelle der Zeitleiste, um einen Termin anzulegen. Ziehe einen Eintrag zum Verschieben oder seinen oberen oder unteren Rand zum Ändern der Länge. Änderungen landen direkt in deinem Apple-Kalender."
+   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Öffne SideCal und ziehe auf einer freien Stelle der Zeitleiste, um einen Termin anzulegen. Ziehe einen Eintrag zum Verschieben oder seinen oberen oder unteren Rand zum Ändern der Länge. Änderungen landen direkt in deinem Apple-Kalender.",
+   "Add to Claude Desktop": "Zu Claude Desktop hinzufügen",
+   "Opens in Claude Desktop. Install SideCal first. In the app, Settings → General → Add to Claude and Cursor does the same for Claude Code and Cursor.": "Öffnet sich in Claude Desktop. Installiere zuerst SideCal. Für Claude Code und Cursor nutze in der App Einstellungen → General → Add to Claude and Cursor."
   }
  },
  "es": {
@@ -430,7 +432,6 @@ window.SC_I18N = {
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal es un calendario lateral gratuito y de código abierto para macOS. Bloquea tiempo arrastrando, mira tu próximo evento en la barra de menús, sincroniza con el Calendario de Apple (iCloud, Google, Exchange) y deja que asistentes de IA como Claude y Cursor planifiquen tu día mediante un servidor MCP local.",
    "SideCal: the free sidebar calendar for macOS": "SideCal: el calendario lateral gratuito para macOS",
    "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Calendario lateral gratuito para macOS: bloques de tiempo arrastrando, ocultación automática, cuenta atrás en la barra de menús y un servidor MCP local para que asistentes de IA como Claude y Cursor planifiquen tu día.",
-   "Claude Desktop extension (.mcpb)": "Extensión para Claude Desktop (.mcpb)",
    "Today's events on a timeline down the edge of your screen, with a line marking right now.": "Los eventos de hoy en una línea de tiempo junto al borde de la pantalla, con una marca para el momento actual.",
    "Prefer it detached? Island mode floats it a little off the screen edge.": "¿Lo prefieres separado? El modo isla lo despega un poco del borde.",
    "Colours": "Colores",
@@ -446,7 +447,9 @@ window.SC_I18N = {
    "Download it or build it.": "Descárgalo o compílalo tú.",
    "Is SideCal free?": "¿SideCal es gratis?",
    "How do I plan my day with it?": "¿Cómo planifico mi día con él?",
-   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Abre SideCal y arrastra sobre una zona vacía de la línea de tiempo para crear un evento. Arrastra una entrada para moverla o su borde superior o inferior para cambiar su duración. Los cambios se guardan en tu Calendario de Apple."
+   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Abre SideCal y arrastra sobre una zona vacía de la línea de tiempo para crear un evento. Arrastra una entrada para moverla o su borde superior o inferior para cambiar su duración. Los cambios se guardan en tu Calendario de Apple.",
+   "Add to Claude Desktop": "Añadir a Claude Desktop",
+   "Opens in Claude Desktop. Install SideCal first. In the app, Settings → General → Add to Claude and Cursor does the same for Claude Code and Cursor.": "Se abre en Claude Desktop. Instala SideCal primero. Para Claude Code y Cursor, usa en la app Ajustes → General → Add to Claude and Cursor."
   }
  },
  "fr": {
@@ -579,7 +582,6 @@ window.SC_I18N = {
    "SideCal is a free, open-source sidebar calendar for macOS. Time-block by dragging, see your next event in the menu bar, sync with Apple Calendar (iCloud, Google, Exchange), and let AI assistants like Claude and Cursor plan your day through a local MCP server.": "SideCal est un calendrier gratuit et open source en barre latérale pour macOS. Planifiez en faisant glisser, voyez votre prochain événement dans la barre des menus, synchronisez avec le Calendrier Apple (iCloud, Google, Exchange) et laissez des assistants IA comme Claude et Cursor planifier votre journée via un serveur MCP local.",
    "SideCal: the free sidebar calendar for macOS": "SideCal : le calendrier gratuit en barre latérale pour macOS",
    "Free sidebar calendar for macOS: time blocking by dragging, auto-hide, a menu bar countdown, and a local MCP server so AI assistants like Claude and Cursor can plan your day.": "Calendrier gratuit en barre latérale pour macOS : blocs de temps par glisser, masquage auto, compte à rebours dans la barre des menus et serveur MCP local pour que des assistants IA comme Claude et Cursor planifient votre journée.",
-   "Claude Desktop extension (.mcpb)": "Extension pour Claude Desktop (.mcpb)",
    "Today's events on a timeline down the edge of your screen, with a line marking right now.": "Les événements du jour sur une frise le long du bord de l’écran, avec un trait pour l’instant présent.",
    "Prefer it detached? Island mode floats it a little off the screen edge.": "Vous le préférez détaché ? Le mode îlot l’éloigne un peu du bord.",
    "Colours": "Couleurs",
@@ -595,7 +597,9 @@ window.SC_I18N = {
    "Download it or build it.": "Téléchargez-le ou compilez-le.",
    "Is SideCal free?": "SideCal est-il gratuit ?",
    "How do I plan my day with it?": "Comment planifier ma journée avec ?",
-   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Ouvrez SideCal et faites glisser sur une zone vide de la frise pour créer un événement. Glissez une entrée pour la déplacer, ou son bord haut ou bas pour la redimensionner. Les changements sont enregistrés dans votre Calendrier Apple."
+   "Open SideCal and drag on an empty part of the timeline to create an event. Drag an entry to move it, or drag its top or bottom edge to resize it. Changes are saved to your Apple Calendar.": "Ouvrez SideCal et faites glisser sur une zone vide de la frise pour créer un événement. Glissez une entrée pour la déplacer, ou son bord haut ou bas pour la redimensionner. Les changements sont enregistrés dans votre Calendrier Apple.",
+   "Add to Claude Desktop": "Ajouter à Claude Desktop",
+   "Opens in Claude Desktop. Install SideCal first. In the app, Settings → General → Add to Claude and Cursor does the same for Claude Code and Cursor.": "S’ouvre dans Claude Desktop. Installez d’abord SideCal. Pour Claude Code et Cursor, utilisez dans l’app Réglages → General → Add to Claude and Cursor."
   }
  }
 };
