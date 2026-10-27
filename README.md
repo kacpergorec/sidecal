@@ -2,7 +2,7 @@
 
 <h1 align="center">SideCal</h1>
 
-<p align="center"><b>A free sidebar calendar for macOS.</b><br>Your whole day on the edge of your screen. Time-block by dragging. See your next event in the menu bar.</p>
+<p align="center"><b>A free sidebar calendar for macOS.</b><br>Your whole day on the edge of your screen. Zoom into it, move and resize events by dragging, see your next event in the menu bar.</p>
 
 <p align="center">
 <a href="https://github.com/kacpergorec/sidecal/releases/latest"><b>Download</b></a> ·
@@ -28,14 +28,16 @@
 | Feature | What it does |
 | --- | --- |
 | **Your day on the edge** | Today's events on a timeline down the edge of your screen, with a line marking right now. |
-| **Time blocking** | Drag to create, move or resize events. Snaps to 15 minutes, saves to Apple Calendar. |
+| **Time blocking** | Drag to move or resize events. Snaps to 15 minutes, saves to Apple Calendar. |
+| **Zoom** | Ctrl or Cmd + scroll, or pinch, zooms the timeline in; plain scroll moves it. A mini-map shows where you are in the day. |
 | **Auto-hide** | Slides off the screen edge when you move away, returns when you touch the edge. Left or right side. |
 | **Edge preview** | A thin, faded strip of your day stays on the edge while hidden. |
 | **Menu bar countdown** | "Design review (23m left)" while an event runs, "Standup in 12m" before the next. |
 | **All your calendars** | iCloud, Google, Exchange and CalDAV, through the macOS Calendar app. |
 | **Your colours, your order** | Recolour calendars and events, set calendar priority, hide single events, highlight the running event. |
 | **Island mode** | Float the sidebar as a card a little off the screen edge. |
-| **Global shortcuts** | Show the sidebar, add an event or open settings from anywhere. |
+| **Global shortcuts** | Show the sidebar or open settings from anywhere. |
+| **Your language** | English, Polish, German, Spanish and French, picked from your Mac's language. Switch it in Settings. |
 | **AI assistants (MCP)** | Claude, Cursor or any MCP client can read your day and time-block it, locally. One-click setup for Claude Desktop. |
 | **Optional updates** | Check from the menu bar and install in one click. Off by default. |
 
