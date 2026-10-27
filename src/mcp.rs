@@ -243,6 +243,7 @@ fn run_tool(name: &str, args: &Value) -> Result<Value, String> {
                 calendar_id: arg(args, "calendar_id").map(str::to_string),
                 start,
                 end,
+                reminder: None,
             })?;
             // EventKit does not hand the new id back from `save`, so look the event up again.
             let created = calendar::events(start - 1000.0, end + 1000.0)
@@ -272,7 +273,7 @@ fn run_tool(name: &str, args: &Value) -> Result<Value, String> {
                 return Err("end must be after start".into());
             }
             let title = arg(args, "title").map(str::to_string).unwrap_or(current.title);
-            calendar::save(calendar::EventInput { id: Some(id.to_string()), title, calendar_id: None, start, end })?;
+            calendar::save(calendar::EventInput { id: Some(id.to_string()), title, calendar_id: None, start, end, reminder: None })?;
             Ok(json!({ "updated": event_json(&calendar::event_by_id(id)?) }))
         }
 

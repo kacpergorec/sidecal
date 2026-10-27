@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="theme.css">
 <style>
-  :root { --hour: 40px; --gutter: 22px; }
+  :root { --hour: 40px; --gutter: 32px; }
   * { box-sizing: border-box; margin: 0; }
   [hidden] { display: none !important; }
   /* "Highlight Active Event": a soft glow along the inside edge of the open sidebar, drawn above everything
@@ -12,13 +12,10 @@
   #glow { position: absolute; inset: 0; z-index: 14; pointer-events: none; border-radius: inherit; transition: box-shadow .3s; }
   body.collapsed #glow { box-shadow: none !important; }
   #backdrop { position: absolute; inset: 0; z-index: 15; background: var(--scrim); }
-  #sel { position: absolute; left: 1px; right: 2px; z-index: 4; border-radius: 6px; pointer-events: none;
-    background: color-mix(in srgb, var(--focus) 22%, transparent); border: 1px solid var(--focus);
-    color: var(--text); padding: 2px 6px; font: 500 10.5px var(--font); }
-  #day { cursor: crosshair; }
 
-  html, body { height: 100%; color: var(--text); overflow: hidden;
-    font: 12px/1.4 var(--font); -webkit-font-smoothing: antialiased; user-select: none; cursor: default; }
+  /* clip, not hidden: a clipped box can never be scrolled (even programmatically), so the header cannot be pushed off the top. */
+  html, body { height: 100%; color: var(--text); overflow: hidden; overflow: clip;
+    font: 12px/1.4 var(--font); -webkit-font-smoothing: antialiased; -webkit-user-select: none; user-select: none; cursor: default; }
   /* Fixed-width content anchored to the screen edge: the window only reveals it, so nothing reflows while it slides. */
   /* Not plain `transparent`: then the body background would be propagated to the whole canvas and fill the
      island margin / edge strip with an opaque colour. 0.5% alpha is invisible but stops the propagation. */
@@ -40,16 +37,26 @@
   :root[data-slide] body.collapsed { width: var(--strip, 10px); min-width: var(--strip, 10px); left: 0; right: auto; }
   :root[data-slide][data-side="left"] body.collapsed { left: calc(var(--ww, 190px) - var(--strip, 10px)); }
   body.collapsed header, body.collapsed #allday, body.collapsed .hour { opacity: 0; pointer-events: none; }
+  /* The hidden header and all-day row must not take space: the strip runs the full height of the screen. */
+  body.collapsed header, body.collapsed #allday { height: 0; min-height: 0; padding-top: 0; padding-bottom: 0; margin: 0; border: 0; overflow: hidden; }
   body.collapsed #msg { display: none; }
   body.collapsed .ev .tm, body.collapsed .ev .tt { display: none; }
   body.collapsed .ev { font-size: 0 !important; padding: 0; border-radius: 2px; left: 1px !important; width: calc(100% - 2px) !important; opacity: var(--pv-op, .6); box-shadow: none; }
   body.collapsed .ev.past { opacity: calc(var(--pv-op, .6) * .5); }
-  body.collapsed .ev.active { opacity: 1; }   /* the running event stays at full strength in the preview */
+  body.collapsed .ev.active { opacity: 1; box-shadow: inset 0 0 0 1.5px var(--text), 0 0 8px color-mix(in srgb, var(--text) 30%, transparent); }   /* the running event stays at full strength in the preview */
   /* Preview: the "now" line crosses the bars; its dot sits in a separate column at the strip's outer edge. */
   body.collapsed { --dot: min(6px, calc(var(--strip, 10px) * .4)); }
-  body.collapsed #day { margin-left: var(--dot); }
+  body.collapsed #day { margin-left: var(--dot); margin-right: 0; }
+  body.collapsed #scroll { padding: 0; }
   body.collapsed #now { left: calc(var(--dot) * -1); }
-  body.collapsed #now::before { width: var(--dot); height: var(--dot); top: calc((1.5px - var(--dot)) / 2); }
+  /* Left-docked: the screen edge is on the left, so the time dot moves to the outer (right) side. */
+  :root[data-side="left"] body.collapsed #day { margin-left: 0; margin-right: var(--dot); }
+  :root[data-side="left"] body.collapsed #now { left: 0; right: calc(var(--dot) * -1); }
+  :root[data-side="left"] body.collapsed #now::before { left: auto; right: 0; }
+  :root[data-side="left"] #now::before { left: auto; right: -4px; }
+  :root[data-side="left"] body.collapsed #now::before { right: 0; }
+  body.collapsed #now::before { left: 0; width: var(--dot); height: var(--dot); top: calc((2px - var(--dot)) / 2); }
+  /* Hovering the strip: preview bars fade out in 0.1 s while the sidebar is about to open. */
   /* Transitions live on the collapsed state only: collapsing animates, expanding is instant. */
   body.collapsed { transition: width .16s ease-out, min-width .16s ease-out, left .16s ease-out, right .16s ease-out, top .16s ease-out,
     bottom .16s ease-out, border-radius .16s ease-out, background-color .16s, border-color .16s; }
@@ -59,35 +66,45 @@
 
   /* ---- header ---- */
   /* min-height: the buttons are absolutely positioned, so without weekday/date the header would collapse. */
-  header { text-align: center; padding: 10px 40px 9px; border-bottom: 1px solid var(--line); position: relative; min-height: 40px; }
+  header { text-align: left; padding: 14px 48px 8px 16px; position: relative; min-height: 48px; }
   header b, header span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  header b { font: 500 16px/1.15 var(--serif); letter-spacing: -.02em; }
-  header span { margin-top: 2px; color: var(--muted); font-size: 10.5px; letter-spacing: .01em; }
-  header .tools { position: absolute; left: 5px; top: 7px; display: flex; flex-direction: column; gap: 2px; }
-  header .tools.r { left: auto; right: 5px; }
-  header button { width: 24px; height: 24px; display: grid; place-items: center; border: 0; border-radius: 6px;
-    background: transparent; color: var(--muted); cursor: pointer; transition: background-color .12s, color .12s, transform .12s; }
-  header button:hover { background: var(--hover); color: var(--text); }
-  header button:active { transform: scale(.94); }
-  header svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  header b { font: 600 24px/1.1 var(--font); letter-spacing: -.035em; }
+  header span { margin-top: 1px; color: var(--muted); font-size: 12px; letter-spacing: -.01em; }
+  header .tools { position: absolute; top: 12px; display: flex; flex-direction: column; gap: 0; }
+  header .tools.r { right: 12px; }
+  header button { width: 24px; height: 24px; display: grid; place-items: center; border: 0; padding: 0;
+    background: none; color: var(--muted); cursor: pointer; transition: color .12s, transform .12s; }
+  header button:hover { color: var(--text); }
+  header button:active { transform: scale(.92); }
+  header svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
   /* ---- timeline ---- */
   #allday { padding: 4px 4px 0 var(--gutter); }
   #allday div { border-radius: 6px; padding: 2px 6px; margin-bottom: 2px; font-weight: 500;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #allday div, .ev { background: var(--ev-c); color: var(--ev-ink); }
-  #scroll { flex: 1; overflow: hidden; min-height: 0; }
-  #day { position: relative; height: 100%; margin-left: var(--gutter); }
+  #allday div, .ev { background: var(--ev-c); color: var(--ev-ink); font-weight: 600; }
+  #scroll { flex: 1; overflow: hidden; min-height: 0; padding: 4px 0 12px; scrollbar-width: none; }
+  #scroll::-webkit-scrollbar { display: none; }
+  #mm { position: absolute; right: 3px; width: 5px; border-radius: 3px; background: var(--hover); z-index: 6; pointer-events: none;
+    opacity: 0; transition: opacity .35s ease; }
+  #mm.show { opacity: .5; }
+  #mm.show.act { opacity: 1; transition-duration: .12s; }
+  :root[data-side="left"] #mm { right: auto; left: 3px; }
+  #mm i { position: absolute; left: 0; right: 0; border-radius: 3px; background: color-mix(in srgb, var(--c) 70%, var(--bg)); }
+  #mm .vp { left: -2px; right: -2px; background: none; box-shadow: 0 0 0 1.5px var(--text); }
+  #day { position: relative; height: 100%; /* fit() sets px height when zoomed */ margin-left: var(--gutter); margin-right: 12px; }
   .hour { position: absolute; left: calc(var(--gutter) * -1); right: 0; border-top: 1px solid var(--line); pointer-events: none; }
-  .hour span { position: absolute; left: 0; width: calc(var(--gutter) - 5px); text-align: right; top: -6px;
+  .hour span { position: absolute; left: -2px; width: calc(var(--gutter) - 5px); text-align: right; top: -6px;
     background: var(--bg); color: var(--muted); font: 500 9px/12px var(--font); letter-spacing: 0; }
   /* Labels sit centred on their line; the first one would stick out above the grid and get clipped. */
   .hour[data-h="0"] span { top: 1px; }
+  /* The top hour line doubles as the divider under the header; without a header it goes too. */
+  body.no-header .hour[data-h="0"] { border-top-color: transparent; }
   .ev { position: absolute; border-radius: 6px; padding: 0 6px; overflow: hidden; font-weight: 500; line-height: 1.2;
     font-size: var(--ev-fs, 11px); display: flex; align-items: center; gap: 6px; }
   .ev .tt { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ev .tm { flex: none; font-size: .88em; opacity: .78; white-space: nowrap; }
+  .ev .tm { flex: none; font-size: .88em; opacity: .95; white-space: nowrap; }
   /* Tiers by rendered height: l2 = title + time on two lines, l1 = one line (time beside the title),
      l0 = compact title only, mini = too small for text (name stays in the tooltip). */
   .ev.l2 { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 1px; padding-top: 4px; }
@@ -96,24 +113,26 @@
   .ev.l0 { font-size: calc(var(--ev-fs, 11px) - 1px); }
   .ev.mini { font-size: 0; padding: 0; }
   .ev.active { z-index: 7; box-shadow: 0 0 0 1px var(--bg), 0 0 0 2.5px var(--ev-c), 0 0 8px 1px color-mix(in srgb, var(--ev-c) 45%, transparent); }
+  /* Solid entries: the running one gets an ink border (a coloured ring would vanish on its own colour). */
+  :root:not([data-ev="tinted"]) body:not(.collapsed) .ev.active { box-shadow: inset 0 0 0 2px var(--text), 0 0 14px 2px color-mix(in srgb, var(--ev-c) 65%, transparent); }
   .ev.editable { cursor: grab; }
   .ev.dragging { z-index: 8; cursor: grabbing; outline: 2px solid var(--text); outline-offset: -1px; }
   /* Event style "Tinted": a soft tint of the event colour, a hairline in the same hue and a solid bar on the left.
      Only in the open sidebar; the edge preview keeps solid bars. */
-  [data-ev="tinted"] body:not(.collapsed) :is(#allday div, .ev) { background: color-mix(in srgb, var(--ev-c) 18%, var(--bg));
-    border: 1px solid color-mix(in srgb, var(--ev-c) 40%, transparent); color: var(--text); font-weight: 600; }
-  [data-ev="tinted"] body:not(.collapsed) :is(#allday div, .ev)::before { content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px;
-    width: 3px; border-radius: 2px; background: var(--ev-c); }
-  [data-ev="tinted"] body:not(.collapsed) #allday div { position: relative; padding-left: 11px; }
-  [data-ev="tinted"] body:not(.collapsed) .ev { padding-left: 11px; }
-  [data-ev="tinted"] body:not(.collapsed) .ev.l1::before { top: 2px; bottom: 2px; }   /* short entries: keep the bar visible */
-  [data-ev="tinted"] body:not(.collapsed) .ev .tm { font-weight: 500; color: var(--muted); opacity: 1; }
+  [data-ev="tinted"] body:not(.collapsed) :is(#allday div, .ev) { background: color-mix(in srgb, var(--ev-c) var(--tint, 17%), var(--bg));
+    border-left: 3px solid var(--ev-c); border-radius: 6px 8px 8px 6px; color: color-mix(in srgb, var(--ev-c) var(--tint-tx, 72%), var(--tint-tx-base, #000)); font-weight: 600; }
+  [data-ev="tinted"] body:not(.collapsed) .ev.active { background: color-mix(in srgb, var(--ev-c) var(--tint-a, 28%), var(--bg)); color: var(--text);
+    box-shadow: inset 0 0 0 1.5px var(--ev-c), 0 0 14px 2px color-mix(in srgb, var(--ev-c) 65%, transparent); }
+  [data-ev="tinted"] body:not(.collapsed) .ev .tm { font-weight: 400; color: inherit; opacity: .6; }
   #tip { position: absolute; z-index: 12; left: 2px; padding: 2px 7px; border-radius: 6px; background: var(--panel);
     border: 1px solid var(--line); color: var(--text); font: 500 10.5px var(--font); font-variant-numeric: tabular-nums;
     pointer-events: none; white-space: nowrap; }
-  #now { position: absolute; left: calc(var(--gutter) * -1); right: 0; height: 1.5px; background: var(--now); z-index: 10; pointer-events: none; }
-  #now::before { content: ""; position: absolute; left: 0; top: -2.5px; width: 6.5px; height: 6.5px; border-radius: 50%; background: var(--now); }
-  #msg { padding: 16px 12px; color: var(--muted); text-align: center; line-height: 1.5; font-size: 11px; }
+  #now { position: absolute; left: 0; right: 0; height: 2px; background: var(--now); z-index: 10; pointer-events: none; }
+  #now::before { content: ""; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--now); }
+  #msg { margin: 10px; padding: 8px 10px 8px 30px; position: relative; border-radius: 8px; text-align: left; line-height: 1.45; font-size: 11px;
+    background: color-mix(in srgb, #ffcc00 22%, var(--bg)); color: var(--text); }
+  #msg::before { content: "!"; position: absolute; left: 8px; top: 8px; width: 16px; height: 16px; border-radius: 50%;
+    background: #ffcc00; color: #000; font: 700 11px/16px var(--font); text-align: center; }
 
   /* ---- color menu & event form: flat panels, hairline borders ---- */
   #cmenu { position: absolute; z-index: 30; padding: 10px; background: var(--panel); border: 1px solid var(--line);
@@ -127,6 +146,14 @@
     color: var(--text); font: 500 12px var(--font); cursor: pointer; }
   #cmenu .act:hover { background: var(--hover); }
   #cmenu .act.danger { color: var(--danger); }
+  #cmenu .icons { grid-column: 1 / -1; display: flex; gap: 4px; margin: 4px -4px -4px; padding-top: 4px; border-top: 1px solid var(--line); }
+  #cmenu .ico { flex: 1; display: flex; align-items: center; justify-content: center; height: 28px; border: 0; border-radius: 6px;
+    background: none; color: var(--muted); cursor: pointer; }
+  #cmenu .ico:hover { background: var(--hover); color: var(--text); }
+  #cmenu .ico.danger { color: var(--danger); }
+  #cmenu .ico.danger:hover { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+  #cmenu .ico.sure { background: var(--danger); color: #fff; }
+  #cmenu .ico svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
   .is-hidden { opacity: .45; outline: 1px dashed var(--muted); outline-offset: -1px; }
 
   #form { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 20; padding: 12px;
@@ -136,6 +163,23 @@
     background: var(--bg); color: var(--text); font: inherit; }
   #form input:focus, #form select:focus { outline: 2px solid var(--focus); outline-offset: -1px; border-color: transparent; }
   #form input[type=time] { font-size: 12px; }
+  .dd { position: relative; }
+  .dd, .dd > button, .dd .list { box-sizing: border-box; }
+  #form .dd > button { padding: 6px 8px; flex: none; }
+  .dd > button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+  .dd > button:hover { background: var(--hover); }
+  .dd > button .lbl { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dd > button::after { content: ""; width: 5px; height: 5px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted);
+    transform: translateY(-1px) rotate(45deg); flex: none; }
+  .dd .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; background: var(--muted); }
+  .dd .list { display: none; margin-top: 4px; padding: 3px; max-height: 150px; overflow-y: auto; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--bg); }
+  .dd.open .list { display: block; }
+  .dd .opt { display: flex; align-items: center; gap: 8px; padding: 5px 7px; border-radius: 5px; cursor: pointer; }
+  .dd .opt:hover { background: var(--hover); }
+  .dd .opt.sel { font-weight: 600; }
+  .dd .opt .lbl { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   #form .row { display: flex; gap: 6px; align-items: center; color: var(--muted); }
   #form .row input { min-width: 0; }
   #form button { flex: 1; padding: 6px 0; border-radius: 6px; border: 1px solid var(--line);
@@ -159,32 +203,37 @@
     [data-ev="tinted"] body:not(.collapsed) .ev { padding-left: 10px; }
   }
   html.boot * { transition: none !important; }
+  /* WebKit needs the prefix, and the property must reach every descendant; only text fields stay selectable. */
+  body *, html { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  input, textarea { -webkit-user-select: text; user-select: text; }
 </style>
 </head>
 <body>
 <header>
-  <div class="tools">
-    <button id="gear" title="Settings" aria-label="Settings"><svg viewBox="0 0 16 16"><path d="M2 4h6.5M11.9 4H14M2 8h2.5M7.9 8H14M2 12h7.5M12.9 12H14"/><circle cx="10.2" cy="4" r="1.7"/><circle cx="6.2" cy="8" r="1.7"/><circle cx="11.2" cy="12" r="1.7"/></svg></button>
-  </div>
   <b id="weekday"></b><span id="date"></span>
-  <div class="tools r"><button id="add" title="New event" aria-label="New event"><svg viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></svg></button></div>
+  <div class="tools r">
+    <button id="gear" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+  </div>
 </header>
 <div id="msg" hidden>Waiting for calendar access…<br>System Settings → Privacy &amp; Security → Calendars</div>
 <div id="allday"></div>
-<div id="scroll"><div id="day"><div id="now"></div><div id="sel" hidden></div></div></div>
+<div id="mm"></div>
+<div id="scroll"><div id="day"><div id="now"></div></div></div>
 
 <div id="glow"></div>
 <div id="backdrop" hidden></div>
 <div id="cmenu" hidden></div>
 <form id="form" hidden>
   <input id="f-title" placeholder="Event title" autocomplete="off" required>
-  <select id="f-cal"></select>
+  <div class="dd" id="f-cal"></div>
   <div class="row times"><input id="f-start" type="time" required><span class="dash">–</span><input id="f-end" type="time" required></div>
+  <div class="dd" id="f-rem"></div>
   <div id="err"></div>
   <div class="row"><button type="button" id="f-cancel">Cancel</button><button class="primary">Save</button></div>
 </form>
 
 <script src="palette.js"></script>
+<script src="i18n.js"></script>
 <script>
 // Initial state arrives synchronously from Rust, so the first paint is already correct.
 const SC = window.__SC || {};
@@ -194,6 +243,7 @@ requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement
 const { invoke } = window.__TAURI__.core;
 const { listen } = window.__TAURI__.event;
 const $ = (id) => document.getElementById(id);
+let timedList = [], zoom = 1, keepScroll = 0, openH = 0, openTop = 0;  // 1 = whole day fits; >1 only with Zoom Timeline with Scroll
 let HOUR = 40, MIN = HOUR / 60;  // fitted to the window height so all 24 h are always visible
 let events = [], calendars = [], cfg = {}, dayStart = 0, scrolled = false, editing = null;
 
@@ -204,11 +254,23 @@ for (let h = 0; h < 24; h++) {
   $('day').appendChild(el);
 }
 
-// Fit exactly 24 hours into the available height; no scrolling.
+// Height of the box minus its padding: the timeline must fit inside the padding, not under it.
+const innerH = (b) => { const cs = getComputedStyle(b); return b.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom); };
+
+// Fit 24 hours into the available height, times the zoom factor (always 1 unless scroll zoom is on).
 function fit() {
-  const h = $('scroll').clientHeight;
+  const box = $('scroll'), col = document.body.classList.contains('collapsed');
+  const z = cfg.scroll_zoom ? zoom : 1;
+  // Zoomed edge preview keeps the open panel's scale and screen position (it just stretches to the screen top).
+  const keep = col && z > 1 && openH > 0;
+  const h = keep ? openH : innerH(box);
   if (!h) return;
-  HOUR = h / 24; MIN = HOUR / 60;
+  HOUR = (h / 24) * z; MIN = HOUR / 60;
+  $('day').style.height = z > 1 ? h * z + 'px' : '';
+  box.style.overflowY = z > 1 ? 'auto' : 'hidden';
+  const off = keep ? openTop - keepScroll : 0;   // screen y of the day's top in the open panel
+  $('day').style.marginTop = off > 0 ? off + 'px' : '';
+  if (keep) box.scrollTop = Math.max(0, -off);
   document.querySelectorAll('.hour').forEach((el) => (el.style.top = el.dataset.h * HOUR + 'px'));
   // Small screens get tighter rows: scale entry text with the hour height (9.5-12 px).
   document.documentElement.style.setProperty('--ev-fs', Math.max(9.5, Math.min(12, HOUR * 0.27)) + 'px');
@@ -216,15 +278,20 @@ function fit() {
 
 // One place builds an entry's geometry and content, used by render() and while dragging.
 function styleEv(el, e, start, end) {
-  const top = Math.max(0, (start - dayStart) / 60000) * MIN;
+  let top = Math.max(0, (start - dayStart) / 60000) * MIN;
   const bottom = Math.min(24 * 60, (end - dayStart) / 60000) * MIN;
-  const h = Math.max(16, bottom - top - 1);
+  let h = bottom - top - 1;
+  if (h < 16) {
+    if (e.mode === 'up') { top = Math.max(0, bottom - 16); h = bottom - top - 1; }
+    else h = e.mode === 'thin' ? Math.max(6, h) : 16;
+  }
   el.style.top = top + 'px';
   el.style.height = h + 'px';
   el.classList.remove('l2', 'l1', 'l0', 'mini', 'tall');
   const tier = h >= 40 ? 'l2' : 'l1';
   el.classList.add(tier);
   if (h >= 60) el.classList.add('tall');
+  if (h < 14) el.classList.add('mini');   // too small for text: the name stays in the tooltip
   el.textContent = '';
   const tt = document.createElement('span');
   tt.className = 'tt'; tt.textContent = e.title;
@@ -273,6 +340,7 @@ function applyTheme() {
   if (cfg.island_mode) root.dataset.island = ''; else delete root.dataset.island;
   $('weekday').hidden = !cfg.show_weekday;
   document.querySelector('header').hidden = !cfg.show_header;
+  document.body.classList.toggle('no-header', !cfg.show_header);
   root.style.setProperty('--strip', cfg.strip_width + 'px');
   root.style.setProperty('--pv-op', cfg.preview_opacity);
   $('date').hidden = !cfg.show_date;
@@ -298,28 +366,41 @@ function layout(list) {
   for (const e of list) {
     e.cols = 1 + Math.max(...list.filter((o) => o.start < e.end && o.end > e.start).map((o) => o.col));
   }
+  // Entries shorter than 16px would be unreadable. They are drawn 16px tall, growing downwards; when the next entry
+  // in the same column starts right after (back-to-back), they grow upwards instead, so the end time stays exact
+  // and nothing is painted over. With no free room above they stay thin.
+  const minMs = (16 / MIN) * 60000;
+  for (const e of list) {
+    e.mode = null;
+    if (e.end - e.start >= minMs) continue;
+    const same = list.filter((o) => o !== e && o.col === e.col);
+    const n = same.filter((o) => o.start >= e.end).sort((a, b) => a.start - b.start)[0];
+    if (!n || n.start - e.start >= minMs) continue;
+    const p = same.filter((o) => o.end <= e.start).sort((a, b) => b.end - a.end)[0];
+    e.mode = !p || p.end <= e.end - minMs ? 'up' : 'thin';
+  }
 }
 
 // ---- custom colors, drag to move, drag edges to resize ---------------------------
 
-// Black or white text, whichever reads better on the entry colour (WCAG relative luminance).
-function ink(hex) {
-  const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
-  if (!m) return '#fff';
+// Solid style: white text on saturated mid-tones (blue, purple, red), black only on really light fills.
+// Plain max-WCAG-contrast picks black on mid-blues, which looks wrong, so the switch sits higher (relative luminance 0.4).
+const lum = (hex) => {
   const [r, g, b] = [0, 2, 4].map((i) => {
-    const c = parseInt(m[1].slice(i, i + 2), 16) / 255;
+    const c = parseInt(hex.slice(1 + i, 3 + i), 16) / 255;
     return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
   });
-  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  return 1.05 / (L + 0.05) >= (L + 0.05) / 0.05 ? '#ffffff' : '#111111';
-}
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const inkFor = (hex) => (/^#[0-9a-f]{6}$/i.test(hex || '') && lum(hex) > 0.4 ? '#000000' : '#ffffff');
 // Entry colour plus its text colour (used by the solid event style).
-const paint = (el, c) => { el.style.setProperty('--ev-c', c); el.style.setProperty('--ev-ink', ink(c)); };
+const paint = (el, c) => { el.style.setProperty('--ev-c', c); el.style.setProperty('--ev-ink', inkFor(c)); };
 const darkMq = matchMedia('(prefers-color-scheme: dark)');
 const isDark = () => scIsDark(cfg.theme);
 const tone = (p) => scTone(p, cfg.theme);
 // A calendar can override its colour in Settings → Calendars; otherwise its own colour, livened up.
 const calPref = (e) => (cfg.calendars || []).find((c) => c.id === e.calendar_id) || {};
+const defaultColorOfCal = (c) => { const p = scFind(((cfg.calendars || []).find((x) => x.id === c.id) || {}).color); return p ? tone(p) : scSoften(c.color, cfg.theme); };
 function defaultColor(e) {
   const p = scFind(calPref(e).color);
   return p ? tone(p) : scSoften(e.color, cfg.theme);
@@ -364,11 +445,11 @@ function openBoardMenu(m) {
   menu.innerHTML = '';
   menu.classList.add('list');
   menu.style.gridTemplateColumns = '';
-  addAction(menu, 'Reload', async () => { closeColorMenu(); calendars = []; await loadConfig(); refresh(); });
+  addAction(menu, t('Reload'), async () => { closeColorMenu(); calendars = []; await loadConfig(); refresh(); });
   const n = (cfg.hidden_events || []).length;
-  addAction(menu, (showHidden ? 'Hide' : 'Show') + ' hidden events' + (n ? ` (${n})` : ''),
+  addAction(menu, t(showHidden ? 'Hide hidden events' : 'Show hidden events') + (n ? ` (${n})` : ''),
     () => { showHidden = !showHidden; closeColorMenu(); render(); });
-  addAction(menu, 'Settings…', () => { closeColorMenu(); invoke('open_settings'); });
+  addAction(menu, t('Settings…'), () => { closeColorMenu(); invoke('open_settings'); });
   showMenu(menu, m);
 }
 document.addEventListener('contextmenu', (m) => {
@@ -387,7 +468,7 @@ function openColorMenu(m, e, el) {
   menu.innerHTML = '';
   for (const p of PALETTE) {
     const b = document.createElement('button');
-    b.className = 'sw'; b.style.background = tone(p); b.title = p.id;
+    b.className = 'sw'; b.style.background = tone(p); b.title = colorName(p.id);
     b.onmouseenter = () => preview(tone(p));
     b.onmouseleave = () => preview(current);
     b.onclick = () => commit(p.id);
@@ -397,17 +478,34 @@ function openColorMenu(m, e, el) {
   const acts = document.createElement('div');
   acts.className = 'acts';
   menu.appendChild(acts);
-  const reset = addAction(acts, 'Use calendar colour', () => commit(null));
+  const reset = addAction(acts, t('Use calendar colour'), () => commit(null));
   reset.onmouseenter = () => preview(defaultColor(e));
   reset.onmouseleave = () => preview(current);
-  addAction(acts, isHiddenEv(e) ? 'Unhide event' : 'Hide event',
+  // Bottom row of three icon buttons: hide (dashed eye), open in Calendar, delete (two clicks).
+  const icons = document.createElement('div');
+  icons.className = 'icons';
+  menu.appendChild(icons);
+  const SVG = {
+    eye: '<svg viewBox="0 0 16 16"><path d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8z"/><circle cx="8" cy="8" r="2"/></svg>',
+    eyeDashed: '<svg viewBox="0 0 16 16"><path stroke-dasharray="2 2" d="M1 8s2.5-4.5 7-4.5S15 8 15 8s-2.5 4.5-7 4.5S1 8 1 8z"/><circle cx="8" cy="8" r="2" stroke-dasharray="1.5 1.5"/></svg>',
+    open: '<svg viewBox="0 0 16 16"><path d="M9 2h5v5M14 2L7.5 8.5M12 9.5V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3.5"/></svg>',
+    trash: '<svg viewBox="0 0 16 16"><path d="M2.5 4h11M6 4V2.5h4V4M4 4l.6 9a1 1 0 0 0 1 .9h4.8a1 1 0 0 0 1-.9L12 4M6.5 7v4M9.5 7v4"/></svg>',
+  };
+  const addIcon = (svg, title, fn, cls) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ico' + (cls ? ' ' + cls : ''); b.title = title; b.innerHTML = svg; b.onclick = fn;
+    icons.appendChild(b);
+    return b;
+  };
+  addIcon(isHiddenEv(e) ? SVG.eye : SVG.eyeDashed, t(isHiddenEv(e) ? 'Unhide event' : 'Hide event'),
     () => { invoke('set_event_hidden', { id: e.id, hidden: !isHiddenEv(e) }); closeColorMenu(); });
+  addIcon(SVG.open, t('Open in Calendar'), () => { invoke('open_event', { id: e.id }).catch((err) => console.error(err)); closeColorMenu(); });
   if (e.editable) {
     // Two clicks: deleting removes the event from the calendar itself.
-    addAction(acts, 'Delete event', function () {
-      if (!this.dataset.sure) { this.dataset.sure = '1'; this.textContent = 'Click again to delete'; return; }
+    addIcon(SVG.trash, t('Delete event'), function () {
+      if (!this.classList.contains('sure')) { this.classList.add('sure'); this.title = t('Click again to delete'); return; }
       invoke('delete_event', { id: e.id }).then(() => { closeColorMenu(); refresh(); }).catch((err) => console.error(err));
-    }, true);
+    }, 'danger');
   }
 
   // As many swatch columns as fit the sidebar (6, 4, 3 or 2), so the menu is never cut off.
@@ -468,6 +566,7 @@ function render() {
   const shown = events.filter((e) => (cfg.calendars.find((c) => c.id === e.calendar_id) || {}).visible !== false
     && (showHidden || !isHiddenEv(e)));
   const timed = shown.filter((e) => !e.all_day);
+  timedList = timed;
   layout(timed);
   if (cfg.display_all_day_events) {
     for (const e of shown.filter((e) => e.all_day).sort((a, b) => rank(a) - rank(b))) {
@@ -494,39 +593,37 @@ function render() {
       el.onmousedown = (m) => { if (m.button === 0 && !document.body.classList.contains('collapsed')) startEvDrag(m, e, el); };
       el.onmousemove = (m) => { if (!evDrag) el.style.cursor = edgeMode(m, el) === 'move' ? 'grab' : 'ns-resize'; };
     }
+    el._e = e;
     $('day').appendChild(el);
   }
 
   const nowY = ((now - dayStart) / 60000) * MIN;
   $('now').style.top = nowY + 'px';
+  if (cfg.scroll_zoom && zoom > 1 && cfg.automatic_scroll && !scrolled && $('scroll').clientHeight) {
+    $('scroll').scrollTop = nowY - $('scroll').clientHeight / 2;
+    scrolled = true;
+  }
 
   // Menu bar: current event with time left, else the next one.
   const cur = timed.find((e) => e.start <= now && e.end > now);
-  $('glow').style.boxShadow = cfg.show_glowing_border && cur && !document.body.classList.contains('collapsed')
-    ? `inset 0 0 10px 0 color-mix(in srgb, ${colorOf(cur)} 70%, transparent)` : 'none';
+  $('glow').style.boxShadow = 'none';
   const next = timed.find((e) => e.start > now);
-  let title = 'Calendar';
+  let title = t('Calendar');
   if (cur) {
-    const left = cfg.show_duration_in_menu_bar ? `${fmtLeft(cur.end - now)} left` : '';
-    title = cfg.show_title_in_menu_bar ? (left ? `${cur.title} (${left})` : cur.title) : (left || 'Calendar');
+    const left = cfg.show_duration_in_menu_bar ? t('{t} left', { t: fmtLeft(cur.end - now) }) : '';
+    title = cfg.show_title_in_menu_bar ? (left ? `${cur.title} (${left})` : cur.title) : (left || t('Calendar'));
   } else if (next) {
-    const inn = cfg.show_duration_in_menu_bar ? `in ${fmtLeft(next.start - now)}` : '';
-    title = cfg.show_title_in_menu_bar ? `${next.title} ${inn}`.trim() : (inn ? `Next ${inn}` : 'Calendar');
+    const inn = cfg.show_duration_in_menu_bar ? t('in {t}', { t: fmtLeft(next.start - now) }) : '';
+    title = cfg.show_title_in_menu_bar ? `${next.title} ${inn}`.trim() : (inn ? t('Next in {t}', { t: fmtLeft(next.start - now) }) : t('Calendar'));
   } else if (cfg.show_title_in_menu_bar) {
-    title = 'No more events';
+    title = t('No more events');
   }
   invoke('set_title', { title });
+  drawMap();
 
 }
 
-// ---- add / edit -----------------------------------------------------------
-
-function nextFreeSlot() {
-  const busy = events.filter((e) => !e.all_day);
-  let t = Math.ceil(Date.now() / 1800000) * 1800000;
-  while (busy.some((e) => e.start < t + 3600000 && e.end > t)) t += 1800000;
-  return t;
-}
+// ---- edit -----------------------------------------------------------
 
 // Centers the modal on the entry (or the window when there is none), kept fully on screen.
 function placeForm(startMs, endMs, anchored) {
@@ -542,8 +639,37 @@ function placeForm(startMs, endMs, anchored) {
   f.style.top = Math.max(margin, Math.min(innerHeight - h - margin, top)) + 'px';
 }
 
-function openForm(ev, startMs, endMs) {
-  editing = ev && ev.id ? ev : null;
+// Small custom dropdown (the native select can't show colour dots). `el.value` works like a select's.
+function makeDD(el) {
+  let items = [], value = null;
+  const draw = () => {
+    const cur = items.find((i) => i.v === value) || items[0];
+    const dot = (i) => (i && i.color ? `<span class="dot" style="background:${i.color}"></span>` : '');
+    el.innerHTML = `<button type="button">${dot(cur)}<span class="lbl"></span></button><div class="list"></div>`;
+    el.querySelector('.lbl').textContent = cur ? cur.label : '';
+    const list = el.querySelector('.list');
+    for (const i of items) {
+      const o = document.createElement('div');
+      o.className = 'opt' + (i === cur ? ' sel' : '');
+      o.innerHTML = dot(i) + '<span class="lbl"></span>';
+      o.querySelector('.lbl').textContent = i.label;
+      o.onclick = () => { value = i.v; el.classList.remove('open'); draw(); };
+      list.appendChild(o);
+    }
+    el.querySelector('button').onclick = () => el.classList.toggle('open');
+  };
+  Object.defineProperty(el, 'value', { get: () => value, set: (v) => { value = v; draw(); } });
+  el.setItems = (list, v) => { items = list; value = v !== undefined ? v : list.length ? list[0].v : null; el.classList.remove('open'); draw(); };
+  return el;
+}
+makeDD($('f-cal')); makeDD($('f-rem'));
+const remLabel = (m) => (m < 0 ? t('No reminder') : m === 0 ? t('At time of event') : m < 60 ? t('{n} min before', { n: m })
+  : m % 1440 === 0 ? t(m === 1440 ? '{n} day before' : '{n} days before', { n: m / 1440 })
+  : m % 60 === 0 ? t(m === 60 ? '{n} hour before' : '{n} hours before', { n: m / 60 }) : t('{n} min before', { n: m }));
+let remInitial = -1;
+
+function openForm(ev) {
+  editing = ev;
   // Priority = order in Settings → Calendars: top one is listed first and preselected.
   // Hidden calendars are left out (except the one the edited event already belongs to).
   const idx = (c) => { const i = cfg.calendars.findIndex((p) => p.id === c.id); return i < 0 ? 1e6 : i; };
@@ -551,17 +677,21 @@ function openForm(ev, startMs, endMs) {
   const writable = calendars
     .filter((c) => c.writable && (!hiddenCal(c) || (ev && ev.calendar_id === c.id)))
     .sort((a, b) => idx(a) - idx(b));
-  // Calendar titles come from other apps/accounts: build options with textContent, never innerHTML.
-  $('f-cal').replaceChildren(...writable.map((c) => Object.assign(document.createElement('option'), { value: c.id, textContent: c.title })));
-  const start = ev ? ev.start : startMs ?? (cfg.suggest_events ? nextFreeSlot() : Math.ceil(Date.now() / 900000) * 900000);
-  $('f-title').value = ev ? ev.title : '';
+  $('f-cal').setItems(writable.map((c) => ({ v: c.id, label: c.title, color: defaultColorOfCal(c) })));
+  const start = ev.start;
+  $('f-title').value = ev.title;
   $('f-start').value = hm24(start);
-  $('f-end').value = hm24(ev ? ev.end : endMs ?? start + 3600000);
-  if (ev) $('f-cal').value = ev.calendar_id;
+  $('f-end').value = hm24(ev.end);
+  $('f-cal').value = ev.calendar_id;
+  // Reminder: the event's own (first) alarm; new events get the default from Settings.
+  remInitial = ev.alarms && ev.alarms.length ? ev.alarms[0] : -1;
+  const opts = [-1, 0, 5, 10, 15, 30, 60, 120, 1440];
+  if (!opts.includes(remInitial)) opts.push(remInitial);
+  $('f-rem').setItems(opts.map((m) => ({ v: m, label: remLabel(m) })), remInitial);
   $('err').textContent = '';
   $('form').hidden = false;
   $('backdrop').hidden = false;
-  placeForm(start, ev ? ev.end : endMs ?? start + 3600000, !!(ev || startMs));
+  placeForm(start, ev.end, true);
   invoke('set_pinned', { pinned: true });
   setTimeout(() => $('f-title').focus(), 50);
 }
@@ -569,56 +699,27 @@ function openForm(ev, startMs, endMs) {
 function closeForm() {
   $('form').hidden = true;
   $('backdrop').hidden = true;
-  $('sel').hidden = true;
   invoke('set_pinned', { pinned: false });
 }
 
-$('add').onclick = () => openForm(null);
 $('gear').onclick = () => invoke('open_settings');
 $('f-cancel').onclick = closeForm;
 $('backdrop').onclick = closeForm;
 
-// Click and drag on the timeline to create an event, then confirm in the modal.
-const SNAP = 15; // minutes
-const minuteAt = (e) => {
-  const y = e.clientY - $('day').getBoundingClientRect().top;
-  return Math.max(0, Math.min(24 * 60, Math.round(y / MIN / SNAP) * SNAP));
-};
-let drag = null;
-$('day').onmousedown = (e) => {
-  if (e.button !== 0 || e.target.closest('.ev') || !$('form').hidden) return;
-  drag = { from: minuteAt(e), to: minuteAt(e), moved: false };
-};
-window.addEventListener('mousemove', (e) => {
-  if (!drag) return;
-  drag.to = minuteAt(e);
-  if (drag.to !== drag.from) drag.moved = true;
-  if (!drag.moved) return;
-  const a = Math.min(drag.from, drag.to), b = Math.max(drag.from, drag.to);
-  const sel = $('sel');
-  sel.hidden = false;
-  sel.style.top = a * MIN + 'px';
-  sel.style.height = Math.max(8, (b - a) * MIN) + 'px';
-  sel.textContent = `${hm(dayStart + a * 60000)} – ${hm(dayStart + b * 60000)}`;
-});
-window.addEventListener('mouseup', () => {
-  if (!drag) return;
-  const { from, to, moved } = drag;
-  drag = null;
-  const a = Math.min(from, to), b = Math.max(from, to);
-  const start = dayStart + a * 60000;
-  openForm(null, start, moved ? dayStart + b * 60000 : start + 3600000);
-});
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeColorMenu(); closeForm(); } });
 
 $('form').onsubmit = async (e) => {
   e.preventDefault();
-  const start = atTime($('f-start').value), end = atTime($('f-end').value);
-  if (end <= start) { $('err').textContent = 'End must be after start'; return; }
+  const start = atTime($('f-start').value);
+  let end = atTime($('f-end').value);
+  if (end <= start && $('f-end').value === '00:00') end += 864e5;   // 23:00–00:00 ends at the next midnight
+  if (end <= start) { $('err').textContent = t('End must be after start'); return; }
   try {
     await invoke('save_event', { event: {
-      id: editing ? editing.id : null, title: $('f-title').value.trim() || 'Untitled',
-      calendar_id: $('f-cal').value || null, start, end } });
+      id: editing ? editing.id : null, title: $('f-title').value.trim() || t('Untitled'),
+      calendar_id: $('f-cal').value || null, start, end,
+      // Only sent when changed (or for new events), so other reminders of an edited event stay untouched.
+      reminder: (!editing || $('f-rem').value !== remInitial) ? $('f-rem').value : undefined } });
     closeForm();
     refresh();
   } catch (err) { $('err').textContent = String(err); }
@@ -628,6 +729,7 @@ $('form').onsubmit = async (e) => {
 
 async function loadConfig() {
   cfg = await invoke('get_settings');
+  try { zoom = zoomT = Math.max(1, +localStorage.getItem('zoom') || 1); } catch {}
   applyTheme();
   render();
 }
@@ -636,7 +738,8 @@ async function refresh() {
   const d = new Date(); d.setHours(0, 0, 0, 0);
   if (d.getTime() !== dayStart) scrolled = false;
   dayStart = d.getTime();
-  $('weekday').textContent = d.toLocaleDateString(undefined, { weekday: 'long' });
+  const wd = d.toLocaleDateString(undefined, { weekday: 'long' });
+  $('weekday').textContent = wd.charAt(0).toLocaleUpperCase() + wd.slice(1);
   $('date').textContent = d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
 
   const ok = await invoke('has_access');
@@ -649,14 +752,107 @@ async function refresh() {
 }
 
 function setCollapsed(on) {
+  if (on) {
+    const box = $('scroll');
+    keepScroll = box.scrollTop; openH = innerH(box); openTop = box.getBoundingClientRect().top + parseFloat(getComputedStyle(box).paddingTop);
+  }
+  document.body.classList.remove('hover');
   document.body.classList.toggle('collapsed', on);
   if (on) closeForm();
   render();
+  if (!on && zoom > 1) $('scroll').scrollTop = keepScroll;
 }
 new ResizeObserver(() => render()).observe($('scroll'));
+window.addEventListener('scroll', () => { document.scrollingElement.scrollTop = 0; document.body.scrollTop = 0; }, true);
+
+// Mini-map rail on the right edge while zoomed: the whole day as ticks, a frame around what is visible.
+function drawMap() {
+  const mm = $('mm'), box = $('scroll');
+  const on = cfg.scroll_zoom && cfg.show_minimap !== false && zoom > 1.02 && !document.body.classList.contains('collapsed') && box.scrollHeight > box.clientHeight;
+  mm.classList.toggle('show', on);
+  if (!on) return;
+  const cs = getComputedStyle(box), pt = parseFloat(cs.paddingTop), pb = parseFloat(cs.paddingBottom);
+  mm.style.top = box.offsetTop + pt + 'px';
+  mm.style.height = box.clientHeight - pt - pb + 'px';
+  mm.innerHTML = '';
+  for (const e of events.filter((e) => !e.all_day && (cfg.calendars.find((c) => c.id === e.calendar_id) || {}).visible !== false && (showHidden || !isHiddenEv(e)))) {
+    const i = document.createElement('i');
+    i.style.setProperty('--c', colorOf(e));
+    i.style.top = Math.max(0, (e.start - dayStart) / 864e5) * 100 + '%';
+    i.style.height = Math.max(1.2, (Math.min(e.end, dayStart + 864e5) - Math.max(e.start, dayStart)) / 864e5 * 100) + '%';
+    mm.appendChild(i);
+  }
+  const vp = document.createElement('i');
+  vp.className = 'vp';
+  vp.style.top = box.scrollTop / box.scrollHeight * 100 + '%';
+  vp.style.height = box.clientHeight / box.scrollHeight * 100 + '%';
+  mm.appendChild(vp);
+}
+// Fades to a faint resting state when idle; brightens while zooming or scrolling.
+let mmTimer = 0;
+function pokeMap() {
+  const mm = $('mm');
+  mm.classList.add('act');
+  clearTimeout(mmTimer);
+  mmTimer = setTimeout(() => mm.classList.remove('act'), 1100);
+}
+$('scroll').addEventListener('scroll', () => { drawMap(); pokeMap(); });
+
+// Smooth zoom and pan: wheel input only moves a target; a frame loop eases the real values towards it.
+let zoomT = 1, panT = null, anchor = null, anim = 0;
+function relayout() {
+  pokeMap();   // cheap per-frame update: no rebuild of the entries, just new geometry
+  fit();
+  layout(timedList);
+  document.querySelectorAll('.ev').forEach((el) => {
+    if (!el._e) return;
+    el.style.left = `calc(${(el._e.col / el._e.cols) * 100}% + 3px)`;
+    el.style.width = `calc(${100 / el._e.cols}% - 6px)`;
+    styleEv(el, el._e, el._e.start, el._e.end);
+  });
+  $('now').style.top = ((Date.now() - dayStart) / 60000) * MIN + 'px';
+  drawMap();
+}
+function step() {
+  anim = 0;
+  const box = $('scroll');
+  let busy = false;
+  if (Math.abs(zoomT - zoom) > 0.002) { zoom += (zoomT - zoom) * 0.28; busy = true; } else zoom = zoomT;
+  if (anchor || zoom !== zoomT) relayout();
+  if (anchor) box.scrollTop = anchor.minute * MIN - anchor.y;
+  else if (panT !== null) {
+    const d = panT - box.scrollTop;
+    if (Math.abs(d) > 0.5) { box.scrollTop += d * 0.25; busy = true; } else { box.scrollTop = panT; panT = null; }
+  }
+  if (!busy) anchor = null;
+  if (busy) anim = requestAnimationFrame(step);
+}
+const kick = () => { if (!anim) anim = requestAnimationFrame(step); };
+
+$('scroll').addEventListener('wheel', (e) => {
+  if (!cfg.scroll_zoom || document.body.classList.contains('collapsed')) return;
+  const box = $('scroll');
+  if (e.ctrlKey || e.metaKey) {      // trackpad pinch arrives as ctrl+wheel
+    e.preventDefault();
+    const y = e.clientY - box.getBoundingClientRect().top;
+    // Keep the minute under the cursor fixed while the zoom eases.
+    anchor = { minute: (box.scrollTop + y) / MIN, y };
+    zoomT = Math.max(1, Math.min(8, zoomT * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.003))));
+    if (zoomT < 1.02) zoomT = 1;
+    try { localStorage.setItem('zoom', zoomT); } catch {}
+    kick();
+  } else if (zoom > 1) {
+    e.preventDefault();
+    anchor = null;
+    const max = box.scrollHeight - box.clientHeight;
+    panT = Math.max(0, Math.min(max, (panT === null ? box.scrollTop : panT) + e.deltaY));
+    kick();
+  }
+}, { passive: false });
+
 listen('collapsed', (e) => setCollapsed(e.payload));
 listen('settings-changed', () => { calendars = []; loadConfig().then(refresh); });
-listen('new-event', () => openForm(null));
+applyI18n();
 loadConfig().then(refresh);
 invoke('slide_mode_enabled').then((on) => { if (on) document.documentElement.dataset.slide = ''; });
 invoke('is_collapsed').then(setCollapsed);
@@ -671,6 +867,7 @@ setInterval(async () => {
   if ($('form').hidden) await refresh(); else render();
   haveAccess = $('msg').hidden;
 }, 1000);
+document.addEventListener('selectstart', (e) => { if (!(e.target.closest && e.target.closest('input, textarea'))) e.preventDefault(); });
 </script>
 </body>
 </html>

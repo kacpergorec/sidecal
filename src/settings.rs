@@ -55,6 +55,10 @@ pub struct Settings {
     pub use_global_hotkeys: bool,
     pub display_all_day_events: bool,
     pub automatic_scroll: bool,
+    /// Ctrl/Cmd + scroll (or pinch) zooms the timeline; plain scroll pans it while zoomed in.
+    pub scroll_zoom: bool,
+    /// Thin day overview on the edge of the panel while zoomed in.
+    pub show_minimap: bool,
     pub use_12_hour: bool,
     pub suggest_events: bool,
     /// "light" | "dark" | "system"
@@ -72,6 +76,10 @@ pub struct Settings {
     /// Edge preview: the thin strip of faded entries left on the screen edge while auto-hidden.
     pub edge_preview: bool,
     pub strip_width: f64,
+    /// Notification this many minutes before an event starts; -1 = no reminders, 0 = at the start.
+    pub reminder_minutes: i32,
+    /// Seconds the cursor must rest on the screen edge before the sidebar slides out (0..=1).
+    pub reveal_delay: f64,
     /// 0.2..=1.0
     pub preview_opacity: f64,
     /// Ordered; calendars missing here are visible and not productive.
@@ -97,19 +105,23 @@ impl Default for Settings {
             use_global_hotkeys: true,
             display_all_day_events: true,
             automatic_scroll: true,
+            scroll_zoom: true,
+            show_minimap: true,
             use_12_hour: false,
             suggest_events: true,
             theme: "system".into(),
             side: "right".into(),
             event_style: "tinted".into(),
-            width: 190.0,
+            width: 260.0,
             show_date: true,
             show_header: true,
             show_weekday: true,
             island_mode: false,
             edge_preview: true,
-            strip_width: 10.0,
-            preview_opacity: 0.6,
+            strip_width: 20.0,
+            reminder_minutes: -1,
+            reveal_delay: 0.2,
+            preview_opacity: 0.4,
             calendars: Vec::new(),
             shortcuts: Shortcuts::default(),
             event_colors: HashMap::new(),
@@ -123,6 +135,8 @@ impl Settings {
     pub fn sanitized(mut self) -> Self {
         self.strip_width = self.strip_width.clamp(7.0, 40.0);
         self.preview_opacity = self.preview_opacity.clamp(0.2, 1.0);
+        self.reminder_minutes = self.reminder_minutes.clamp(-1, 120);
+        self.reveal_delay = (self.reveal_delay.clamp(0.0, 1.0) * 20.0).round() / 20.0;
         self
     }
 

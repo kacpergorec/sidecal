@@ -4,10 +4,18 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="theme.css">
 <style>
+  /* Settings keeps its own warm-grey palette (the sidebar uses the black / white product-page tokens). */
+  :root { --bg: #1c1c1b; --panel: #242423; --line: #363633; --hover: #2d2d2b; --text: #ecebe8; --muted: #a3a09a;
+    --btn: #ecebe8; --btn-ink: #111111; --focus: #0a84ff; }
+  :root[data-theme="light"] { --bg: #fbfbfa; --panel: #ffffff; --line: #eaeaea; --hover: #f1f0ee; --text: #111111; --muted: #6b6965;
+    --btn: #111111; --btn-ink: #ffffff; --focus: #007aff; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme]) { --bg: #fbfbfa; --panel: #ffffff; --line: #eaeaea; --hover: #f1f0ee;
+    --text: #111111; --muted: #6b6965; --btn: #111111; --btn-ink: #ffffff; --focus: #007aff; } }
+
   * { box-sizing: border-box; margin: 0; }
-  html, body { background: var(--bg); color: var(--text); font: 13px/1.5 var(--font); -webkit-font-smoothing: antialiased; user-select: none; cursor: default; }
+  html, body { background: var(--bg); color: var(--text); font: 13px/1.5 var(--font); -webkit-font-smoothing: antialiased; -webkit-user-select: none; user-select: none; cursor: default; }
   body { padding: 38px 44px 34px; min-width: 520px; }
-  h1 { font: 500 28px/1.1 var(--serif); letter-spacing: -.03em; margin-bottom: 8px; }
+  h1 { font: 600 30px/1.1 var(--font); letter-spacing: -.04em; margin-bottom: 8px; }
   .intro { color: var(--muted); margin-bottom: 22px; max-width: 46ch; }
   nav { display: flex; flex-wrap: wrap; gap: 0 20px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
   nav button { padding: 8px 0 9px; border: 0; background: none; color: var(--muted); font: 500 13px var(--font); cursor: pointer;
@@ -84,25 +92,40 @@
     border-radius: 10px; margin-bottom: 10px; background: var(--panel); cursor: pointer; transition: background-color .12s; }
   .stat:hover { background: var(--hover); }
   .stat span { color: var(--muted); }
-  .stat b { font: 500 26px var(--serif); letter-spacing: -.02em; }
+  .stat b { font: 600 28px var(--font); letter-spacing: -.04em; }
+  #lang-slot { position: absolute; top: 14px; right: 16px; }
+  .langs { position: relative; }
+  .langs button { border: 0; background: none; padding: 0; font: inherit; color: var(--text); cursor: pointer; }
+  .langs .cur { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+    box-shadow: 0 0 0 1px var(--line); transition: transform .12s; }
+  .langs .cur:hover { transform: scale(1.08); }
+  .langs svg { display: block; }
+  .langs .menu { position: absolute; right: 0; top: 34px; z-index: 50; min-width: 140px; padding: 4px; border-radius: 10px;
+    background: var(--panel); box-shadow: 0 0 0 1px var(--line), 0 8px 24px rgba(0,0,0,.25); }
+  .langs .menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; border-radius: 7px; text-align: left; }
+  .langs .menu button:hover { background: var(--hover); }
+  .langs .menu button.on { font-weight: 600; }
+  /* WebKit needs the prefix, and the property must reach every descendant; only text fields stay selectable. */
+  body *, html { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  input, textarea { -webkit-user-select: text; user-select: text; }
 </style>
 </head>
 <body>
 <h1>SideCal</h1>
-<p class="intro">Keep an eye on your calendar from the screen edge and the menu bar.</p>
+<div id="lang-slot"></div>
+<p class="intro">Glance at your day without breaking focus.</p>
 <nav id="tabs">
   <button data-t="cal" class="on">Calendars</button><button data-t="gen">General</button><button data-t="app">Appearance</button>
   <button data-t="side">Sidebar</button><button data-t="keys">Shortcuts</button><button data-t="prod">Productivity</button>
 </nav>
 
 <section id="cal" class="on"><div id="cal-list"></div>
-  <p class="hint">Untick the swatch to hide a calendar. Drag the handle to reorder: higher = priority (wins the left column and sits on top when events overlap). "Counts as productive" feeds the Productivity tab.</p></section>
+  <p class="hint">Untick the swatch to hide a calendar. Drag the handle to reorder: higher = priority.</p></section>
 
 <!-- Checkbox settings are filled in from TOGGLES into the groups below (data-keys = which ones). -->
 <section id="gen">
   <div class="grp" data-keys="launch_at_login,check_for_updates"><h3>Startup</h3><div class="list"></div></div>
   <div class="grp" data-keys="show_title_in_menu_bar,show_duration_in_menu_bar"><h3>Menu bar</h3><div class="list"></div></div>
-  <div class="grp" data-keys="suggest_events"><h3>New events</h3><div class="list"></div></div>
   <div class="grp"><h3>AI assistants</h3><div class="list">
     <div class="row"><button id="connect" class="act">Add to Claude and Cursor</button></div>
     <p class="hint" id="connect-out">Registers SideCal's local MCP server with Claude Desktop, Claude Code and Cursor. It only edits their config files; nothing is sent over the network.</p>
@@ -117,7 +140,7 @@
       <div class="seg" id="ev-seg"><button data-v="solid" title="Filled with the event colour">Solid</button><button data-v="tinted" title="A soft tint with a colour bar on the left">Tinted</button></div></div>
   </div></div>
   <div class="grp" data-keys="island_mode,show_header,show_weekday,show_date"><h3>Header &amp; layout</h3><div class="list"></div></div>
-  <div class="grp" data-keys="use_12_hour,show_time_indicator,display_all_day_events,show_glowing_border"><h3>Timeline</h3><div class="list"></div></div>
+  <div class="grp" data-keys="use_12_hour,scroll_zoom,show_minimap,show_time_indicator,display_all_day_events,show_glowing_border"><h3>Timeline</h3><div class="list"></div></div>
 </section>
 
 <section id="side">
@@ -125,6 +148,7 @@
     <div class="row"><span>Sidebar side</span>
       <div class="seg" id="side-seg"><button data-v="left">Left</button><button data-v="right">Right</button></div></div>
     <div class="row"><span>Sidebar width</span><input id="width" type="range" min="150" max="320" step="10"><b id="width-v"></b></div>
+    <div class="row"><span>Reveal delay</span><input id="rd" type="range" min="0" max="20" step="1"><b id="rd-v"></b></div>
   </div></div>
   <div class="grp"><h3>Edge preview</h3><div class="list">
     <label><input type="checkbox" id="pv-on"> <span>Leave faded entries on the screen edge while hidden</span></label>
@@ -136,20 +160,20 @@
 <section id="keys">
   <div class="grp" data-keys="use_global_hotkeys"><div class="list"></div></div>
   <div class="row"><span>Show / hide sidebar</span><input type="text" data-k="toggle" readonly></div>
-  <div class="row"><span>New event</span><input type="text" data-k="new_event" readonly></div>
   <div class="row"><span>Open settings</span><input type="text" data-k="settings" readonly></div>
-  <p class="hint">Click a field and press the new combination (include Ctrl, Alt or Cmd). Requires "Use Global Hotkeys".</p>
+  <p class="hint">Click a field and press a new combination (with Ctrl, Alt or Cmd).</p>
 </section>
 
 <section id="prod">
   <div class="stat" id="p-today"><span>Productive today</span><b>–</b></div>
   <div class="stat" id="p-week"><span>Productive this week</span><b>–</b></div>
-  <p class="hint">Sums timed events from calendars marked "Counts as productive". Click a number to copy it.</p>
+  <p class="hint">Sums timed events from calendars marked "Counts as productive". Click a number to copy.</p>
 </section>
 
 <p class="credit">SideCal by Kacper Górec · open source under the Apache License 2.0</p>
 <div id="tt"></div>
 <script src="palette.js"></script>
+<script src="i18n.js"></script>
 <script>
 const { invoke } = window.__TAURI__.core;
 const $ = (id) => document.getElementById(id);
@@ -161,12 +185,13 @@ const TOGGLES = [
   ['float_above', 'Keep Above Other Windows', 'Keeps the sidebar on top of other windows. Turn it off to let other windows cover it.'],
   ['auto_hide', 'Auto-Hide', 'Slides the sidebar to the screen edge when the cursor leaves it, and back out when you touch the edge.'],
   ['island_mode', 'Island Mode', 'Shows the open sidebar as a floating card: transparent margin around it and rounded corners, like a macOS window.'],
-  ['show_glowing_border', 'Highlight Active Event', 'Marks the event happening right now: a ring around its entry and a soft glow along the edge of the open sidebar, in the event colour. In the edge preview it is drawn at full opacity while the other entries stay faded.'],
-  ['suggest_events', 'Suggest Events', 'When you add an event with the + button or the shortcut, it starts in the next free half-hour slot and lasts an hour, instead of starting right now.'],
+  ['show_glowing_border', 'Highlight Active Event', 'Marks the event happening right now with a ring around its entry. In the edge preview it is drawn at full opacity while the other entries stay faded.'],
   ['show_duration_in_menu_bar', 'Show Event Duration in Menu Bar'], ['show_title_in_menu_bar', 'Show Event Title in Menu Bar'],
   ['use_12_hour', 'Use 12-Hour Time Format', 'Shows 1-12 instead of 0-23 (no AM/PM).'],
+  ['scroll_zoom', 'Zoom Timeline with Scroll', 'Hold Ctrl or Cmd and scroll (or pinch on a trackpad) to zoom the timeline in. Plain scroll then moves up and down; zooming fully out fits the whole day again.'],
+  ['show_minimap', 'Show Zoom Mini-Map', 'While zoomed in, a thin overview of the whole day appears on the edge of the panel, with a frame around what you see.'],
   ['show_time_indicator', 'Show Time Indicator'],
-  ['show_header', 'Show Header', 'Hides the whole header: weekday, date and the settings and + buttons. Right-click the board for Settings; use the shortcut to add an event.'],
+  ['show_header', 'Show Header', 'Hides the whole header: weekday, date and the settings button. Right-click the board for Settings.'],
   ['show_weekday', 'Show Weekday'], ['show_date', 'Show Date'],
   ['use_global_hotkeys', 'Use Global Hotkeys'],
 ];
@@ -226,12 +251,12 @@ function openPalette(row, p, c) {
   for (const x of PALETTE) {
     const b = document.createElement('button');
     b.className = 'dot' + (scFind(p.color) === x ? ' on' : '');
-    b.style.background = scTone(x, cfg.theme); b.title = x.id;
+    b.style.background = scTone(x, cfg.theme); b.title = colorName(x.id);
     b.onclick = () => { p.color = x.id; save(); renderCalendars(); };
     pal.appendChild(b);
   }
   const reset = document.createElement('button');
-  reset.className = 'rs'; reset.textContent = 'Use the calendar’s own colour';
+  reset.className = 'rs'; reset.textContent = t('Use the calendar’s own colour');
   reset.onclick = () => { p.color = null; save(); renderCalendars(); };
   pal.appendChild(reset);
   row.appendChild(pal);
@@ -251,8 +276,8 @@ function renderCalendars() {
     const row = document.createElement('div');
     row.className = 'cal'; row.dataset.id = c.id;
     row.innerHTML = `<span class="grip"><svg viewBox="0 0 12 12"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg></span><input type="checkbox" ${p.visible ? 'checked' : ''}>
-      <button class="sw" title="Change calendar colour" aria-label="Change calendar colour"></button><span class="name"></span>
-      <label><input type="checkbox" class="prod" ${p.productive ? 'checked' : ''}>Counts as productive</label>`;
+      <button class="sw" title="${t('Change calendar colour')}" aria-label="${t('Change calendar colour')}"></button><span class="name"></span>
+      <label><input type="checkbox" class="prod" ${p.productive ? 'checked' : ''}>${t('Counts as productive')}</label>`;
     row.querySelector('.name').textContent = c.title;
     const swatch = row.querySelector('.sw');
     const chosen = scFind(p.color);
@@ -275,10 +300,10 @@ function renderToggles() {
       const [, label, tip] = byKey[key];
       const l = document.createElement('label');
       l.innerHTML = `<input type="checkbox" ${cfg[key] ? 'checked' : ''}> <span></span>`;
-      l.querySelector('span').textContent = label;
+      l.querySelector('span').textContent = t(label);
       if (tip) {
         const q = document.createElement('span');
-        q.className = 'q'; q.textContent = '?'; q.dataset.tip = tip;
+        q.className = 'q'; q.textContent = '?'; q.dataset.tip = t(tip);
         q.onclick = (e) => e.preventDefault();      // don't toggle the checkbox when asking for help
         q.onmouseenter = () => showTip(q, tip);
         q.onmouseleave = hideTip;
@@ -291,6 +316,7 @@ function renderToggles() {
   renderSeg(); $('width').value = cfg.width; $('width-v').textContent = cfg.width + ' px';
   $('pv-on').checked = cfg.edge_preview;
   $('pv-w').value = cfg.strip_width; $('pv-w-v').textContent = cfg.strip_width + ' px';
+  $('rd').value = Math.round(cfg.reveal_delay * 20); $('rd-v').textContent = cfg.reveal_delay.toFixed(2) + ' s';
   $('pv-o').value = Math.round(cfg.preview_opacity * 100); $('pv-o-v').textContent = Math.round(cfg.preview_opacity * 100) + '%';
 }
 function renderSeg() {
@@ -309,6 +335,8 @@ $('width').onchange = (e) => { cfg.width = +e.target.value; save(); };
 $('pv-on').onchange = (e) => { cfg.edge_preview = e.target.checked; save(); };
 $('pv-w').oninput = (e) => { $('pv-w-v').textContent = e.target.value + ' px'; };
 $('pv-w').onchange = (e) => { cfg.strip_width = +e.target.value; save(); };
+$('rd').oninput = (e) => { $('rd-v').textContent = (e.target.value / 20).toFixed(2) + ' s'; };
+$('rd').onchange = (e) => { cfg.reveal_delay = +e.target.value / 20; save(); };
 $('pv-o').oninput = (e) => { $('pv-o-v').textContent = e.target.value + '%'; };
 $('pv-o').onchange = (e) => { cfg.preview_opacity = +e.target.value / 100; save(); };
 
@@ -367,9 +395,15 @@ window.__TAURI__.event.listen('settings-changed', async () => {
 (async () => {
   cfg = await invoke('get_settings');
   cals = await invoke('get_calendars');
-  applyTheme(); renderCalendars(); renderToggles();
+  applyTheme(); renderCalendars(); renderToggles(); paintRanges();
   document.querySelectorAll('[data-k]').forEach((i) => (i.value = cfg.shortcuts[i.dataset.k]));
 })();
+$('lang-slot').appendChild(langPicker());
+
+const paintRanges = () => document.querySelectorAll('input[type=range]').forEach((r) => r.style.setProperty('--p', (r.value - r.min) / (r.max - r.min) * 100 + '%'));
+document.addEventListener('input', (e) => { if (e.target.type === 'range') paintRanges(); });
+applyI18n();
+document.addEventListener('selectstart', (e) => { if (!(e.target.closest && e.target.closest('input, textarea'))) e.preventDefault(); });
 </script>
 </body>
 </html>

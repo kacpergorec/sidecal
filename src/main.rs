@@ -3,6 +3,7 @@
 
 mod assistants;
 mod calendar;
+mod i18n;
 mod mcp;
 mod settings;
 mod updater;
@@ -61,6 +62,20 @@ fn get_calendars() -> Vec<calendar::Calendar> {
 #[tauri::command]
 fn save_event(event: calendar::EventInput) -> Result<(), String> {
     calendar::save(event)
+}
+
+/// Shows the event in the macOS Calendar app (which also hosts Google/other synced calendars).
+#[tauri::command]
+fn open_event(id: String) -> Result<(), String> {
+    let enc: String = id
+        .bytes()
+        .map(|b| if b.is_ascii_alphanumeric() || b == b'-' || b == b'_' { (b as char).to_string() } else { format!("%{b:02X}") })
+        .collect();
+    std::process::Command::new("open")
+        .arg(format!("ical://ekevent/{enc}?method=show&options=more"))
+        .spawn()
+        .map(|_| ())
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -210,14 +225,6 @@ fn toggle_sidebar(app: &AppHandle) {
     }
 }
 
-fn new_event(app: &AppHandle) {
-    show_sidebar(app);
-    if let Some(win) = app.get_webview_window("sidebar") {
-        let _ = win.set_focus();
-    }
-    let _ = app.emit("new-event", ());
-}
-
 /// The window keeps its full width and only slides on/off the screen edge (no webview resize,
 /// so nothing can lag or jitter). That is only safe when no other monitor sits on the docked
 /// side, otherwise the hidden part would show up there; then it is resized instead.
@@ -360,7 +367,6 @@ fn apply(app: &AppHandle) {
             });
         };
         bind(&s.shortcuts.toggle, toggle_sidebar);
-        bind(&s.shortcuts.new_event, new_event);
         bind(&s.shortcuts.settings, show_settings);
     }
 
@@ -372,13 +378,13 @@ fn apply(app: &AppHandle) {
 fn spawn_auto_hide(app: AppHandle) {
     std::thread::spawn(move || {
         let mut left_at: Option<Instant> = None;
-        let mut entered_at: Option<Instant> = None;
+        let mut edge_at: Option<Instant> = None;
         loop {
             std::thread::sleep(Duration::from_millis(50));
             let rt = app.state::<Runtime>();
-            let (auto_hide, side) = {
+            let (auto_hide, side, reveal_delay) = {
                 let s = rt.settings.lock().unwrap();
-                (s.auto_hide, s.side.clone())
+                (s.auto_hide, s.side.clone(), s.reveal_delay)
             };
             let Some(win) = app.get_webview_window("sidebar") else { continue };
             if !auto_hide {
@@ -398,34 +404,87 @@ fn spawn_auto_hide(app: AppHandle) {
                 && cur.y >= pos.y as f64
                 && cur.y <= (pos.y + size.height as i32) as f64;
 
+            // The cursor has to stay on the screen edge for the configured delay.
+            let edge_ready = if at_edge && cur.y > MENU_BAR * scale {
+                edge_at.get_or_insert_with(Instant::now).elapsed() >= Duration::from_secs_f64(reveal_delay)
+            } else {
+                edge_at = None;
+                false
+            };
+
             if !win.is_visible().unwrap_or(false) {
                 // Hidden with the hotkey/menu: the screen edge still brings it back.
-                if at_edge && cur.y > MENU_BAR * scale {
+                if edge_ready {
                     show_sidebar(&app);
+                    edge_at = None;
                 }
                 continue;
             }
             if rt.auto_hidden.load(Ordering::Relaxed) {
-                // Collapsed to a strip: only touching the screen edge itself (not the whole strip)
-                // for 100 ms expands the sidebar.
-                if at_edge && cur.y > MENU_BAR * scale {
-                    if entered_at.get_or_insert_with(Instant::now).elapsed() >= Duration::from_millis(100) {
-                        set_collapsed(&app, false);
-                        entered_at = None;
-                    }
-                } else {
-                    entered_at = None;
+                // Collapsed to a strip: only the screen edge itself (not hovering the strip)
+                // expands the sidebar, so the browser scrollbar next to it stays usable.
+                if edge_ready {
+                    set_collapsed(&app, false);
+                    edge_at = None;
                 }
                 left_at = None;
                 continue;
             }
-            entered_at = None;
             let in_grace = Instant::now() < *rt.grace_until.lock().unwrap();
             if inside || in_grace || rt.pinned.load(Ordering::Relaxed) {
                 left_at = None;
             } else if left_at.get_or_insert_with(Instant::now).elapsed() > Duration::from_millis(250) {
                 set_collapsed(&app, true);
                 left_at = None;
+            }
+        }
+    });
+}
+
+/// Notifies for the reminders the events themselves carry (as set in the connected calendar), via osascript.
+fn spawn_reminders(app: AppHandle) {
+    std::thread::spawn(move || {
+        let mut notified: std::collections::HashSet<String> = std::collections::HashSet::new();
+        loop {
+            std::thread::sleep(Duration::from_secs(15));
+            let s = app.state::<Runtime>().settings.lock().unwrap().clone();
+            if !calendar::has_access() {
+                continue;
+            }
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_millis() as f64)
+                .unwrap_or(0.0);
+            for e in calendar::events(now - 60_000.0, now + 2.0 * 86_400_000.0) {
+                let hidden = s.hidden_events.contains(&e.id)
+                    || s.calendars.iter().any(|c| c.id == e.calendar_id && !c.visible);
+                if e.all_day || hidden {
+                    continue;
+                }
+                for m in &e.alarms {
+                    let fire = e.start - *m as f64 * 60_000.0;
+                    // Only inside a one-minute window, so a wake from sleep doesn't replay old events.
+                    if now < fire || now >= fire + 60_000.0 {
+                        continue;
+                    }
+                    if !notified.insert(format!("{}@{}#{m}", e.id, e.start)) {
+                        continue;
+                    }
+                    let mins = ((e.start - now) / 60_000.0).ceil().max(0.0) as i64;
+                    let body = if mins == 0 { i18n::tr("Starting now", 0) } else { i18n::tr("Starts in {n} min", mins) };
+                    let body = format!("{body} · {}", e.calendar);
+                    let _ = std::process::Command::new("osascript")
+                        .args([
+                            "-e", "on run argv",
+                            "-e", "display notification (item 1 of argv) with title (item 2 of argv)",
+                            "-e", "end run",
+                            &body, &e.title,
+                        ])
+                        .spawn();
+                }
+            }
+            if notified.len() > 500 {
+                notified.clear();
             }
         }
     });
@@ -446,6 +505,7 @@ fn main() {
             get_calendars,
             save_event,
             delete_event,
+            open_event,
             set_title,
             set_pinned,
             get_settings,
@@ -489,10 +549,10 @@ fn main() {
                 .inner_size(190.0, 800.0)
                 .build()?;
 
-            let settings_item = MenuItem::with_id(app, "settings", "Settings…", true, Some("Cmd+,"))?;
+            let settings_item = MenuItem::with_id(app, "settings", &i18n::tr("Settings…", 0), true, Some("Cmd+,"))?;
             let update_item = MenuItem::with_id(app, "update", updater::CHECK_TITLE, true, None::<&str>)?;
             updater::init(&handle, update_item.clone());
-            let quit = MenuItem::with_id(app, "quit", "Quit SideCal", true, None::<&str>)?;
+            let quit = MenuItem::with_id(app, "quit", &i18n::tr("Quit SideCal", 0), true, None::<&str>)?;
             TrayIconBuilder::with_id(TRAY_ID)
                 .title("Calendar")
                 .menu(&Menu::with_items(app, &[&settings_item, &update_item, &quit])?)
@@ -513,6 +573,7 @@ fn main() {
             apply(&handle);
             calendar::request_access();
             updater::spawn_auto_check(handle.clone());
+            spawn_reminders(handle.clone());
             spawn_auto_hide(handle);
             Ok(())
         })
