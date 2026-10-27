@@ -34,12 +34,12 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   setTimeout(() => (b.textContent = UI.copy || 'Copy'), 1600);
 }));
 
-// Pinned story: scrolling drives the mockup (clock, menu bar, new event, auto-hide, island, dark).
+// Pinned story: scrolling drives the mockup (clock, menu bar, zoom + mini-map, auto-hide, island, dark).
 (() => {
   const story = document.querySelector('.story');
   if (!story) return;
   const stage = story.querySelector('.stage'), scene = story.querySelector('.scene'), side = story.querySelector('.side');
-  const evs = [...story.querySelectorAll('.ev[data-s]')], ghost = story.querySelector('.ghost');  // ghost is the entry "added" in step 3
+  const evs = [...story.querySelectorAll('.ev[data-s]')], day = story.querySelector('.sc-day'), grid = story.querySelector('.grid24'), mm = story.querySelector('.mm');
   const now = story.querySelector('.now'), title = story.querySelector('.mbar b'), clk = story.querySelector('.clk');
   const caps = [...story.querySelectorAll('.cap')], dots = [...story.querySelectorAll('.dots i')];
   const N = caps.length, T0 = 8 * 60 + 40, T1 = 20 * 60 + 10;
@@ -48,8 +48,28 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   const clamp = (v) => Math.min(1, Math.max(0, v));
   let step = -1, lastT = -1;
 
+  const ZOOM = 2.6;
+  let zoom = 1;
   // Same tiers as the app: two lines when tall enough, one line otherwise.
   const tiers = () => evs.forEach((e) => e.classList.toggle('l2', e.offsetHeight >= 40));
+  // Mini-map: the whole day as ticks (built once) and a frame for the visible part.
+  const vp = document.createElement('i');
+  vp.className = 'vp';
+  for (const e of evs) {
+    const i = document.createElement('i');
+    i.style.cssText = `top:${(+e.dataset.s / 14.4)}%;height:${((+e.dataset.e - +e.dataset.s) / 14.4)}%;--c:${e.style.getPropertyValue('--ev-c')}`;
+    mm.appendChild(i);
+  }
+  mm.appendChild(vp);
+  // Zoomed: the timeline follows the clock, like scrolling in the app. Unzoomed: the whole day fits.
+  function view(t) {
+    const h = day.clientHeight, gh = h * zoom;
+    const ty = zoom > 1 ? Math.min(0, Math.max(h - gh, h / 2 - (t / 1440) * gh)) : 0;
+    grid.style.setProperty('--z', zoom);
+    grid.style.setProperty('--ty', ty + 'px');
+    vp.style.top = (-ty / gh) * 100 + '%';
+    vp.style.height = 100 / zoom + '%';
+  }
 
   function draw() {
     const rect = story.getBoundingClientRect();
@@ -61,25 +81,25 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
       step = i;
       caps.forEach((c, k) => c.classList.toggle('on', k === i));
       dots.forEach((d, k) => d.classList.toggle('on', k === i));
-      ghost.classList.toggle('on', i >= 2);
+      zoom = i === 2 ? ZOOM : 1;
+      side.classList.toggle('zoomed', i === 2);
       side.classList.toggle('collapsed', i === 3);
       side.classList.toggle('island', i >= 4);
       scene.dataset.mode = (i >= 5) === isDark() ? 'light' : 'dark';
-      lastT = -1;  // the ghost entry joins (or leaves) the clock logic
-      setTimeout(tiers, 0);
+      lastT = -1;
+      setTimeout(tiers, 560);  // entries change height with the zoom transition
     }
     if (t !== lastT) {
       lastT = t;
       now.style.top = (t / 14.4) + '%';
       let cur = null, next = null;
       for (const e of evs) {
-        if (e === ghost && !ghost.classList.contains('on')) { e.classList.remove('active'); continue; }
         const on = +e.dataset.s <= t && +e.dataset.e > t;
         e.classList.toggle('active', on);
         if (on) cur = e;
         else if (+e.dataset.s > t && (!next || +e.dataset.s < +next.dataset.s)) next = e;
       }
-      side.style.setProperty('--glow', cur ? cur.style.getPropertyValue('--ev-c') : 'transparent');
+      view(t);
       title.textContent = cur ? fmt(UI.running || '{t} ({d} left)', { t: cur.dataset.t, d: dur(+cur.dataset.e - t) }) : next ? fmt(UI.upcoming || '{t} in {d}', { t: next.dataset.t, d: dur(+next.dataset.s - t) }) : (UI.calendar || 'Calendar');
       clk.textContent = `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
     }
@@ -88,7 +108,7 @@ document.querySelectorAll('.copy').forEach((b) => b.addEventListener('click', as
   const tick = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; draw(); }); };
   addEventListener('scroll', tick, { passive: true });
   document.addEventListener('themechange', () => { step = -1; tick(); });
-  addEventListener('resize', () => { tiers(); tick(); });
+  addEventListener('resize', () => { tiers(); lastT = -1; tick(); });
   tiers(); draw();
 })();
 

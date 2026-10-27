@@ -113,57 +113,56 @@ pre code { background: none; border: 0; padding: 0; font-size: 1em; }
 .mbar b { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .mbar span { flex: none; font-variant-numeric: tabular-nums; }
 
-/* The sidebar mirrors the real app (ui/index.html, ui/theme.css): same tokens, serif header, 24 h grid, entry tiers. */
-.side { --bg: #fbfbfa; --line: #eaeaea; --text: #111; --muted: #6b6965; --now: #d93831; --glow: transparent; --t: .55s;
-  --serif: ui-serif, 'New York', Georgia, serif;
+/* The sidebar mirrors the real app (ui/index.html, ui/theme.css): black / white tokens, left-aligned header with a cog,
+   24 h grid, tinted entries, a glowing ring on the running one, zoom with a mini-map, solid bars in the edge preview. */
+.side { --bg: #fff; --line: #e8e8ed; --text: #1d1d1f; --muted: #6e6e73; --now: #ff3b30; --tint: 17%; --tint-a: 28%; --tx: 72%; --txb: #000; --t: .55s;
   position: absolute; right: 0; top: 28px; bottom: 0; width: 190px; overflow: hidden; background: var(--bg);
   border: 1px solid transparent; border-left-color: var(--line); color: var(--text); font: 12px/1.4 var(--font); letter-spacing: 0;
   transition: width var(--t) var(--ease), right var(--t) var(--ease), top var(--t) var(--ease), bottom var(--t) var(--ease),
     border-radius var(--t) var(--ease), background-color var(--t), border-color var(--t); }
-.scene[data-mode="dark"] .side { --bg: #1c1c1b; --line: #363633; --text: #ecebe8; --muted: #a3a09a; --now: #ff6961; }
-/* "Highlight Active Event": the glow sits above the hour labels, like #glow in the app. */
-.side::after { content: ""; position: absolute; inset: 0; z-index: 14; pointer-events: none; border-radius: inherit;
-  box-shadow: inset 0 0 10px 0 color-mix(in srgb, var(--glow) 70%, transparent); transition: box-shadow .4s, opacity .3s; }
+.scene[data-mode="dark"] .side { --bg: #000; --line: #2c2c2e; --text: #f5f5f7; --muted: #a1a1a6; --now: #ff453a; --tint: 38%; --tint-a: 50%; --tx: 45%; --txb: #fff; }
 .side-in { position: absolute; top: 0; bottom: 0; right: 0; width: 188px; display: flex; flex-direction: column; }
 .side.island { right: 12px; top: 40px; bottom: 12px; border-color: var(--line); border-radius: 12px; }
-/* Auto-hidden: the same elements shrink to a thin strip of faded bars on the screen edge. */
+/* Auto-hidden: the same elements shrink to a thin strip of faded solid bars on the screen edge. */
 .side.collapsed { width: 10px; right: 0; top: 28px; bottom: 0; border-radius: 0; background: transparent; border-color: transparent; }
-.side.collapsed::after { opacity: 0; }
-.side.collapsed .sc-head, .side.collapsed .hour, .side.collapsed .ev > span { opacity: 0; }
-/* Same as the app: thin 2px-radius bars across the strip, "now" dot in its own column on the outer edge. */
-.side.collapsed .ev { opacity: .6; left: calc(100% - 6px); right: 1px; border-radius: 2px; padding: 0; min-height: 0; box-shadow: none; }
+.side.collapsed .sc-head, .side.collapsed .hour, .side.collapsed .ev > span, .side.collapsed .mm { opacity: 0; }
+.side.collapsed .ev { opacity: .4; left: calc(100% - 6px); right: 1px; border: 0; border-radius: 2px; padding: 0; min-height: 0; box-shadow: none; background: var(--ev-c); }
+.side.collapsed .sc-day { margin: 0 0 0 32px; clip-path: none; }
 .side.collapsed .now { left: calc(100% - 8px); }
-.side.collapsed .now::before { width: 3.5px; height: 3.5px; top: -1px; }
-.side.collapsed .ev.active { opacity: 1; }
+.side.collapsed .now::before { width: 4px; height: 4px; top: -1px; }
+.side.collapsed .ev.active { opacity: 1; box-shadow: inset 0 0 0 1.5px var(--text); }
 .side *, .side *::before { transition: opacity var(--t) var(--ease), color var(--t), background-color var(--t), border-color var(--t),
-  left var(--t) var(--ease), right var(--t) var(--ease), border-radius var(--t), padding var(--t), transform var(--t) var(--ease); }
+  left var(--t) var(--ease), right var(--t) var(--ease), margin var(--t) var(--ease), border-radius var(--t), padding var(--t), transform var(--t) var(--ease), box-shadow var(--t); }
 
-.sc-head { position: relative; text-align: center; padding: 6px 30px 6px; min-height: 32px; border-bottom: 1px solid var(--line); flex: none; }
-.sc-head b { display: block; font: 500 14px/1.15 var(--serif); letter-spacing: -.02em; color: var(--text); }
-.sc-head span { display: block; margin-top: 1px; color: var(--muted); font-size: 9.5px; letter-spacing: .01em; }
-.sc-head .tools { position: absolute; left: 4px; top: 4px; }
-.sc-head .tools.r { left: auto; right: 4px; }
-.sc-head i { width: 22px; height: 22px; display: grid; place-items: center; color: var(--muted); }
-.sc-head svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.sc-day { flex: 1; min-height: 0; padding: 0 0 0 22px; }
-.grid24 { position: relative; height: 100%; font-variant-numeric: tabular-nums; }
-.hour { position: absolute; left: -22px; right: 0; border-top: 1px solid var(--line); }
-.hour span { position: absolute; left: 0; width: 17px; text-align: right; top: -6px; background: var(--bg); color: var(--muted); font: 500 9px/12px var(--font); }
+.sc-head { position: relative; text-align: left; padding: 14px 44px 8px 16px; min-height: 48px; flex: none; }
+.sc-head b { display: block; font: 600 24px/1.1 var(--font); letter-spacing: -.035em; color: var(--text); }
+.sc-head span { display: block; margin-top: 1px; color: var(--muted); font-size: 12px; letter-spacing: -.01em; }
+.sc-head .tools { position: absolute; top: 12px; right: 12px; }
+.sc-head i { width: 24px; height: 24px; display: grid; place-items: center; color: var(--muted); }
+.sc-head svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.sc-day { position: relative; flex: 1; min-height: 0; margin: 4px 12px 12px 32px; clip-path: inset(0 -14px 0 -32px); }
+.grid24 { position: relative; height: calc(100% * var(--z, 1)); transform: translateY(var(--ty, 0px)); font-variant-numeric: tabular-nums;
+  transition: height .5s var(--ease), transform .5s var(--ease); }
+.hour { position: absolute; left: -32px; right: 0; border-top: 1px solid var(--line); }
+.hour span { position: absolute; left: -2px; width: 27px; text-align: right; top: -6px; background: var(--bg); color: var(--muted); font: 500 9.5px/12px var(--font); }
 .hour:first-child span { top: 1px; }
-.ev { position: absolute; left: 3px; right: 3px; min-height: 15px; border-radius: 6px; padding: 0 6px; overflow: hidden; font-weight: 500; line-height: 1.2; font-size: 11px;
-  display: flex; align-items: center; gap: 6px; }
+.ev { position: absolute; left: 2px; right: 0; min-height: 15px; border-radius: 6px 8px 8px 6px; padding: 0 8px; overflow: hidden; font-weight: 600; line-height: 1.2; font-size: 11px;
+  display: flex; align-items: center; gap: 6px; border-left: 3px solid var(--ev-c);
+  background: color-mix(in srgb, var(--ev-c) var(--tint), var(--bg)); color: color-mix(in srgb, var(--ev-c) var(--tx), var(--txb)); }
 .ev .tt { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ev .tm { flex: none; font-size: .88em; opacity: .78; white-space: nowrap; }
+.ev .tm { flex: none; font-size: .88em; font-weight: 400; opacity: .6; white-space: nowrap; }
 .ev.l2 { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 1px; padding-top: 4px; }
 .ev.l2 .tt { flex: 0 1 auto; width: 100%; }
 .ev:not(.l2) .tm { display: none; }
-.side.collapsed .ev.active { box-shadow: none; }
-.ev.active { z-index: 7; box-shadow: 0 0 0 1px var(--bg), 0 0 0 2.5px var(--ev-c), 0 0 8px 1px color-mix(in srgb, var(--ev-c) 45%, transparent); }
-.ev.ghost { opacity: 0; transform: scaleY(.2); transform-origin: top; }
-.ev.ghost.on { opacity: 1; transform: none; }
-.side.collapsed .ev.ghost.on { opacity: .6; }
-.now { position: absolute; left: -22px; right: 0; height: 1.5px; background: var(--now); z-index: 10; }
-.now::before { content: ""; position: absolute; left: 0; top: -2.5px; width: 6.5px; height: 6.5px; border-radius: 50%; background: var(--now); }
+.ev.active { z-index: 7; color: var(--text); background: color-mix(in srgb, var(--ev-c) var(--tint-a), var(--bg));
+  box-shadow: inset 0 0 0 1.5px var(--ev-c), 0 0 14px 2px color-mix(in srgb, var(--ev-c) 65%, transparent); }
+.now { position: absolute; left: 0; right: 0; height: 2px; background: var(--now); z-index: 10; }
+.now::before { content: ""; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--now); }
+/* Zoom mini-map on the right edge: the whole day as ticks and a frame around what is visible. */
+.mm { position: absolute; right: -9px; top: 0; bottom: 0; width: 5px; border-radius: 3px; background: color-mix(in srgb, var(--text) 8%, var(--bg)); opacity: 0; z-index: 6; pointer-events: none; }
+.side.zoomed .mm { opacity: 1; }
+.mm i { position: absolute; left: 0; right: 0; border-radius: 3px; background: color-mix(in srgb, var(--c) 70%, var(--bg)); }
+.mm .vp { left: -2px; right: -2px; background: none; box-shadow: 0 0 0 1.5px var(--text); transition: top .3s var(--ease), height .5s var(--ease); }
 
 /* ---- feature sections ---- */
 .band { padding: 112px 0; text-align: center; }
