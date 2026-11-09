@@ -1,7 +1,7 @@
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "assets": {
-    "aarch64": { "url": "https://github.com/kacpergorec/sidecal/releases/download/v0.4.0/SideCal-apple-silicon.zip", "sha256": "c5d8ec348925ebf362762bac0eb1c2bd0df4c11d1e1bf2d6ae964aa2119cfedb" },
-    "x86_64": { "url": "https://github.com/kacpergorec/sidecal/releases/download/v0.4.0/SideCal-intel.zip", "sha256": "fd2b89836695c860ee9241e196a6e0340853deb02d16878e97423db591d97883" }
+    "aarch64": { "url": "https://github.com/kacpergorec/sidecal/releases/download/v0.4.1/SideCal-apple-silicon.zip", "sha256": "2ffac430e2e9a31cbf83e149f56906206a95f19ba7268239ba6263ba5fe622a8" },
+    "x86_64": { "url": "https://github.com/kacpergorec/sidecal/releases/download/v0.4.1/SideCal-intel.zip", "sha256": "2948fa961b1ef532f96ceebbf44515976037ef941ffda00ac0e9b422e99df201" }
   }
 }
