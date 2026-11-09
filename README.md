@@ -28,7 +28,7 @@
 | Feature | What it does |
 | --- | --- |
 | **Your day on the edge** | Today's events on a timeline down the edge of your screen, with a line marking right now. |
-| **Time blocking** | Drag to move or resize events. Snaps to 15 minutes, saves to Apple Calendar. |
+| **Time blocking** | Click or drag on an empty spot to create an event; drag to move or resize events. Snaps to 15 minutes, saves to Apple Calendar. |
 | **Zoom** | Ctrl or Cmd + scroll, or pinch, zooms the timeline in; plain scroll moves it. A mini-map shows where you are in the day. |
 | **Auto-hide** | Slides off the screen edge when you move away, returns when you touch the edge. Left or right side. |
 | **Edge preview** | A thin, faded strip of your day stays on the edge while hidden. |

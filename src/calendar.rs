@@ -147,12 +147,18 @@ fn alarm_minutes(ev: &EKEvent) -> Vec<i32> {
 
 /// Events organised by someone else (a meeting on a shared/work calendar) are read-only here:
 /// moving or deleting them would only change your copy or fail on the server.
+/// EventKit often reports `isCurrentUser` = false for your own events on Google/Exchange calendars,
+/// so an organiser whose address is the calendar's account (its title) counts as you too.
 fn organized_by_me(ev: &EKEvent) -> bool {
     unsafe {
-        match ev.organizer() {
-            Some(o) => o.isCurrentUser(),
-            None => true,
+        let Some(o) = ev.organizer() else { return true };
+        if o.isCurrentUser() {
+            return true;
         }
+        let mail = o.URL().absoluteString().map(|s| s.to_string().to_lowercase()).unwrap_or_default();
+        let mail = mail.trim_start_matches("mailto:");
+        let account = ev.calendar().map(|c| c.title().to_string().to_lowercase()).unwrap_or_default();
+        !mail.is_empty() && mail == account
     }
 }
 
@@ -206,22 +212,4 @@ pub fn remove(id: &str) -> Result<(), String> {
         }
         store.removeEvent_span_error(&ev, EKSpan::ThisEvent).map_err(|e| e.localizedDescription().to_string())
     })
-}
-
-// TEMP probe: what does the private EKEvent `color` return for synced (Google) events?
-fn debug_color(ev: &EKEvent) {
-    use objc2::msg_send;
-    use objc2::runtime::AnyObject;
-    use std::io::Write;
-    unsafe {
-        let c: Option<objc2::rc::Retained<AnyObject>> = msg_send![ev, color];
-        let line = match c {
-            Some(o) => format!("{} | {} | {:?} | {:?}\n", ev.title(), ev.calendar().map(|c| c.title().to_string()).unwrap_or_default(), o.class(), o),
-            None => format!("{} | nil\n", ev.title()),
-        };
-        if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true)
-            .open("/private/tmp/claude-502/-Users-kacper-PhpstormProjects-sidebar-calendar/755c7397-79cd-4f87-b40e-35f0af0798d2/scratchpad/color-probe.log") {
-            let _ = f.write_all(line.as_bytes());
-        }
-    }
 }

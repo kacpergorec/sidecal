@@ -124,6 +124,10 @@
   [data-ev="tinted"] body:not(.collapsed) .ev.active { background: color-mix(in srgb, var(--ev-c) var(--tint-a, 28%), var(--bg)); color: var(--text);
     box-shadow: inset 0 0 0 1.5px var(--ev-c), 0 0 14px 2px color-mix(in srgb, var(--ev-c) 65%, transparent); }
   [data-ev="tinted"] body:not(.collapsed) .ev .tm { font-weight: 400; color: inherit; opacity: .6; }
+  /* Band shown while dragging out a new entry. */
+  #sel { position: absolute; left: 3px; right: 3px; z-index: 9; border-radius: 6px; padding: 2px 6px; pointer-events: none;
+    background: color-mix(in srgb, var(--text) 12%, transparent); border: 1.5px dashed var(--muted); color: var(--text);
+    font: 600 10.5px/1.3 var(--font); font-variant-numeric: tabular-nums; overflow: hidden; white-space: nowrap; }
   #tip { position: absolute; z-index: 12; left: 2px; padding: 2px 7px; border-radius: 6px; background: var(--panel);
     border: 1px solid var(--line); color: var(--text); font: 500 10.5px var(--font); font-variant-numeric: tabular-nums;
     pointer-events: none; white-space: nowrap; }
@@ -218,7 +222,7 @@
 <div id="msg" hidden>Waiting for calendar access…<br>System Settings → Privacy &amp; Security → Calendars</div>
 <div id="allday"></div>
 <div id="mm"></div>
-<div id="scroll"><div id="day"><div id="now"></div></div></div>
+<div id="scroll"><div id="day"><div id="now"></div><div id="sel" hidden></div></div></div>
 
 <div id="glow"></div>
 <div id="backdrop" hidden></div>
@@ -669,20 +673,20 @@ const remLabel = (m) => (m < 0 ? t('No reminder') : m === 0 ? t('At time of even
 let remInitial = -1;
 
 function openForm(ev) {
-  editing = ev;
+  editing = ev.id ? ev : null;   // a draft (no id) from click-and-drag creates a new event
   // Priority = order in Settings → Calendars: top one is listed first and preselected.
   // Hidden calendars are left out (except the one the edited event already belongs to).
   const idx = (c) => { const i = cfg.calendars.findIndex((p) => p.id === c.id); return i < 0 ? 1e6 : i; };
   const hiddenCal = (c) => (cfg.calendars.find((p) => p.id === c.id) || {}).visible === false;
   const writable = calendars
-    .filter((c) => c.writable && (!hiddenCal(c) || (ev && ev.calendar_id === c.id)))
+    .filter((c) => c.writable && (!hiddenCal(c) || (ev.calendar_id && ev.calendar_id === c.id)))
     .sort((a, b) => idx(a) - idx(b));
   $('f-cal').setItems(writable.map((c) => ({ v: c.id, label: c.title, color: defaultColorOfCal(c) })));
   const start = ev.start;
-  $('f-title').value = ev.title;
+  $('f-title').value = ev.title || '';
   $('f-start').value = hm24(start);
   $('f-end').value = hm24(ev.end);
-  $('f-cal').value = ev.calendar_id;
+  if (ev.calendar_id) $('f-cal').value = ev.calendar_id;
   // Reminder: the event's own (first) alarm; new events get the default from Settings.
   remInitial = ev.alarms && ev.alarms.length ? ev.alarms[0] : -1;
   const opts = [-1, 0, 5, 10, 15, 30, 60, 120, 1440];
@@ -706,6 +710,40 @@ $('gear').onclick = () => invoke('open_settings');
 $('f-cancel').onclick = closeForm;
 $('backdrop').onclick = closeForm;
 
+// Click (1 h) or click-and-drag on an empty spot of the timeline to create an entry; the form confirms it.
+const SNAP = 15;   // minutes
+const minuteAt = (m) => {
+  const y = m.clientY - $('day').getBoundingClientRect().top;
+  return Math.max(0, Math.min(24 * 60, Math.round(y / MIN / SNAP) * SNAP));
+};
+let mk = null;
+$('day').addEventListener('mousedown', (m) => {
+  if (m.button !== 0 || m.target.closest('.ev') || !$('form').hidden || !$('cmenu').hidden || document.body.classList.contains('collapsed')) return;
+  mk = { from: minuteAt(m), to: minuteAt(m), moved: false };
+});
+window.addEventListener('mousemove', (m) => {
+  if (!mk) return;
+  mk.to = minuteAt(m);
+  if (mk.to !== mk.from) mk.moved = true;
+  if (!mk.moved) return;
+  const a = Math.min(mk.from, mk.to), b = Math.max(mk.from, mk.to);
+  const sel = $('sel');
+  sel.hidden = false;
+  sel.style.top = a * MIN + 'px';
+  sel.style.height = Math.max(8, (b - a) * MIN) + 'px';
+  sel.textContent = `${hm(dayStart + a * 60000)}–${hm(dayStart + b * 60000)}`;
+});
+window.addEventListener('mouseup', () => {
+  if (!mk) return;
+  const { from, to, moved } = mk;
+  mk = null;
+  $('sel').hidden = true;
+  const a = Math.min(from, to), b = Math.max(from, to);
+  const start = dayStart + a * 60000;
+  const end = moved ? dayStart + b * 60000 : Math.min(start + 3600000, dayStart + 864e5);
+  if (end <= start) return;   // a click on the last quarter of the day
+  openForm({ id: null, title: '', calendar_id: null, start, end, alarms: [] });
+});
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeColorMenu(); closeForm(); } });
 
 $('form').onsubmit = async (e) => {
